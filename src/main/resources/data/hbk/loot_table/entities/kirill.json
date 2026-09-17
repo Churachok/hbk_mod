@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:entity",
+	"pools": [
+		{
+			"rolls": 1.0,
+			"entries": [
+				{
+					"type": "minecraft:item",
+					"name": "hbk:attacking_member",
+					"conditions": [
+						{
+							"condition": "minecraft:random_chance",
+							"chance": 0.2
+						}
+					]
+				}
+			]
+		}
+	],
+	"random_sequence": "hbk:entities/kirill"
+}

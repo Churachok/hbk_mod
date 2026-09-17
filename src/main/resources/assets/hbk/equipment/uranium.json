@@ -1,0 +1,10 @@
+{
+  "layers": {
+    "humanoid": [
+      { "texture": "hbk:uranium" }
+    ],
+    "humanoid_leggings": [
+      { "texture": "hbk:uranium" }
+    ]
+  }
+}

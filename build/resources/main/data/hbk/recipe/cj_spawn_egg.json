@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"minecraft:gunpowder",
+		"minecraft:gunpowder",
+		"minecraft:gunpowder",
+		"minecraft:ink_sac"
+	],
+	"result": {
+		"id": "hbk:cj_spawn_egg"
+	}
+}

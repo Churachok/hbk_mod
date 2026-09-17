@@ -1,0 +1,14 @@
+{
+	"required": true,
+	"package": "dev.kirill.hbk.client.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"client": [
+		"AvatarRendererMixin",
+		"ItemInHandLayerMixin",
+		"KeyboardInputMixin",
+		"MinecraftAttackMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

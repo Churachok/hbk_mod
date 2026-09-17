@@ -1,0 +1,13 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"minecraft:bread",
+		"minecraft:bread",
+		"minecraft:bread",
+		"minecraft:gold_ingot"
+	],
+	"result": {
+		"id": "hbk:stalin_spawn_egg"
+	}
+}

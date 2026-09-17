@@ -1,0 +1,15 @@
+{
+	"required": true,
+	"package": "dev.kirill.hbk.mixin",
+	"compatibilityLevel": "JAVA_25",
+	"mixins": [
+		"BlockStateBaseMixin",
+		"OverworldBiomeBuilderMixin",
+		"PlayerPersistentDataMixin",
+		"ServerPlayerMechanicsDataMixin",
+		"WorkerMobMixin"
+	],
+	"injectors": {
+		"defaultRequire": 1
+	}
+}

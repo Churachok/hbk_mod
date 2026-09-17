@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/dry_log",
+    "end": "hbk:block/dry_log_top"
+  }
+}

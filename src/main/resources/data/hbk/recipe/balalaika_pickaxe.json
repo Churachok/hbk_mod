@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "equipment",
+	"ingredients": [
+		"minecraft:iron_pickaxe",
+		"minecraft:spruce_planks",
+		"minecraft:string",
+		"minecraft:string",
+		"minecraft:string"
+	],
+	"result": { "id": "hbk:balalaika_pickaxe" }
+}

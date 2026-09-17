@@ -1,0 +1,45 @@
+{
+	"ambientocclusion": false,
+	"textures": {
+		"chest": "hbk:block/strange_chest",
+		"particle": "hbk:block/strange_chest"
+	},
+	"elements": [
+		{
+			"from": [1, 0, 1],
+			"to": [15, 10, 15],
+			"faces": {
+				"north": { "texture": "#chest" },
+				"east": { "texture": "#chest" },
+				"south": { "texture": "#chest" },
+				"west": { "texture": "#chest" },
+				"up": { "texture": "#chest" },
+				"down": { "texture": "#chest" }
+			}
+		},
+		{
+			"from": [1, 10, 1],
+			"to": [15, 14, 15],
+			"faces": {
+				"north": { "texture": "#chest" },
+				"east": { "texture": "#chest" },
+				"south": { "texture": "#chest" },
+				"west": { "texture": "#chest" },
+				"up": { "texture": "#chest" },
+				"down": { "texture": "#chest" }
+			}
+		},
+		{
+			"from": [6.5, 7, 0.25],
+			"to": [9.5, 11, 1.25],
+			"faces": {
+				"north": { "texture": "#chest" },
+				"east": { "texture": "#chest" },
+				"south": { "texture": "#chest" },
+				"west": { "texture": "#chest" },
+				"up": { "texture": "#chest" },
+				"down": { "texture": "#chest" }
+			}
+		}
+	]
+}

@@ -1,0 +1,93 @@
+{
+  "attributes": {
+    "minecraft:audio/music_volume": 0.15,
+    "minecraft:gameplay/increased_fire_burnout": true,
+    "minecraft:visual/fog_color": "#65752f",
+    "minecraft:visual/fog_end_distance": {
+      "argument": 0.42,
+      "modifier": "multiply"
+    },
+    "minecraft:visual/sky_color": "#75733b",
+    "minecraft:visual/water_fog_color": "#233d0c",
+    "minecraft:visual/water_fog_end_distance": {
+      "argument": 0.45,
+      "modifier": "multiply"
+    }
+  },
+  "carvers": [
+    "minecraft:cave",
+    "minecraft:cave_extra_underground",
+    "minecraft:canyon"
+  ],
+  "downfall": 0.8,
+  "effects": {
+    "dry_foliage_color": "#5c5427",
+    "foliage_color": "#65742e",
+    "grass_color": "#77773a",
+    "water_color": "#78a61e"
+  },
+  "features": [
+    [],
+    [
+      "minecraft:lake_lava_underground"
+    ],
+    [
+      "minecraft:amethyst_geode",
+      "hbk:radioactive_crater"
+    ],
+    [
+      "minecraft:monster_room",
+      "minecraft:monster_room_deep"
+    ],
+    [
+      "hbk:radioactive_ruin"
+    ],
+    [],
+    [
+      "minecraft:ore_dirt",
+      "minecraft:ore_gravel",
+      "minecraft:ore_granite_upper",
+      "minecraft:ore_granite_lower",
+      "minecraft:ore_diorite_upper",
+      "minecraft:ore_diorite_lower",
+      "minecraft:ore_andesite_upper",
+      "minecraft:ore_andesite_lower",
+      "minecraft:ore_tuff",
+      "minecraft:ore_coal_upper",
+      "minecraft:ore_coal_lower",
+      "minecraft:ore_iron_upper",
+      "minecraft:ore_iron_middle",
+      "minecraft:ore_iron_small",
+      "minecraft:ore_gold",
+      "minecraft:ore_redstone",
+      "minecraft:ore_redstone_lower",
+      "minecraft:ore_diamond",
+      "minecraft:ore_diamond_medium",
+      "minecraft:ore_diamond_buried",
+      "hbk:ore_uranium"
+    ],
+    [],
+    [
+      "minecraft:spring_water",
+      "minecraft:spring_lava"
+    ],
+    [
+      "minecraft:glow_lichen",
+      "hbk:wasteland_surface"
+    ],
+    []
+  ],
+  "has_precipitation": true,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 1.35
+}

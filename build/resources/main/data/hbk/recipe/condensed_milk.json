@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "food",
+	"ingredients": [
+		"minecraft:milk_bucket",
+		"minecraft:sugar",
+		"minecraft:sugar",
+		"minecraft:iron_ingot"
+	],
+	"result": {
+		"id": "hbk:condensed_milk",
+		"count": 2
+	}
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "hbk:item/attacking_member",
+  "textures": {
+    "white": "minecraft:block/light_gray_terracotta",
+    "magenta": "minecraft:block/gray_terracotta",
+    "particle": "minecraft:block/light_gray_terracotta"
+  }
+}
