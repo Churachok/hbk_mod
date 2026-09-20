@@ -10,6 +10,7 @@ import dev.kirill.hbk.item.CarrierMemberItem;
 import dev.kirill.hbk.item.BeastlikeMemberItem;
 import dev.kirill.hbk.item.HammerFighterMemberItem;
 import dev.kirill.hbk.item.FemaleVaginaItem;
+import dev.kirill.hbk.item.ProgenitorTransformationItem;
 import dev.kirill.hbk.item.CondensedMilkItem;
 import dev.kirill.hbk.item.BandageItem;
 import dev.kirill.hbk.item.BuckwheatItem;
@@ -66,8 +67,8 @@ public class ModItems {
 	public static final Item DRY_LOG = block("dry_log", ModBlocks.DRY_LOG);
 	public static final Item BRIGHT_GRASS = block("bright_grass", ModBlocks.BRIGHT_GRASS);
 	public static final Item ROTTEN_EARTH = block("rotten_earth", ModBlocks.ROTTEN_EARTH);
-	public static final Item WHITE_VISCOUS_LIQUID = block("white_viscous_liquid", ModBlocks.WHITE_VISCOUS_LIQUID);
-	public static final Item BLOODY_VISCOUS_LIQUID = block("bloody_viscous_liquid", ModBlocks.BLOODY_VISCOUS_LIQUID);
+	public static final Item SPERM = block("sperm", ModBlocks.SPERM);
+	public static final Item BLOODY_SPERM = block("bloody_sperm", ModBlocks.BLOODY_SPERM);
 	public static final Item RUINED_CONCRETE = block("ruined_concrete", ModBlocks.RUINED_CONCRETE);
 	public static final Item BUILDING_DEBRIS = block("building_debris", ModBlocks.BUILDING_DEBRIS);
 	public static final Item CRIMSON_MONUMENT = block("crimson_monument", ModBlocks.CRIMSON_MONUMENT);
@@ -168,11 +169,27 @@ public class ModItems {
 			FemaleVaginaItem::new,
 			new Item.Properties().sword(ToolMaterial.IRON, 3.0f, -2.4f).rarity(net.minecraft.world.item.Rarity.RARE)
 	);
+	public static final Item PROGENITOR_TRANSFORMATION = register(
+			"progenitor_transformation",
+			ProgenitorTransformationItem::new,
+			new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)
+	);
+	public static final Item FOUNDING_PENIS = register(
+			"founding_penis",
+			ProgenitorTransformationItem::new,
+			new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)
+	);
 
 	public static final Item BALALAIKA_PICKAXE = register(
 			"balalaika_pickaxe",
 			Item::new,
 			new Item.Properties().pickaxe(ToolMaterial.IRON, 1.0f, -2.8f)
+	);
+
+	public static final Item REDSTONE_PICKAXE = register(
+			"redstone_pickaxe",
+			Item::new,
+			new Item.Properties().pickaxe(ModToolMaterials.REDSTONE, 1.0f, -2.8f).fireResistant()
 	);
 
 	public static final Item CURRANT_TINCTURE = register(
@@ -204,11 +221,7 @@ public class ModItems {
 			new Item.Properties().shovel(ToolMaterial.IRON, 1.5f, -3.0f)
 	);
 
-	public static final Item STRANGE_CHEST = register(
-			"strange_chest",
-			properties -> new BlockItem(ModBlocks.STRANGE_CHEST, properties),
-			new Item.Properties()
-	);
+	public static final Item STRANGE_CHEST = block("strange_chest", ModBlocks.STRANGE_CHEST);
 
 	public static final Item STALIN_SPAWN_EGG = register(
 			"stalin_spawn_egg",
@@ -228,6 +241,30 @@ public class ModItems {
 			new Item.Properties().spawnEgg(ModEntityTypes.NURSE)
 	);
 
+	public static final Item ANTON_SPAWN_EGG = register(
+			"anton_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.ANTON));
+
+	public static final Item DENIS_SPAWN_EGG = register(
+			"denis_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.DENIS));
+
+	public static final Item GOSHA_SPAWN_EGG = register(
+			"gosha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.GOSHA));
+
+	public static final Item GRISHA_SPAWN_EGG = register(
+			"grisha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.GRISHA));
+
+	public static final Item LESHA_SPAWN_EGG = register(
+			"lesha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.LESHA));
+
+	public static final Item SASHA_SPAWN_EGG = register(
+			"sasha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.SASHA));
+
+	public static final Item VLAD_SPAWN_EGG = register(
+			"vlad_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.VLAD));
+
+	public static final Item LEX_SPAWN_EGG = register(
+			"lex_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.LEX));
+
 	private static <T extends Item> T register(String name, Function<Item.Properties, T> factory, Item.Properties properties) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, HbkMod.id(name));
 		T item = factory.apply(properties.setId(key));
@@ -235,7 +272,8 @@ public class ModItems {
 	}
 
 	private static Item block(String name, net.minecraft.world.level.block.Block block) {
-		return register(name, properties -> new BlockItem(block, properties), new Item.Properties());
+		return register(name, properties -> new BlockItem(block, properties),
+				new Item.Properties().useBlockDescriptionPrefix());
 	}
 
 	private static Item armor(String name, ArmorType type) {
@@ -299,8 +337,8 @@ public class ModItems {
 			output.accept(DRY_LOG);
 			output.accept(BRIGHT_GRASS);
 			output.accept(ROTTEN_EARTH);
-			output.accept(WHITE_VISCOUS_LIQUID);
-			output.accept(BLOODY_VISCOUS_LIQUID);
+			output.accept(SPERM);
+			output.accept(BLOODY_SPERM);
 			output.accept(RUINED_CONCRETE);
 			output.accept(BUILDING_DEBRIS);
 			output.accept(CRIMSON_MONUMENT);
@@ -313,6 +351,15 @@ public class ModItems {
 			output.accept(STALIN_SPAWN_EGG);
 			output.accept(CJ_SPAWN_EGG);
 			output.accept(NURSE_SPAWN_EGG);
+			output.accept(ANTON_SPAWN_EGG);
+			output.accept(DENIS_SPAWN_EGG);
+			output.accept(GOSHA_SPAWN_EGG);
+			output.accept(GRISHA_SPAWN_EGG);
+			output.accept(LESHA_SPAWN_EGG);
+			output.accept(SASHA_SPAWN_EGG);
+			output.accept(VLAD_SPAWN_EGG);
+			output.accept(LEX_SPAWN_EGG);
+
 		});
 
 		ResourceKey<CreativeModeTab> foodAndDrinks = ResourceKey.create(
@@ -336,6 +383,7 @@ public class ModItems {
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
 			output.accept(FLYING_CARPET);
 			output.accept(BALALAIKA_PICKAXE);
+			output.accept(REDSTONE_PICKAXE);
 			output.accept(SHOVEL_SWORD);
 			output.accept(WESTERN_CHESTPLATE);
 			output.accept(URANIUM_HELMET);
@@ -350,6 +398,7 @@ public class ModItems {
 			output.accept(BEASTLIKE_MEMBER);
 			output.accept(HAMMER_FIGHTER_MEMBER);
 			output.accept(FEMALE_VAGINA);
+			output.accept(FOUNDING_PENIS);
 			output.accept(STRANGE_CHEST);
 			output.accept(SICKLE_AND_HAMMER);
 			output.accept(BANDAGE);

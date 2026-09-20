@@ -20,6 +20,16 @@ dependencies {
 	implementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 }
 
+fabricApi {
+	configureTests {
+		createSourceSet = true
+		modId = 'hbk_npc_tests'
+		enableGameTests = true
+		enableClientGameTests = false
+		eula = false
+	}
+}
+
 processResources {
 	def version = project.version
 	inputs.property "version", version

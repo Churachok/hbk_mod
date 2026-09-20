@@ -6,15 +6,14 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 /** A sword whose successful melee hit launches its wielder like Wind Burst III. */
-public final class CarrierMemberItem extends Item {
+public final class CarrierMemberItem extends DestructiveMemberItem {
 	private static final double WIND_BURST_III_STRENGTH = 2.2;
 
 	public CarrierMemberItem(Properties properties) {
-		super(properties);
+		super(properties, Ability.BOMBING_RUN);
 	}
 
 	@Override

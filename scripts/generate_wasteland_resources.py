@@ -82,11 +82,19 @@ def main():
         write(ASSETS / "items" / f"{name}.json", {
             "model": {"type": "minecraft:model", "model": f"hbk:item/{name}"}
         })
+        loot_conditions = [{"condition": "minecraft:survives_explosion"}]
+        drop_item = name
+        if name == "uranium_ore":
+            drop_item = "uranium_235"
+            loot_conditions.insert(0, {
+                "condition": "minecraft:match_tool",
+                "predicate": {"items": "hbk:redstone_pickaxe"},
+            })
         write(DATA / "loot_table/blocks" / f"{name}.json", {
             "type": "minecraft:block",
             "pools": [{
-                "conditions": [{"condition": "minecraft:survives_explosion"}],
-                "entries": [{"type": "minecraft:item", "name": f"hbk:{name}"}],
+                "conditions": loot_conditions,
+                "entries": [{"type": "minecraft:item", "name": f"hbk:{drop_item}"}],
                 "rolls": 1.0,
             }],
             "random_sequence": f"hbk:blocks/{name}",

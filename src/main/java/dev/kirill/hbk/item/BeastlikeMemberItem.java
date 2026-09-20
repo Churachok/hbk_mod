@@ -11,7 +11,6 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.sheep.Sheep;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
@@ -20,16 +19,19 @@ import java.util.Map;
 import java.util.UUID;
 
 /** A sword that summons a sheep on RMB. */
-public final class BeastlikeMemberItem extends Item {
+public final class BeastlikeMemberItem extends DestructiveMemberItem {
 	private static final int SUMMON_COOLDOWN_TICKS = 120 * 20;
 	private final Map<UUID, Integer> summonReadyAt = new HashMap<>();
 
 	public BeastlikeMemberItem(Properties properties) {
-		super(properties);
+		super(properties, Ability.ROAR);
 	}
 
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
+		if (player.isShiftKeyDown()) {
+			return useDestruction(level, player, hand);
+		}
 		if (!(level instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) {
 			return InteractionResult.SUCCESS;
 		}

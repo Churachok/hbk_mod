@@ -10,7 +10,7 @@ public final class LizaRenderer extends HumanoidMobRenderer<LizaEntity, GiantBos
 	private static final Identifier TEXTURE = HbkMod.id("textures/entity/liza.png");
 
 	public LizaRenderer(EntityRendererProvider.Context context) {
-		super(context, new GiantBossModel(context.bakeLayer(ModEntityModelLayers.GIANT_BOSS)), 0.45f);
+		super(context, new GiantBossModel(context.bakeLayer(ModEntityModelLayers.GIANT_BOSS), false), 0.45f);
 	}
 
 	@Override

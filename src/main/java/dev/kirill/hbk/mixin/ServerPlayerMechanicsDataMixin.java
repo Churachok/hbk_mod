@@ -19,5 +19,7 @@ public abstract class ServerPlayerMechanicsDataMixin {
 		newData.hbk$setLastBuckwheatTick(oldData.hbk$getLastBuckwheatTick());
 		newData.hbk$setLastStewTick(oldData.hbk$getLastStewTick());
 		newData.hbk$setConsecutiveStew(oldData.hbk$getConsecutiveStew());
+		newData.hbk$setProgenitorTicks(alive ? oldData.hbk$getProgenitorTicks() : 0);
+		newData.hbk$setFoundingBlastReadyTick(oldData.hbk$getFoundingBlastReadyTick());
 	}
 }

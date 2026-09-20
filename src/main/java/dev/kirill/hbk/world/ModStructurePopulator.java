@@ -25,11 +25,13 @@ import java.util.List;
 public final class ModStructurePopulator {
 	private static final Identifier KIRILL_HOUSE = HbkMod.id("kirill_house");
 	private static final Identifier KIRILL_HOUSE_HBK = HbkMod.id("kirill_house_hbk");
+	private static final Identifier DENIS_HOUSE = HbkMod.id("denis_house");
 	private static final Identifier STALINKA = HbkMod.id("stalinka");
 	private static final Identifier GULAG = HbkMod.id("gulag");
 	private static final int VILLAGER_COUNT = 8;
 	private static final float VILLAGER_CHANCE = 0.60f;
 	private static final float LIZA_CHANCE = 0.60f;
+	private static final float DENIS_CHANCE = 0.30f;
 	private static final int NKVD_COUNT = 10;
 
 	private ModStructurePopulator() {
@@ -80,6 +82,35 @@ public final class ModStructurePopulator {
 					data.markStructurePopulated(kirillPopulationKey);
 				}
 			}
+			if (id.equals(KIRILL_HOUSE) || id.equals(KIRILL_HOUSE_HBK)) {
+				String npcName = id.equals(KIRILL_HOUSE) ? "lex" : "vlad";
+				String npcKey = npcName + "@" + id + "@" + start.getChunkPos().pack();
+				if (!data.isStructurePopulated(npcKey)) {
+					BlockPos pos = findPositionNearStructure(level, box, 120);
+					var type = id.equals(KIRILL_HOUSE) ? ModEntityTypes.LEX : ModEntityTypes.VLAD;
+					if (pos != null && type.spawn(level, pos, EntitySpawnReason.STRUCTURE) != null) {
+						data.markStructurePopulated(npcKey);
+					}
+				}
+			}
+			if (id.equals(DENIS_HOUSE)) {
+				String denisKey = "denis@" + populationKey;
+				String rollKey = denisKey + "@rolled";
+				String selectedKey = denisKey + "@selected";
+				if (!data.isStructurePopulated(rollKey)) {
+					if (level.getRandom().nextFloat() < DENIS_CHANCE) {
+						data.markStructurePopulated(selectedKey);
+					}
+					data.markStructurePopulated(rollKey);
+				}
+				// Retry only a selected spawn with no safe position; never reroll the 30% chance.
+				if (data.isStructurePopulated(selectedKey) && !data.isStructurePopulated(denisKey)) {
+					BlockPos pos = findPositionNearStructure(level, box, 120);
+					if (pos != null && ModEntityTypes.DENIS.spawn(level, pos, EntitySpawnReason.STRUCTURE) != null) {
+						data.markStructurePopulated(denisKey);
+					}
+				}
+			}
 			if (id.equals(STALINKA)) {
 				String lizaPopulationKey = "liza@" + id + "@" + start.getChunkPos().pack();
 				if (!data.isStructurePopulated(lizaPopulationKey)) {
@@ -98,7 +129,7 @@ public final class ModStructurePopulator {
 				.map(key -> key.identifier())
 				.filter(id -> id.getNamespace().equals(HbkMod.MOD_ID))
 				.filter(id -> id.equals(KIRILL_HOUSE) || id.equals(KIRILL_HOUSE_HBK)
-						|| id.equals(STALINKA) || id.equals(GULAG))
+						|| id.equals(DENIS_HOUSE) || id.equals(STALINKA) || id.equals(GULAG))
 				.orElse(null);
 	}
 

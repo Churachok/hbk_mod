@@ -24,6 +24,10 @@ public abstract class PlayerPersistentDataMixin implements MechanicsPlayerData {
 	private long hbk$lastStewTick = Long.MIN_VALUE;
 	@Unique
 	private int hbk$consecutiveStew;
+	@Unique
+	private int hbk$progenitorTicks;
+	@Unique
+	private long hbk$foundingBlastReadyTick = Long.MIN_VALUE;
 
 	@Override
 	public int hbk$getRationTicks() {
@@ -85,6 +89,26 @@ public abstract class PlayerPersistentDataMixin implements MechanicsPlayerData {
 		this.hbk$consecutiveStew = count;
 	}
 
+	@Override
+	public int hbk$getProgenitorTicks() {
+		return this.hbk$progenitorTicks;
+	}
+
+	@Override
+	public void hbk$setProgenitorTicks(int ticks) {
+		this.hbk$progenitorTicks = Math.max(0, ticks);
+	}
+
+	@Override
+	public long hbk$getFoundingBlastReadyTick() {
+		return this.hbk$foundingBlastReadyTick;
+	}
+
+	@Override
+	public void hbk$setFoundingBlastReadyTick(long tick) {
+		this.hbk$foundingBlastReadyTick = tick;
+	}
+
 	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
 	private void hbk$saveMechanicData(ValueOutput output, CallbackInfo ci) {
 		output.putInt("hbk_ration_ticks", this.hbk$rationTicks);
@@ -93,6 +117,8 @@ public abstract class PlayerPersistentDataMixin implements MechanicsPlayerData {
 		output.putLong("hbk_last_buckwheat_tick", this.hbk$lastBuckwheatTick);
 		output.putLong("hbk_last_stew_tick", this.hbk$lastStewTick);
 		output.putInt("hbk_consecutive_stew", this.hbk$consecutiveStew);
+		output.putInt("hbk_progenitor_ticks", this.hbk$progenitorTicks);
+		output.putLong("hbk_founding_blast_ready_tick", this.hbk$foundingBlastReadyTick);
 	}
 
 	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
@@ -103,5 +129,7 @@ public abstract class PlayerPersistentDataMixin implements MechanicsPlayerData {
 		this.hbk$lastBuckwheatTick = input.getLongOr("hbk_last_buckwheat_tick", Long.MIN_VALUE);
 		this.hbk$lastStewTick = input.getLongOr("hbk_last_stew_tick", Long.MIN_VALUE);
 		this.hbk$consecutiveStew = input.getIntOr("hbk_consecutive_stew", 0);
+		this.hbk$progenitorTicks = Math.max(0, input.getIntOr("hbk_progenitor_ticks", 0));
+		this.hbk$foundingBlastReadyTick = input.getLongOr("hbk_founding_blast_ready_tick", Long.MIN_VALUE);
 	}
 }

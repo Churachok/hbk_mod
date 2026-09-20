@@ -57,7 +57,7 @@ public final class GornoslavyanskMonumentFeature extends Feature<NoneFeatureConf
 				int localY = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x + dx, z + dz) - 1;
 				BlockPos stain = new BlockPos(x + dx, localY, z + dz);
 				if (level.getBiome(stain).is(ModWorldgen.PAST_GORNOSLAVYANSK)) {
-					level.setBlock(stain, ModBlocks.BLOODY_VISCOUS_LIQUID.defaultBlockState(), 2);
+					level.setBlock(stain, ModBlocks.BLOODY_SPERM.defaultBlockState(), 2);
 				}
 			}
 		}

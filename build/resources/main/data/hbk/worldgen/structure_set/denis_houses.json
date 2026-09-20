@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 173984237,
+    "separation": 16,
+    "spacing": 52
+  },
+  "structures": [
+    {
+      "structure": "hbk:denis_house",
+      "weight": 1
+    }
+  ]
+}

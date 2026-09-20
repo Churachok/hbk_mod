@@ -1,12 +1,14 @@
 package dev.kirill.hbk.entity;
 
 import dev.kirill.hbk.registry.ModEntityTypes;
+import dev.kirill.hbk.item.MemberDestruction;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +24,11 @@ public class AttackingMemberBulletEntity extends ThrowableItemProjectile {
 	private static final byte IMPACT_EVENT = 3;
 	private static final float DEFAULT_DAMAGE = 10.0f;
 	private float damage = DEFAULT_DAMAGE;
+	private float explosionPower;
+
+	public void setExplosionPower(float power) {
+		this.explosionPower = Math.clamp(power, 0.0f, 3.0f);
+	}
 
 	public AttackingMemberBulletEntity(EntityType<? extends AttackingMemberBulletEntity> type, Level level) {
 		super(type, level);
@@ -63,6 +70,10 @@ public class AttackingMemberBulletEntity extends ThrowableItemProjectile {
 	protected void onHit(HitResult result) {
 		super.onHit(result);
 		if (!this.level().isClientSide()) {
+			if (this.explosionPower > 0 && this.level() instanceof ServerLevel level
+					&& this.getOwner() instanceof Player player) {
+				MemberDestruction.explode(level, player, result.getLocation(), this.explosionPower);
+			}
 			this.level().broadcastEntityEvent(this, IMPACT_EVENT);
 			this.discard();
 		}
@@ -88,11 +99,13 @@ public class AttackingMemberBulletEntity extends ThrowableItemProjectile {
 	protected void addAdditionalSaveData(ValueOutput output) {
 		super.addAdditionalSaveData(output);
 		output.putFloat("damage", this.damage);
+		output.putFloat("explosion_power", this.explosionPower);
 	}
 
 	@Override
 	protected void readAdditionalSaveData(ValueInput input) {
 		super.readAdditionalSaveData(input);
 		this.damage = input.getFloatOr("damage", DEFAULT_DAMAGE);
+		setExplosionPower(input.getFloatOr("explosion_power", 0));
 	}
 }

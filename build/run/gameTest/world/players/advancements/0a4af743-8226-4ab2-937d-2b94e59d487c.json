@@ -1,0 +1,21 @@
+{
+  "hbk:gornoslavyansk_visit": {
+    "criteria": {
+      "visit_gornoslavyansk": "2026-09-20 14:05:33 +0700"
+    },
+    "done": true
+  },
+  "hbk:graveyard_visit": {
+    "criteria": {
+      "visit_graveyard": "2026-09-20 14:05:33 +0700"
+    },
+    "done": true
+  },
+  "minecraft:adventure/adventuring_time": {
+    "criteria": {
+      "minecraft:plains": "2026-09-20 14:05:33 +0700"
+    },
+    "done": false
+  },
+  "DataVersion": 4903
+}

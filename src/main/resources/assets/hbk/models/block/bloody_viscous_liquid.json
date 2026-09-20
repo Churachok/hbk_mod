@@ -1,9 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": {
-      "sprite": "hbk:block/bloody_viscous_liquid",
-      "force_translucent": true
-    }
-  }
-}

@@ -74,10 +74,10 @@ public final class GornoslavyanskSurfaceFeature extends Feature<NoneFeatureConfi
 	private static BlockState pickSurface(RandomSource random) {
 		int roll = random.nextInt(100);
 		if (roll < 48) {
-			return ModBlocks.WHITE_VISCOUS_LIQUID.defaultBlockState();
+			return ModBlocks.SPERM.defaultBlockState();
 		}
 		if (roll < 56) {
-			return ModBlocks.BLOODY_VISCOUS_LIQUID.defaultBlockState();
+			return ModBlocks.BLOODY_SPERM.defaultBlockState();
 		}
 		if (roll < 73) {
 			return ModBlocks.BRIGHT_GRASS.defaultBlockState();
@@ -103,9 +103,9 @@ public final class GornoslavyanskSurfaceFeature extends Feature<NoneFeatureConfi
 			int y = level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, x, z) - 1;
 			BlockPos top = new BlockPos(x, y, z);
 			if (level.getBiome(top).is(ModWorldgen.PAST_GORNOSLAVYANSK)
-					&& (level.getBlockState(top).is(ModBlocks.WHITE_VISCOUS_LIQUID)
+					&& (level.getBlockState(top).is(ModBlocks.SPERM)
 					|| level.getBlockState(top).is(ModBlocks.ROTTEN_EARTH))) {
-				level.setBlock(top, ModBlocks.BLOODY_VISCOUS_LIQUID.defaultBlockState(), 2);
+				level.setBlock(top, ModBlocks.BLOODY_SPERM.defaultBlockState(), 2);
 			}
 			x = Math.clamp(x + random.nextInt(3) - 1, minX, minX + 15);
 			z = Math.clamp(z + random.nextInt(3) - 1, minZ, minZ + 15);

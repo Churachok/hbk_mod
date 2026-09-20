@@ -24,6 +24,7 @@ public class ModWorldData extends SavedData {
 	private boolean kirillHouseHandled;
 	private final List<BlockPos> kirillHousePositions = new ArrayList<>();
 	private final Set<String> populatedStructures = new HashSet<>();
+	private final Set<Long> npcChunks = new HashSet<>();
 
 	public static final Codec<ModWorldData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.LONG.listOf().optionalFieldOf("raided_villages", List.of()).forGetter(data -> data.raidedVillages.stream().toList()),
@@ -34,7 +35,8 @@ public class ModWorldData extends SavedData {
 			BlockPos.CODEC.listOf().optionalFieldOf("stalinka_positions", List.of()).forGetter(data -> List.copyOf(data.stalinkaPositions)),
 			Codec.BOOL.optionalFieldOf("kirill_house_handled", false).forGetter(data -> data.kirillHouseHandled),
 			BlockPos.CODEC.listOf().optionalFieldOf("kirill_house_positions", List.of()).forGetter(data -> List.copyOf(data.kirillHousePositions)),
-			Codec.STRING.listOf().optionalFieldOf("populated_structures", List.of()).forGetter(data -> data.populatedStructures.stream().toList())
+			Codec.STRING.listOf().optionalFieldOf("populated_structures", List.of()).forGetter(data -> data.populatedStructures.stream().toList()),
+			Codec.LONG.listOf().optionalFieldOf("npc_chunks", List.of()).forGetter(data -> data.npcChunks.stream().toList())
 	).apply(instance, ModWorldData::fromCodec));
 
 	public static final SavedDataType<ModWorldData> TYPE = new SavedDataType<>(
@@ -49,7 +51,7 @@ public class ModWorldData extends SavedData {
 
 	private ModWorldData(Set<Long> raidedVillages, Set<Long> gulagCells, Set<Long> answeredStrangeChests, List<BlockPos> gulagPositions,
 			boolean stalinkaHandled, List<BlockPos> stalinkaPositions, boolean kirillHouseHandled, List<BlockPos> kirillHousePositions,
-			Set<String> populatedStructures) {
+			Set<String> populatedStructures, Set<Long> npcChunks) {
 		this.raidedVillages.addAll(raidedVillages);
 		this.gulagCells.addAll(gulagCells);
 		this.answeredStrangeChests.addAll(answeredStrangeChests);
@@ -59,14 +61,15 @@ public class ModWorldData extends SavedData {
 		this.kirillHouseHandled = kirillHouseHandled;
 		this.kirillHousePositions.addAll(kirillHousePositions);
 		this.populatedStructures.addAll(populatedStructures);
+		this.npcChunks.addAll(npcChunks);
 	}
 
 	private static ModWorldData fromCodec(List<Long> raidedVillages, List<Long> gulagCells, List<Long> answeredStrangeChests, List<BlockPos> gulagPositions,
 			boolean stalinkaHandled, List<BlockPos> stalinkaPositions, boolean kirillHouseHandled, List<BlockPos> kirillHousePositions,
-			List<String> populatedStructures) {
+			List<String> populatedStructures, List<Long> npcChunks) {
 		return new ModWorldData(new HashSet<>(raidedVillages), new HashSet<>(gulagCells), new HashSet<>(answeredStrangeChests),
 				gulagPositions, stalinkaHandled, stalinkaPositions, kirillHouseHandled, kirillHousePositions,
-				new HashSet<>(populatedStructures));
+				new HashSet<>(populatedStructures), new HashSet<>(npcChunks));
 	}
 
 	public static ModWorldData get(ServerLevel level) {
@@ -154,6 +157,20 @@ public class ModWorldData extends SavedData {
 
 	public BlockPos getKirillHousePosition() {
 		return this.kirillHousePositions.isEmpty() ? null : this.kirillHousePositions.getFirst();
+	}
+
+	public boolean isNpcChunkHandled(long key) {
+		return this.npcChunks.contains(key);
+	}
+
+	public void markNpcChunkHandled(long key) {
+		this.npcChunks.add(key);
+		this.setDirty();
+	}
+
+	/** The saved unique-chunk set also preserves the cadence across restarts. */
+	public boolean isSashaSpawnRollDue() {
+		return !this.npcChunks.isEmpty() && this.npcChunks.size() % 20 == 0;
 	}
 
 	public boolean isStructurePopulated(String key) {

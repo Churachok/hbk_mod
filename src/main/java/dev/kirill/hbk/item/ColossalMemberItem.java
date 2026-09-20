@@ -19,11 +19,11 @@ import java.util.UUID;
 /** Pink-and-red weapon with an explosive RMB and a 360-degree projectile burst on LMB. */
 public final class ColossalMemberItem extends MemberWeaponItem {
 	private static final int PROJECTILE_COUNT = 100;
-	private static final float PROJECTILE_DAMAGE = 20.0f;
+	private static final float PROJECTILE_DAMAGE = 40.0f;
 	private static final float PROJECTILE_SPEED = 2.2f;
 	private static final int BURST_COOLDOWN_TICKS = 60 * 20;
 	private static final int EXPLOSION_COOLDOWN_TICKS = 40 * 20;
-	private static final float EXPLOSION_POWER = 4.0f;
+	public static final float EXPLOSION_POWER = 16.0f;
 
 	private final Map<UUID, Integer> burstReadyAt = new HashMap<>();
 	private final Map<UUID, Integer> explosionReadyAt = new HashMap<>();
@@ -35,6 +35,9 @@ public final class ColossalMemberItem extends MemberWeaponItem {
 	@Override
 	public void fire(ServerPlayer player) {
 		if (!(player.level() instanceof ServerLevel level) || player.getMainHandItem().getItem() != this) {
+			return;
+		}
+		if (player.isSpectator()) {
 			return;
 		}
 
@@ -66,7 +69,7 @@ public final class ColossalMemberItem extends MemberWeaponItem {
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		ItemStack weapon = player.getItemInHand(hand);
-		if (weapon.getItem() != this) {
+		if (weapon.getItem() != this || player.isSpectator()) {
 			return InteractionResult.PASS;
 		}
 
@@ -81,10 +84,8 @@ public final class ColossalMemberItem extends MemberWeaponItem {
 		}
 		this.explosionReadyAt.put(playerId, now + EXPLOSION_COOLDOWN_TICKS);
 
-		// Detonate in front of the player so the weapon behaves as a directed attack.
-		Vec3 blastPos = player.getEyePosition().add(player.getLookAngle().scale(4.0));
-		serverLevel.explode(player, blastPos.x, blastPos.y, blastPos.z,
-				EXPLOSION_POWER, Level.ExplosionInteraction.TNT);
+		Vec3 blastPos = MemberDestruction.aimedPosition(serverLevel, player, 48.0);
+		MemberDestruction.explode(serverLevel, player, blastPos, EXPLOSION_POWER);
 		serverPlayer.swing(hand, true);
 		return InteractionResult.SUCCESS_SERVER;
 	}

@@ -6,6 +6,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -27,6 +28,14 @@ public final class UraniumArmorEffects {
 	);
 
 	private UraniumArmorEffects() {
+	}
+
+	/** Radiation protection needs only one correctly equipped uranium piece, not the set bonus. */
+	public static boolean hasRadiationProtection(LivingEntity entity) {
+		return entity.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.URANIUM_HELMET)
+				|| entity.getItemBySlot(EquipmentSlot.CHEST).is(ModItems.URANIUM_CHESTPLATE)
+				|| entity.getItemBySlot(EquipmentSlot.LEGS).is(ModItems.URANIUM_LEGGINGS)
+				|| entity.getItemBySlot(EquipmentSlot.FEET).is(ModItems.URANIUM_BOOTS);
 	}
 
 	public static void register() {

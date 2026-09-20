@@ -1,0 +1,20 @@
+{
+  "display": {
+    "icon": {"id": "hbk:attacking_member"},
+    "title": {"translate": "advancement.hbk.hentai_beginnings.title"},
+    "description": {"translate": "advancement.hbk.hentai_beginnings.description"},
+    "background": "minecraft:gui/advancements/backgrounds/adventure",
+    "frame": "task", "show_toast": true, "announce_to_chat": true, "hidden": false
+  },
+  "criteria": {
+    "obtain_any_penis": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [{"items": [
+          "hbk:attacking_member", "hbk:armored_member", "hbk:colossal_member",
+          "hbk:jaw_member", "hbk:carrier_member", "hbk:beastlike_member", "hbk:hammer_fighter_member"
+        ]}]
+      }
+    }
+  }
+}

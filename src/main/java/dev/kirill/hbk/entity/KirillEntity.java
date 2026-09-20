@@ -71,6 +71,15 @@ public final class KirillEntity extends PathfinderMob implements RangedAttackMob
 	}
 
 	@Override
+	protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
+		// Enforce this at death too: existing NPCs may have old saved equipment chances.
+		if (this.getMainHandItem().is(ModItems.ATTACKING_MEMBER)) {
+			this.setDropChance(EquipmentSlot.MAINHAND, 0.0f);
+		}
+		super.dropCustomDeathLoot(level, source, recentlyHit);
+	}
+
+	@Override
 	public void performRangedAttack(LivingEntity target, float pullProgress) {
 		if (!(this.level() instanceof ServerLevel level)) {
 			return;

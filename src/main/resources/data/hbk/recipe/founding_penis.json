@@ -1,0 +1,11 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"hbk:attacking_member",
+		"hbk:female_vagina"
+	],
+	"result": {
+		"id": "hbk:founding_penis"
+	}
+}

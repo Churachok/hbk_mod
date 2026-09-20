@@ -1,12 +1,18 @@
 package dev.kirill.hbk.item;
 
 import dev.kirill.hbk.entity.AttackingMemberBulletEntity;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.TooltipDisplay;
+
+import java.util.function.Consumer;
 
 /** Shared single-projectile behaviour for the member weapon family. */
 public class MemberWeaponItem extends Item {
@@ -33,7 +39,7 @@ public class MemberWeaponItem extends Item {
 		}
 
 		var weapon = player.getMainHandItem();
-		if (weapon.getItem() != this || player.getCooldowns().isOnCooldown(weapon)) {
+		if (player.isSpectator() || weapon.getItem() != this || player.getCooldowns().isOnCooldown(weapon)) {
 			return;
 		}
 
@@ -45,5 +51,12 @@ public class MemberWeaponItem extends Item {
 				0.75f + level.getRandom().nextFloat() * 0.15f);
 		player.getCooldowns().addCooldown(weapon, this.cooldownTicks);
 		player.swing(InteractionHand.MAIN_HAND, true);
+	}
+
+	@Override
+	public void appendHoverText(ItemStack stack, TooltipContext context, TooltipDisplay display,
+			Consumer<Component> tooltip, TooltipFlag flag) {
+		super.appendHoverText(stack, context, display, tooltip, flag);
+		DestructiveMemberItem.addAbilityTooltip(this, tooltip);
 	}
 }

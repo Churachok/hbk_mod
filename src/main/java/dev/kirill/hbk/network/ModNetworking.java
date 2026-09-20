@@ -4,6 +4,7 @@ import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.world.StrangeChestManager;
 import dev.kirill.hbk.entity.FlyingCarpetEntity;
 import dev.kirill.hbk.item.MemberWeaponItem;
+import dev.kirill.hbk.mechanic.ProgenitorTransformation;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -32,6 +33,19 @@ public final class ModNetworking {
 		public static final FireAttackingMemberPayload INSTANCE = new FireAttackingMemberPayload();
 		public static final Type<FireAttackingMemberPayload> TYPE = new Type<>(HbkMod.id("fire_attacking_member"));
 		public static final StreamCodec<RegistryFriendlyByteBuf, FireAttackingMemberPayload> CODEC = StreamCodec.unit(INSTANCE);
+
+		@Override
+		public Type<? extends CustomPacketPayload> type() {
+			return TYPE;
+		}
+	}
+
+	public record FoundingPenisAbilityPayload(boolean blast) implements CustomPacketPayload {
+		public static final Type<FoundingPenisAbilityPayload> TYPE = new Type<>(HbkMod.id("founding_penis_ability"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, FoundingPenisAbilityPayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> buffer.writeBoolean(payload.blast),
+				buffer -> new FoundingPenisAbilityPayload(buffer.readBoolean())
+		);
 
 		@Override
 		public Type<? extends CustomPacketPayload> type() {
@@ -83,6 +97,16 @@ public final class ModNetworking {
 		PayloadTypeRegistry.serverboundPlay().register(AnswerStrangeChestPayload.TYPE, AnswerStrangeChestPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(CarpetInputPayload.TYPE, CarpetInputPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(FireAttackingMemberPayload.TYPE, FireAttackingMemberPayload.CODEC);
+		PayloadTypeRegistry.serverboundPlay().register(FoundingPenisAbilityPayload.TYPE, FoundingPenisAbilityPayload.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(FoundingPenisAbilityPayload.TYPE, (payload, context) ->
+				context.server().execute(() -> {
+					if (payload.blast()) {
+						ProgenitorTransformation.blast(context.player());
+					} else {
+						ProgenitorTransformation.fireProjectile(context.player());
+					}
+				})
+		);
 		ServerPlayNetworking.registerGlobalReceiver(AnswerStrangeChestPayload.TYPE, (payload, context) ->
 				context.server().execute(() -> StrangeChestManager.answer(context.player(), payload.pos(), payload.thief()))
 		);

@@ -24,4 +24,12 @@ public interface MechanicsPlayerData {
 	int hbk$getConsecutiveStew();
 
 	void hbk$setConsecutiveStew(int count);
+
+	int hbk$getProgenitorTicks();
+
+	void hbk$setProgenitorTicks(int ticks);
+
+	long hbk$getFoundingBlastReadyTick();
+
+	void hbk$setFoundingBlastReadyTick(long tick);
 }

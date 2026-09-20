@@ -10,7 +10,7 @@ public final class KirillRenderer extends HumanoidMobRenderer<KirillEntity, Gian
 	private static final Identifier TEXTURE = HbkMod.id("textures/entity/kirill.png");
 
 	public KirillRenderer(EntityRendererProvider.Context context) {
-		super(context, new GiantBossModel(context.bakeLayer(ModEntityModelLayers.GIANT_BOSS)), 0.45f);
+		super(context, new GiantBossModel(context.bakeLayer(ModEntityModelLayers.GIANT_BOSS), false), 0.45f);
 	}
 
 	@Override

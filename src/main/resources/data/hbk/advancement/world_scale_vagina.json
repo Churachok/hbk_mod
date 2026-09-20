@@ -1,0 +1,15 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {"id": "hbk:female_vagina"},
+    "title": {"translate": "advancement.hbk.world_scale_vagina.title"},
+    "description": {"translate": "advancement.hbk.world_scale_vagina.description"},
+    "frame": "goal", "show_toast": true, "announce_to_chat": true, "hidden": false
+  },
+  "criteria": {
+    "obtain_vagina": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {"items": [{"items": "hbk:female_vagina"}]}
+    }
+  }
+}

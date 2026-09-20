@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": {
+      "sprite": "hbk:block/bloody_sperm",
+      "force_translucent": true
+    }
+  }
+}

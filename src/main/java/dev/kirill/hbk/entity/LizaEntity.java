@@ -66,6 +66,15 @@ public final class LizaEntity extends PathfinderMob {
 	}
 
 	@Override
+	protected void dropCustomDeathLoot(ServerLevel level, DamageSource source, boolean recentlyHit) {
+		// The loot table alone controls the weapon drop, including for old saved NPCs.
+		if (this.getMainHandItem().is(ModItems.FEMALE_VAGINA)) {
+			this.setDropChance(EquipmentSlot.MAINHAND, 0.0f);
+		}
+		super.dropCustomDeathLoot(level, source, recentlyHit);
+	}
+
+	@Override
 	protected SoundEvent getAmbientSound() {
 		return SoundEvents.VILLAGER_AMBIENT;
 	}

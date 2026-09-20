@@ -7,17 +7,16 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Blocks;
 
 /** A sword that builds the same 5x3 wall pattern as the Sickle and Hammer. */
-public final class HammerFighterMemberItem extends Item {
+public final class HammerFighterMemberItem extends DestructiveMemberItem {
 	private static final int WALL_HALF_WIDTH = 2;
 	private static final int WALL_HEIGHT = 3;
 
 	public HammerFighterMemberItem(Properties properties) {
-		super(properties);
+		super(properties, Ability.HAMMER);
 	}
 
 	@Override
@@ -25,6 +24,9 @@ public final class HammerFighterMemberItem extends Item {
 		Player player = context.getPlayer();
 		if (player == null) {
 			return InteractionResult.PASS;
+		}
+		if (player.isShiftKeyDown()) {
+			return useDestruction(context.getLevel(), player, context.getHand());
 		}
 		if (!(context.getLevel() instanceof ServerLevel level)) {
 			return InteractionResult.SUCCESS;

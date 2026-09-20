@@ -4,6 +4,12 @@
     {
       "conditions": [
         {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "items": "hbk:redstone_pickaxe"
+          }
+        },
+        {
           "condition": "minecraft:survives_explosion"
         }
       ],

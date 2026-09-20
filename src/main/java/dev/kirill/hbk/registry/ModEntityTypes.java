@@ -2,7 +2,11 @@ package dev.kirill.hbk.registry;
 
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.entity.CjEntity;
+import dev.kirill.hbk.entity.ReferenceNpcEntity;
+import dev.kirill.hbk.entity.LexEntity;
+import dev.kirill.hbk.entity.SashaEntity;
 import dev.kirill.hbk.entity.AttackingMemberBulletEntity;
+import dev.kirill.hbk.entity.FoundingPenisProjectileEntity;
 import dev.kirill.hbk.entity.GiantBossEntity;
 import dev.kirill.hbk.entity.GiantRocketEntity;
 import dev.kirill.hbk.entity.FlyingBlockEntity;
@@ -85,6 +89,14 @@ public class ModEntityTypes {
 					.updateInterval(1)
 	);
 
+	public static final EntityType<FoundingPenisProjectileEntity> FOUNDING_PENIS_PROJECTILE = register(
+			"founding_penis_projectile",
+			EntityType.Builder.<FoundingPenisProjectileEntity>of(FoundingPenisProjectileEntity::new, MobCategory.MISC)
+					.sized(2.0f, 2.0f)
+					.clientTrackingRange(16)
+					.updateInterval(1)
+	);
+
 	public static final EntityType<FlyingBlockEntity> FLYING_BLOCK = register(
 			"flying_block",
 			EntityType.Builder.<FlyingBlockEntity>of(FlyingBlockEntity::new, MobCategory.MISC)
@@ -100,6 +112,38 @@ public class ModEntityTypes {
 					.clientTrackingRange(12)
 					.updateInterval(1)
 	);
+
+	public static final EntityType<ReferenceNpcEntity> ANTON = register("anton",
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<ReferenceNpcEntity> DENIS = register("denis",
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<ReferenceNpcEntity> GOSHA = register("gosha",
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<ReferenceNpcEntity> GRISHA = register("grisha",
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<ReferenceNpcEntity> LESHA = register("lesha",
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<SashaEntity> SASHA = register("sasha",
+			EntityType.Builder.<SashaEntity>of(SashaEntity::new, MobCategory.MONSTER)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3).notInPeaceful());
+
+	public static final EntityType<ReferenceNpcEntity> VLAD = register("vlad",
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<LexEntity> LEX = register("lex",
+			EntityType.Builder.<LexEntity>of(LexEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 0.7f).eyeHeight(0.35f).clientTrackingRange(8).updateInterval(3));
 
 	private static <T extends GiantBossEntity> EntityType.Builder<T> giant(EntityType.EntityFactory<T> factory) {
 		return EntityType.Builder.of(factory, MobCategory.MONSTER)
@@ -126,5 +170,13 @@ public class ModEntityTypes {
 		FabricDefaultAttributeRegistry.register(NURSE, NurseEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(KIRILL, KirillEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(LIZA, LizaEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(ANTON, ReferenceNpcEntity.createAttributes(1.0));
+		FabricDefaultAttributeRegistry.register(DENIS, ReferenceNpcEntity.createAttributes(20.0));
+		FabricDefaultAttributeRegistry.register(GOSHA, ReferenceNpcEntity.createAttributes(20.0));
+		FabricDefaultAttributeRegistry.register(GRISHA, ReferenceNpcEntity.createAttributes(20.0));
+		FabricDefaultAttributeRegistry.register(LESHA, ReferenceNpcEntity.createAttributes(1.0));
+		FabricDefaultAttributeRegistry.register(SASHA, ReferenceNpcEntity.createAttributes(20.0));
+		FabricDefaultAttributeRegistry.register(VLAD, ReferenceNpcEntity.createAttributes(20.0));
+		FabricDefaultAttributeRegistry.register(LEX, LexEntity.createAttributes().add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 20.0));
 	}
 }

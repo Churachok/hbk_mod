@@ -17,9 +17,9 @@ public final class ModArmorMaterials {
 	private static final TagKey<Item> REPAIRS_URANIUM_ARMOR = TagKey.create(
 			net.minecraft.core.registries.Registries.ITEM, HbkMod.id("repairs_uranium_armor")
 	);
-	private static final ResourceKey<EquipmentAsset> URANIUM_ASSET = EquipmentAssets.createId("uranium");
+	private static final ResourceKey<EquipmentAsset> URANIUM_ASSET = ResourceKey.create(EquipmentAssets.ROOT_ID, HbkMod.id("uranium"));
 
-	/** Tougher than netherite, with a dedicated client-side equipment texture. */
+	/** Tougher than netherite, with a dedicated client-side equipment model. */
 	public static final ArmorMaterial URANIUM = new ArmorMaterial(
 			45,
 			Map.of(

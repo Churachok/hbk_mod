@@ -15,10 +15,10 @@ DATA = RESOURCES / "data/hbk"
 TEXTURES = ASSETS / "textures/block"
 SIZE = 16
 BLOCKS = [
-    "bright_grass", "rotten_earth", "white_viscous_liquid", "bloody_viscous_liquid",
+    "bright_grass", "rotten_earth", "sperm", "bloody_sperm",
     "ruined_concrete", "building_debris", "crimson_monument",
 ]
-TRANSLUCENT = {"white_viscous_liquid", "bloody_viscous_liquid"}
+TRANSLUCENT = {"sperm", "bloody_sperm"}
 
 
 def write_json(path, value):
@@ -74,7 +74,7 @@ def generate_textures():
     draw = ImageDraw.Draw(white)
     draw.line([(0, 4), (4, 3), (8, 5), (12, 4), (15, 5)], fill=(250, 247, 252, 235), width=1)
     draw.line([(0, 12), (5, 11), (10, 13), (15, 11)], fill=(167, 164, 176, 225), width=1)
-    save(white, "white_viscous_liquid")
+    save(white, "sperm")
 
     bloody = white.copy()
     draw = ImageDraw.Draw(bloody)
@@ -82,7 +82,7 @@ def generate_textures():
     draw.line([(2, 15), (4, 11), (8, 12), (11, 9), (15, 10)], fill=(151, 9, 24, 242), width=2)
     for box in [(1, 3, 2, 4), (8, 6, 10, 7), (12, 8, 13, 9), (4, 11, 5, 12)]:
         draw.rectangle(box, fill=(188, 14, 30, 240))
-    save(bloody, "bloody_viscous_liquid")
+    save(bloody, "bloody_sperm")
 
     concrete = noise((76, 75, 79), [(53, 54, 58), (91, 90, 94), (109, 106, 108)], 406,
                      accents=[((34, 34, 37), 18)])
