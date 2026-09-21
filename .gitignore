@@ -1,0 +1,19 @@
+# Gradle and build output
+.gradle/
+build/
+
+# Local Minecraft development instance
+run/
+logs/
+
+# Local/generated helper data
+data/
+__pycache__/
+*.py[cod]
+
+# IDE and operating-system files
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db

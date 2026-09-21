@@ -17,18 +17,20 @@ def canvas(size=(32, 32), color=TRANSPARENT):
 
 
 def sickle_and_hammer():
-    source = ROOT / "art_concepts/new_update/ussr_hammer_and_sickle_source.png"
-    emblem = Image.open(source).convert("RGBA")
-    bounds = emblem.getchannel("A").getbbox()
-    emblem = emblem.crop(bounds)
-    emblem.thumbnail((28, 28), Image.Resampling.LANCZOS)
-
-    image = Image.new("RGBA", (32, 32), TRANSPARENT)
-    image.alpha_composite(emblem, ((32 - emblem.width) // 2, (32 - emblem.height) // 2))
-    pixels = image.load()
-    for y in range(32):
-        for x in range(32):
-            pixels[x, y] = (255, 215, 0, 255) if pixels[x, y][3] >= 96 else TRANSPARENT
+    """Draw a self-contained, readable pixel-art hammer and sickle emblem."""
+    image, draw = canvas()
+    shadow, gold, light = "#79551a", "#d7a728", "#ffe17a"
+    # Sickle: two nested arcs give it a chunky Minecraft-scale crescent.
+    draw.arc((3, 2, 28, 28), 115, 310, fill=shadow, width=5)
+    draw.arc((4, 2, 27, 27), 115, 310, fill=gold, width=3)
+    draw.line([(20, 20), (27, 27)], fill=shadow, width=5)
+    draw.line([(20, 20), (27, 27)], fill=gold, width=3)
+    # Hammer sits diagonally across the sickle.
+    draw.line([(8, 25), (21, 8)], fill=shadow, width=5)
+    draw.line([(8, 25), (21, 8)], fill=gold, width=3)
+    draw.polygon([(16, 5), (27, 5), (28, 10), (14, 10)], fill=shadow)
+    draw.polygon([(17, 6), (26, 6), (27, 9), (15, 9)], fill=gold)
+    draw.line([(18, 7), (25, 7)], fill=light)
     return image
 
 

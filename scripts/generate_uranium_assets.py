@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Create the mod's uranium-235 item sprites and worn-equipment textures.
-
-The palette and crystalline accents are based on the generated uranium armour
-concept kept in art_concepts/uranium_armor_reference.png.
-"""
+"""Create the mod's original uranium-235 item sprites and equipment textures."""
 
 from pathlib import Path
 

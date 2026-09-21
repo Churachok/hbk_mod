@@ -1,9 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": {
-      "sprite": "hbk:block/toxic_water",
-      "force_translucent": true
-    }
-  }
-}

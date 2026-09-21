@@ -1,7 +1,0 @@
-{
-  "type": "minecraft:smithing_transform",
-  "template": "minecraft:netherite_upgrade_smithing_template",
-  "base": "minecraft:netherite_leggings",
-  "addition": "hbk:uranium_235",
-  "result": { "id": "hbk:uranium_leggings" }
-}

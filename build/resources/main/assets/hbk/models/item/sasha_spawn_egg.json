@@ -1,6 +1,0 @@
-{
-	"parent": "minecraft:item/generated",
-	"textures": {
-		"layer0": "hbk:item/sasha_spawn_egg"
-	}
-}

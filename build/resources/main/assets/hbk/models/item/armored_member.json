@@ -1,8 +1,0 @@
-{
-  "parent": "hbk:item/attacking_member",
-  "textures": {
-    "white": "minecraft:block/orange_terracotta",
-    "magenta": "minecraft:block/blue_terracotta",
-    "particle": "minecraft:block/orange_terracotta"
-  }
-}

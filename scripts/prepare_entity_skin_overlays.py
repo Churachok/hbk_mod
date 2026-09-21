@@ -56,7 +56,9 @@ def prepare(name: str, source: Path, target: Path) -> None:
 
 def main() -> None:
     project_root = Path(__file__).resolve().parents[1]
-    source_dir = Path(sys.argv[1]) if len(sys.argv) > 1 else project_root / "art_concepts/skin_cleanup/originals"
+    if len(sys.argv) < 2:
+        raise SystemExit("Usage: prepare_entity_skin_overlays.py <source-skin-directory> [output-directory]")
+    source_dir = Path(sys.argv[1])
     output_dir = Path(sys.argv[2]) if len(sys.argv) > 2 else project_root / "src/main/resources/assets/hbk/textures/entity"
     output_dir.mkdir(parents=True, exist_ok=True)
     for name in NAMES:

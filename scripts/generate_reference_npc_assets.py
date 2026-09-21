@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
-"""Build NPC UV textures with the same pixel skin workflow as the existing mobs.
-
-The sheets in /home/kirill/refer_mods are visual references, not usable UV maps.
-This keeps the palette and character details in a reproducible source format.
-"""
+"""Build reproducible NPC UV textures with the project's pixel-skin workflow."""
 from pathlib import Path
 import json
 from PIL import Image, ImageDraw
