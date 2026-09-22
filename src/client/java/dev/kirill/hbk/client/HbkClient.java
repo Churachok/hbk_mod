@@ -24,6 +24,15 @@ public class HbkClient implements ClientModInitializer {
 				ModItems.URANIUM_LEGGINGS, ModItems.URANIUM_BOOTS);
 		EntityRendererRegistry.register(ModEntityTypes.STALIN, context -> new GiantBossRenderer<>(context, HbkMod.id("textures/entity/stalin.png")));
 		EntityRendererRegistry.register(ModEntityTypes.CJ, context -> new GiantBossRenderer<>(context, HbkMod.id("textures/entity/cj.png")));
+		EntityRendererRegistry.register(ModEntityTypes.MAD_LIBERAL, context -> new HumanoidBossRenderer<>(context,
+				ModEntityModelLayers.MAD_LIBERAL, 1.5f,
+				HbkMod.id("textures/entity/mad_liberal.png"),
+				HbkMod.id("textures/entity/mad_liberal_cracked_1.png"),
+				HbkMod.id("textures/entity/mad_liberal_cracked_2.png"),
+				HbkMod.id("textures/entity/mad_liberal_cracked_3.png"),
+				HbkMod.id("textures/entity/mad_liberal_cracked_4.png")));
+		EntityRendererRegistry.register(ModEntityTypes.KIRILL_DOOM, context -> new HumanoidBossRenderer<>(context, 1.5f,
+				HbkMod.id("textures/entity/kirill_doom.png")));
 		EntityRendererRegistry.register(ModEntityTypes.NKVD, NkvdRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.NURSE, NurseRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.KIRILL, KirillRenderer::new);
@@ -39,6 +48,7 @@ public class HbkClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntityTypes.GIANT_ROCKET, context -> new ThrownItemRenderer<>(context, 1.75f, true));
 		EntityRendererRegistry.register(ModEntityTypes.ATTACKING_MEMBER_BULLET, context -> new ThrownItemRenderer<>(context, 0.55f, true));
 		EntityRendererRegistry.register(ModEntityTypes.FOUNDING_PENIS_PROJECTILE, context -> new ThrownItemRenderer<>(context, 3.0f, true));
+		EntityRendererRegistry.register(ModEntityTypes.COLOSSAL_BOMB, context -> new ThrownItemRenderer<>(context, 8.0f, true));
 		EntityRendererRegistry.register(ModEntityTypes.FLYING_CARPET, FlyingCarpetRenderer::new);
 		LivingEntityRenderLayerRegistrationCallback.EVENT.register((entityType, renderer, helper, context) -> {
 			if (entityType == EntityTypes.PLAYER) {

@@ -1,0 +1,14 @@
+{
+	"type": "minecraft:entity",
+	"pools": [
+		{
+			"rolls": 1,
+			"entries": [{"type": "minecraft:item", "name": "hbk:armored_member"}]
+		},
+		{
+			"rolls": 1,
+			"entries": [{"type": "minecraft:item", "name": "hbk:uranium_chestplate"}]
+		}
+	],
+	"random_sequence": "hbk:entities/mad_liberal"
+}

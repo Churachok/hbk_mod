@@ -1,0 +1,10 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"category": "misc",
+	"ingredients": [
+		"minecraft:diamond_sword",
+		"hbk:attacking_member",
+		"minecraft:quartz"
+	],
+	"result": {"id": "hbk:kirill_doom_spawn_egg"}
+}
