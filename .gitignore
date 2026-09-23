@@ -8,6 +8,8 @@ logs/
 
 # Local/generated helper data
 data/
+!src/main/resources/data/
+!src/main/resources/data/**
 __pycache__/
 *.py[cod]
 

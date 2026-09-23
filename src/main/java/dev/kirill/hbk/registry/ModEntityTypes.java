@@ -15,6 +15,7 @@ import dev.kirill.hbk.entity.KirillEntity;
 import dev.kirill.hbk.entity.LizaEntity;
 import dev.kirill.hbk.entity.NkvdEntity;
 import dev.kirill.hbk.entity.NurseEntity;
+import dev.kirill.hbk.entity.PinkFurryWolfEntity;
 import dev.kirill.hbk.entity.StalinEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
@@ -145,6 +146,10 @@ public class ModEntityTypes {
 			EntityType.Builder.<LexEntity>of(LexEntity::new, MobCategory.CREATURE)
 					.sized(0.6f, 0.7f).eyeHeight(0.35f).clientTrackingRange(8).updateInterval(3));
 
+	public static final EntityType<PinkFurryWolfEntity> PINK_FURRY_WOLF = register("furry_wolf",
+			EntityType.Builder.<PinkFurryWolfEntity>of(PinkFurryWolfEntity::new, MobCategory.CREATURE)
+					.sized(0.7f, 1.95f).eyeHeight(1.72f).clientTrackingRange(8).updateInterval(3));
+
 	private static <T extends GiantBossEntity> EntityType.Builder<T> giant(EntityType.EntityFactory<T> factory) {
 		return EntityType.Builder.of(factory, MobCategory.MONSTER)
 				.sized(GiantBossEntity.HITBOX_WIDTH, GiantBossEntity.HITBOX_HEIGHT)
@@ -178,5 +183,6 @@ public class ModEntityTypes {
 		FabricDefaultAttributeRegistry.register(SASHA, ReferenceNpcEntity.createAttributes(20.0));
 		FabricDefaultAttributeRegistry.register(VLAD, ReferenceNpcEntity.createAttributes(20.0));
 		FabricDefaultAttributeRegistry.register(LEX, LexEntity.createAttributes().add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 20.0));
+		FabricDefaultAttributeRegistry.register(PINK_FURRY_WOLF, PinkFurryWolfEntity.createAttributes());
 	}
 }
