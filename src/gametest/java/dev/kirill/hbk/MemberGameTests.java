@@ -342,14 +342,24 @@ public final class MemberGameTests {
 				"The recipe must yield the transformation item");
 
 		var player = test.makeMockServerPlayerInLevel();
+		BlockPos obstruction = null;
 		try {
 			player.setPos(Vec3.atCenterOf(test.absolutePos(new BlockPos(2, 250, 2))));
+			obstruction = BlockPos.containing(player.position()).offset(2, 1, 0);
+			level.setBlockAndUpdate(obstruction, Blocks.OBSIDIAN.defaultBlockState());
 			player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.FOUNDING_PENIS));
 			test.assertTrue(ModItems.FOUNDING_PENIS.use(level, player, InteractionHand.MAIN_HAND).consumesAction(),
-					"Right click must start the transformation");
+					"Right click must start the transformation even without clear giant-sized space");
 			MechanicsPlayerData data = (MechanicsPlayerData) player;
 			test.assertTrue(data.hbk$getProgenitorTicks() == 1200 && ProgenitorTransformation.isActive(player),
 					"The giant form must start with 60 seconds remaining");
+			test.assertTrue(player.getMaxHealth() == ProgenitorTransformation.FORM_MAX_HEALTH
+					&& player.getHealth() == ProgenitorTransformation.FORM_MAX_HEALTH,
+					"The giant form must have 100 HP and start fully healed");
+			test.assertTrue(Math.abs(player.getAttributeValue(
+					net.minecraft.world.entity.ai.attributes.Attributes.JUMP_STRENGTH)
+					- ProgenitorTransformation.FORM_JUMP_STRENGTH) < 0.0001,
+					"The giant form must be able to jump over trees");
 			test.assertTrue(done(player, advancement(test, "founding_penis")),
 					"Transforming must award the Founding Penis advancement");
 			test.assertTrue(player.getItemInHand(InteractionHand.MAIN_HAND).getCount() == 1,
@@ -375,7 +385,10 @@ public final class MemberGameTests {
 			ProgenitorTransformation.tick(player);
 			test.assertTrue(data.hbk$getProgenitorTicks() == 0 && !ProgenitorTransformation.isActive(player),
 					"The player must return to normal after the final tick");
+			test.assertTrue(player.getMaxHealth() == 20.0f && player.getHealth() == 20.0f,
+					"The temporary health bonus must be removed with the giant form");
 		} finally {
+			if (obstruction != null) level.removeBlock(obstruction, false);
 			removePlayer(test, player);
 		}
 		test.succeed();

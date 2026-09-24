@@ -86,7 +86,7 @@ public final class MadLiberalEntity extends HumanoidBossEntity {
 		if (this.slamCooldown > 0) this.slamCooldown--;
 
 		if (this.tickCount % 5 == 0 && this.getDeltaMovement().horizontalDistanceSqr() > 0.005) {
-			this.breakWeakBlocks(level, 1, 1, 1.5f);
+			this.breakWeakBlocks(level, 1, 0, 2, 1.5f);
 		}
 
 		LivingEntity target = this.getTarget();
@@ -137,8 +137,12 @@ public final class MadLiberalEntity extends HumanoidBossEntity {
 	private void continueRam(ServerLevel level) {
 		this.ramTicks--;
 		double speed = this.isPhaseTwo() ? 1.25 : 0.85;
-		this.setDeltaMovement(this.ramDirection.x * speed, this.getDeltaMovement().y, this.ramDirection.z * speed);
-		this.breakWeakBlocks(level, 1, 1, 2.0f);
+		double verticalSpeed = this.getDeltaMovement().y;
+		if (this.horizontalCollision && this.onGround()) {
+			verticalSpeed = 0.65;
+		}
+		this.setDeltaMovement(this.ramDirection.x * speed, verticalSpeed, this.ramDirection.z * speed);
+		this.breakWeakBlocks(level, 1, 0, 2, 2.0f);
 		AABB impact = this.getBoundingBox().inflate(0.8, 0.3, 0.8);
 		for (LivingEntity victim : level.getEntitiesOfClass(LivingEntity.class, impact,
 				entity -> entity != this && entity.isAlive())) {

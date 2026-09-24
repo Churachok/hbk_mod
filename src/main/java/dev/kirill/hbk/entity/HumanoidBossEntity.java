@@ -76,12 +76,17 @@ public abstract class HumanoidBossEntity extends Monster {
 
 	protected void breakWeakBlocks(ServerLevel level, int horizontalRadius, int verticalRadius,
 			float maximumHardness) {
+		this.breakWeakBlocks(level, horizontalRadius, -verticalRadius, verticalRadius, maximumHardness);
+	}
+
+	protected void breakWeakBlocks(ServerLevel level, int horizontalRadius, int minimumYOffset,
+			int maximumYOffset, float maximumHardness) {
 		if (!level.getGameRules().get(GameRules.MOB_GRIEFING)) {
 			return;
 		}
 		BlockPos center = this.blockPosition();
 		for (int x = -horizontalRadius; x <= horizontalRadius; x++) {
-			for (int y = -verticalRadius; y <= verticalRadius; y++) {
+			for (int y = minimumYOffset; y <= maximumYOffset; y++) {
 				for (int z = -horizontalRadius; z <= horizontalRadius; z++) {
 					BlockPos pos = center.offset(x, y, z);
 					BlockState state = level.getBlockState(pos);

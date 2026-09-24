@@ -16,7 +16,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 /** Keeps the temporary giant form on the player, so their inventory and controls remain intact. */
@@ -25,13 +24,23 @@ public final class ProgenitorTransformation {
 	public static final float SCALE = 16.0f;
 	public static final float WIDTH = 0.6f * SCALE;
 	public static final float HEIGHT = 1.8f * SCALE;
-	public static final float TRANSFORMATION_EXPLOSION_POWER = 20.0f;
+	public static final float TRANSFORMATION_EXPLOSION_POWER = 30.0f;
 	public static final float PROJECTILE_EXPLOSION_POWER = 12.0f;
 	public static final float BLAST_EXPLOSION_POWER = 10.0f;
+	public static final float FORM_MAX_HEALTH = 100.0f;
+	public static final double FORM_JUMP_STRENGTH = 1.0;
 	public static final int BLAST_COOLDOWN_TICKS = 60 * 20;
 	public static final Identifier SCALE_MODIFIER_ID = HbkMod.id("progenitor_scale");
+	public static final Identifier MAX_HEALTH_MODIFIER_ID = HbkMod.id("progenitor_max_health");
+	public static final Identifier JUMP_STRENGTH_MODIFIER_ID = HbkMod.id("progenitor_jump_strength");
 	private static final AttributeModifier SCALE_MODIFIER = new AttributeModifier(
 			SCALE_MODIFIER_ID, SCALE - 1.0, AttributeModifier.Operation.ADD_VALUE
+	);
+	private static final AttributeModifier MAX_HEALTH_MODIFIER = new AttributeModifier(
+			MAX_HEALTH_MODIFIER_ID, FORM_MAX_HEALTH - 20.0, AttributeModifier.Operation.ADD_VALUE
+	);
+	private static final AttributeModifier JUMP_STRENGTH_MODIFIER = new AttributeModifier(
+			JUMP_STRENGTH_MODIFIER_ID, FORM_JUMP_STRENGTH - 0.42, AttributeModifier.Operation.ADD_VALUE
 	);
 
 	private ProgenitorTransformation() {
@@ -56,17 +65,9 @@ public final class ProgenitorTransformation {
 				|| data.hbk$getProgenitorTicks() > 0 || isActive(player)) {
 			return false;
 		}
-		double halfWidth = WIDTH / 2.0;
-		AABB giantBounds = new AABB(
-				player.getX() - halfWidth, player.getY(), player.getZ() - halfWidth,
-				player.getX() + halfWidth, player.getY() + HEIGHT, player.getZ() + halfWidth
-		);
-		if (!player.level().noCollision(player, giantBounds)) {
-			player.sendOverlayMessage(Component.translatable("message.hbk.founding_penis.no_space"));
-			return false;
-		}
 		data.hbk$setProgenitorTicks(DURATION_TICKS);
-		setScaled(player, true);
+		setFormAttributes(player, true);
+		player.setHealth(player.getMaxHealth());
 		player.setIgnoreFallDamageFromCurrentImpulse(true, player.position());
 		player.applyPostImpulseGraceTime(40);
 		MemberDestruction.explode((ServerLevel) player.level(), player,
@@ -127,29 +128,41 @@ public final class ProgenitorTransformation {
 			if (ticks > 0) {
 				data.hbk$setProgenitorTicks(0);
 			}
-			setScaled(player, false);
+			setFormAttributes(player, false);
 			return;
 		}
 		if (ticks == 1) {
 			data.hbk$setProgenitorTicks(0);
-			setScaled(player, false);
+			setFormAttributes(player, false);
 			player.sendOverlayMessage(Component.translatable("message.hbk.founding_penis.ended"));
 		} else {
-			setScaled(player, true);
+			setFormAttributes(player, true);
 			data.hbk$setProgenitorTicks(ticks - 1);
 		}
 	}
 
-	private static void setScaled(ServerPlayer player, boolean enabled) {
+	private static void setFormAttributes(ServerPlayer player, boolean enabled) {
 		AttributeInstance scale = player.getAttribute(Attributes.SCALE);
-		if (scale == null || scale.hasModifier(SCALE_MODIFIER_ID) == enabled) {
+		boolean dimensionsChanged = scale != null && scale.hasModifier(SCALE_MODIFIER_ID) != enabled;
+		updateModifier(scale, SCALE_MODIFIER, enabled);
+		updateModifier(player.getAttribute(Attributes.MAX_HEALTH), MAX_HEALTH_MODIFIER, enabled);
+		updateModifier(player.getAttribute(Attributes.JUMP_STRENGTH), JUMP_STRENGTH_MODIFIER, enabled);
+		if (dimensionsChanged) {
+			player.refreshDimensions();
+		}
+		if (!enabled && player.getHealth() > player.getMaxHealth()) {
+			player.setHealth(player.getMaxHealth());
+		}
+	}
+
+	private static void updateModifier(AttributeInstance attribute, AttributeModifier modifier, boolean enabled) {
+		if (attribute == null) {
 			return;
 		}
 		if (enabled) {
-			scale.addOrUpdateTransientModifier(SCALE_MODIFIER);
+			attribute.addOrUpdateTransientModifier(modifier);
 		} else {
-			scale.removeModifier(SCALE_MODIFIER_ID);
+			attribute.removeModifier(modifier.id());
 		}
-		player.refreshDimensions();
 	}
 }
