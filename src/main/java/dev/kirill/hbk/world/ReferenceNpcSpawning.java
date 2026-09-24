@@ -29,9 +29,9 @@ public final class ReferenceNpcSpawning {
 				MobCategory.CREATURE, ModEntityTypes.GRISHA, 2, 1, 2);
 		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.DESERT),
 				MobCategory.CREATURE, ModEntityTypes.GOSHA, 2, 1, 1);
-		// Copy the vanilla sheep spawn entry: the same biomes, weight 12 and groups of four.
+		// Keep sheep biomes and group size, with a slightly higher weight than vanilla sheep (12).
 		BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(net.minecraft.world.entity.EntityTypes.SHEEP),
-				MobCategory.CREATURE, ModEntityTypes.PINK_FURRY_WOLF, 12, 4, 4);
+				MobCategory.CREATURE, ModEntityTypes.PINK_FURRY_WOLF, 14, 4, 4);
 		for (var type : java.util.List.of(ModEntityTypes.ANTON, ModEntityTypes.GRISHA)) {
 			SpawnPlacements.register(type, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
 					(entityType, level, reason, pos, random) -> level.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON)

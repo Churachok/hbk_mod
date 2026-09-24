@@ -228,6 +228,20 @@ public final class NpcGameTests {
 	}
 
 	@GameTest
+	public void catgirlIsPeacefulAndUsesHerOwnEgg(GameTestHelper test) {
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var catgirl = test.spawn(ModEntityTypes.CATGIRL, 2, 2, 2);
+		test.assertTrue(catgirl.getMaxHealth() == 20, "Catgirl must have 20 HP");
+		test.assertTrue(catgirl.getTarget() == null && !catgirl.canAttack(player), "Catgirl must be completely peaceful");
+		test.assertTrue(ModItems.CATGIRL_SPAWN_EGG instanceof net.minecraft.world.item.SpawnEggItem,
+				"Catgirl must have her own spawn egg");
+		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+				.getKey(ModEntityTypes.CATGIRL).equals(HbkMod.id("catgirl")),
+				"Catgirl summon identifier must be hbk:catgirl");
+		test.succeed();
+	}
+
+	@GameTest
 	public void lexSurvivesDamageAndKill(GameTestHelper test) {
 		var lex = test.spawn(ModEntityTypes.LEX, 1, 2, 1);
 		var level = test.getLevel();

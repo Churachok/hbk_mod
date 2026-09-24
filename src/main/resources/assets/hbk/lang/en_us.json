@@ -153,5 +153,7 @@
 	"advancement.hbk.first_season_finished.title": "The First Seazon Is Over",
 	"advancement.hbk.first_season_finished.description": "Defeat the Mad Liberal",
 	"advancement.hbk.kirill_end_of_world.title": "And Then She Packed Up and Left for Germany…",
-	"advancement.hbk.kirill_end_of_world.description": "Survive the end of the world and defeat Kirill"
+	"advancement.hbk.kirill_end_of_world.description": "Survive the end of the world and defeat Kirill",
+	"entity.hbk.catgirl": "Catgirl",
+	"item.hbk.catgirl_spawn_egg": "Catgirl Spawn Egg"
 }
