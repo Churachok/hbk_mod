@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvent;
 
 public final class ModSounds {
 	public static final SoundEvent GOOSE_HONK = register("goose_honk");
+	public static final SoundEvent MUSIC_DISC_HBKAU = register("music_disc.hbkau");
 
 	private ModSounds() {
 	}

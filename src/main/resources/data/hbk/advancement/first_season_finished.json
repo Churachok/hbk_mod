@@ -1,0 +1,13 @@
+{
+	"parent": "hbk:hentai_beginnings",
+	"display": {
+		"icon": {"id": "hbk:armored_member"},
+		"title": {"translate": "advancement.hbk.first_season_finished.title"},
+		"description": {"translate": "advancement.hbk.first_season_finished.description"},
+		"frame": "challenge",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {"kill": {"trigger": "minecraft:impossible"}}
+}

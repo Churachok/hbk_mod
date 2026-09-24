@@ -12,11 +12,14 @@ import dev.kirill.hbk.entity.GiantRocketEntity;
 import dev.kirill.hbk.entity.FlyingBlockEntity;
 import dev.kirill.hbk.entity.FlyingCarpetEntity;
 import dev.kirill.hbk.entity.KirillEntity;
+import dev.kirill.hbk.entity.KirillDoomEntity;
 import dev.kirill.hbk.entity.LizaEntity;
+import dev.kirill.hbk.entity.MadLiberalEntity;
 import dev.kirill.hbk.entity.NkvdEntity;
 import dev.kirill.hbk.entity.NurseEntity;
 import dev.kirill.hbk.entity.PinkFurryWolfEntity;
 import dev.kirill.hbk.entity.StalinEntity;
+import dev.kirill.hbk.entity.ColossalBombEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,6 +38,20 @@ public class ModEntityTypes {
 	public static final EntityType<CjEntity> CJ = register(
 			"cj",
 			giant(CjEntity::new)
+	);
+
+	public static final EntityType<MadLiberalEntity> MAD_LIBERAL = register(
+			"mad_liberal",
+			EntityType.Builder.<MadLiberalEntity>of(MadLiberalEntity::new, MobCategory.MONSTER)
+					.sized(0.9f, 2.7f).eyeHeight(2.43f).canSpawnFarFromPlayer()
+					.clientTrackingRange(12).updateInterval(2).notInPeaceful()
+	);
+
+	public static final EntityType<KirillDoomEntity> KIRILL_DOOM = register(
+			"kirill_doom",
+			EntityType.Builder.<KirillDoomEntity>of(KirillDoomEntity::new, MobCategory.MONSTER)
+					.sized(0.9f, 2.7f).eyeHeight(2.43f).canSpawnFarFromPlayer()
+					.clientTrackingRange(16).updateInterval(2).notInPeaceful()
 	);
 
 	public static final EntityType<NkvdEntity> NKVD = register(
@@ -96,6 +113,12 @@ public class ModEntityTypes {
 					.sized(2.0f, 2.0f)
 					.clientTrackingRange(16)
 					.updateInterval(1)
+	);
+
+	public static final EntityType<ColossalBombEntity> COLOSSAL_BOMB = register(
+			"colossal_bomb",
+			EntityType.Builder.<ColossalBombEntity>of(ColossalBombEntity::new, MobCategory.MISC)
+					.sized(2.0f, 8.0f).clientTrackingRange(16).updateInterval(2)
 	);
 
 	public static final EntityType<FlyingBlockEntity> FLYING_BLOCK = register(
@@ -171,6 +194,8 @@ public class ModEntityTypes {
 	public static void registerAttributes() {
 		FabricDefaultAttributeRegistry.register(STALIN, StalinEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(CJ, CjEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(MAD_LIBERAL, MadLiberalEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(KIRILL_DOOM, KirillDoomEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(NKVD, NkvdEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(NURSE, NurseEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(KIRILL, KirillEntity.createAttributes());

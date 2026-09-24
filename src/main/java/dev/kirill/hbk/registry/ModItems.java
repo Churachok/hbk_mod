@@ -31,6 +31,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.JukeboxSong;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.core.component.DataComponents;
@@ -46,6 +47,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ModItems {
+	private static final ResourceKey<JukeboxSong> HBKAU_JUKEBOX_SONG = ResourceKey.create(
+			Registries.JUKEBOX_SONG,
+			HbkMod.id("hbkau")
+	);
+
 	public static final Item INFECTED_DIRT = block("infected_dirt", ModBlocks.INFECTED_DIRT);
 	public static final Item RADIOACTIVE_STONE = block("radioactive_stone", ModBlocks.RADIOACTIVE_STONE);
 	public static final Item ASH_SOIL = block("ash_soil", ModBlocks.ASH_SOIL);
@@ -186,6 +192,15 @@ public class ModItems {
 			new Item.Properties().pickaxe(ToolMaterial.IRON, 1.0f, -2.8f)
 	);
 
+	public static final Item MUSIC_DISC_HBKAU = register(
+			"music_disc_hbkau",
+			Item::new,
+			new Item.Properties()
+					.stacksTo(1)
+					.rarity(net.minecraft.world.item.Rarity.UNCOMMON)
+					.jukeboxPlayable(HBKAU_JUKEBOX_SONG)
+	);
+
 	public static final Item REDSTONE_PICKAXE = register(
 			"redstone_pickaxe",
 			Item::new,
@@ -233,6 +248,18 @@ public class ModItems {
 			"cj_spawn_egg",
 			SpawnEggItem::new,
 			new Item.Properties().spawnEgg(ModEntityTypes.CJ)
+	);
+
+	public static final Item MAD_LIBERAL_SPAWN_EGG = register(
+			"mad_liberal_spawn_egg",
+			SpawnEggItem::new,
+			new Item.Properties().spawnEgg(ModEntityTypes.MAD_LIBERAL)
+	);
+
+	public static final Item KIRILL_DOOM_SPAWN_EGG = register(
+			"kirill_doom_spawn_egg",
+			SpawnEggItem::new,
+			new Item.Properties().spawnEgg(ModEntityTypes.KIRILL_DOOM)
 	);
 
 	public static final Item NURSE_SPAWN_EGG = register(
@@ -354,6 +381,8 @@ public class ModItems {
 		CreativeModeTabEvents.modifyOutputEvent(spawnEggs).register(output -> {
 			output.accept(STALIN_SPAWN_EGG);
 			output.accept(CJ_SPAWN_EGG);
+			output.accept(MAD_LIBERAL_SPAWN_EGG);
+			output.accept(KIRILL_DOOM_SPAWN_EGG);
 			output.accept(NURSE_SPAWN_EGG);
 			output.accept(ANTON_SPAWN_EGG);
 			output.accept(DENIS_SPAWN_EGG);
@@ -388,6 +417,7 @@ public class ModItems {
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
 			output.accept(FLYING_CARPET);
 			output.accept(BALALAIKA_PICKAXE);
+			output.accept(MUSIC_DISC_HBKAU);
 			output.accept(REDSTONE_PICKAXE);
 			output.accept(SHOVEL_SWORD);
 			output.accept(WESTERN_CHESTPLATE);

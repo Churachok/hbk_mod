@@ -1,0 +1,8 @@
+{
+  "comparator_output": 13,
+  "description": {
+    "translate": "jukebox_song.hbk.hbkau"
+  },
+  "length_in_seconds": 65.875,
+  "sound_event": "hbk:music_disc.hbkau"
+}

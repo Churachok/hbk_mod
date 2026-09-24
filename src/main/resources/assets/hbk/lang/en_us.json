@@ -1,6 +1,9 @@
 {
 	"entity.hbk.stalin": "hbk",
 	"entity.hbk.cj": "Giant CJ",
+	"entity.hbk.mad_liberal": "Mad Liberal",
+	"entity.hbk.kirill_doom": "Kirill — End of the World",
+	"entity.hbk.colossal_bomb": "Doomsday Colossal Penis",
 	"entity.hbk.nkvd": "NKVD Officer",
 	"entity.hbk.nurse": "Nurse",
 	"entity.hbk.kirill": "Kirill",
@@ -13,6 +16,8 @@
 	"item.hbk.flying_carpet": "Flying Carpet",
 	"item.hbk.stalin_spawn_egg": "hbk Spawn Egg",
 	"item.hbk.cj_spawn_egg": "Giant CJ Spawn Egg",
+	"item.hbk.mad_liberal_spawn_egg": "Summon Mad Liberal",
+	"item.hbk.kirill_doom_spawn_egg": "Summon Kirill — End of the World",
 	"item.hbk.nurse_spawn_egg": "Nurse Spawn Egg",
 	"item.hbk.stew": "Canned Stew",
 	"item.hbk.bandage": "Bandage",
@@ -24,6 +29,8 @@
 	"entity.hbk.flying_block": "Animated Block",
 	"item.hbk.western_chestplate": "Western Chestplate",
 	"item.hbk.balalaika_pickaxe": "Balalaika Pickaxe",
+	"item.hbk.music_disc_hbkau": "Music Disc",
+	"jukebox_song.hbk.hbkau": "Ivan Boyko - HBKau",
 	"item.hbk.currant_tincture": "Currant Tincture",
 	"item.hbk.ration": "Ration",
 	"item.hbk.sushka": "Sushka",
@@ -142,5 +149,9 @@
 	"message.hbk.founding_penis.ended": "You returned to your normal form",
 	"message.hbk.founding_penis.cooldown": "Blast ready in %s s",
 	"advancement.hbk.founding_penis.title": "And Then They United...",
-	"advancement.hbk.founding_penis.description": "Transform into Founding Penis"
+	"advancement.hbk.founding_penis.description": "Transform into Founding Penis",
+	"advancement.hbk.first_season_finished.title": "The First Seazon Is Over",
+	"advancement.hbk.first_season_finished.description": "Defeat the Mad Liberal",
+	"advancement.hbk.kirill_end_of_world.title": "And Then She Packed Up and Left for Germany…",
+	"advancement.hbk.kirill_end_of_world.description": "Survive the end of the world and defeat Kirill"
 }

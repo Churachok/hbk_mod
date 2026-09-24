@@ -1,0 +1,13 @@
+{
+	"parent": "hbk:first_season_finished",
+	"display": {
+		"icon": {"id": "hbk:founding_penis"},
+		"title": {"translate": "advancement.hbk.kirill_end_of_world.title"},
+		"description": {"translate": "advancement.hbk.kirill_end_of_world.description"},
+		"frame": "challenge",
+		"show_toast": true,
+		"announce_to_chat": true,
+		"hidden": false
+	},
+	"criteria": {"kill": {"trigger": "minecraft:impossible"}}
+}

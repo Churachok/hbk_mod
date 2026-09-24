@@ -1,6 +1,9 @@
 {
 	"entity.hbk.stalin": "Гигантский Сталин",
 	"entity.hbk.cj": "Гигантский СиДжей",
+	"entity.hbk.mad_liberal": "Безумный либерал",
+	"entity.hbk.kirill_doom": "Кирилл — конец света",
+	"entity.hbk.colossal_bomb": "Колоссальный penis конца света",
 	"entity.hbk.nkvd": "Сотрудник НКВД",
 	"entity.hbk.nurse": "Медсестра",
 	"entity.hbk.kirill": "Кирилл",
@@ -13,6 +16,8 @@
 	"item.hbk.flying_carpet": "Ковёр-самолёт",
 	"item.hbk.stalin_spawn_egg": "Яйцо призыва гигантского Сталина",
 	"item.hbk.cj_spawn_egg": "Яйцо призыва гигантского СиДжея",
+	"item.hbk.mad_liberal_spawn_egg": "Призыв Безумного либерала",
+	"item.hbk.kirill_doom_spawn_egg": "Призыв Кирилла — конца света",
 	"item.hbk.nurse_spawn_egg": "Яйцо призыва медсестры",
 	"item.hbk.stew": "Тушёнка",
 	"item.hbk.bandage": "Бинт",
@@ -24,6 +29,8 @@
 	"entity.hbk.flying_block": "Оживлённый блок",
 	"item.hbk.western_chestplate": "Западный нагрудник",
 	"item.hbk.balalaika_pickaxe": "Кирка-балалайка",
+	"item.hbk.music_disc_hbkau": "Музыкальная пластинка",
+	"jukebox_song.hbk.hbkau": "Иван Бойко - ХБКау",
 	"item.hbk.currant_tincture": "Настойка смородины",
 	"item.hbk.ration": "Паёк",
 	"item.hbk.sushka": "Сушка",
@@ -142,5 +149,9 @@
 	"message.hbk.founding_penis.ended": "Вы снова приняли прежний облик",
 	"message.hbk.founding_penis.cooldown": "Взрыв будет доступен через %s с",
 	"advancement.hbk.founding_penis.title": "И тут они объединились...",
-	"advancement.hbk.founding_penis.description": "Превратитесь в Founding Penis"
+	"advancement.hbk.founding_penis.description": "Превратитесь в Founding Penis",
+	"advancement.hbk.first_season_finished.title": "Первый чезон окончен",
+	"advancement.hbk.first_season_finished.description": "Одолейте Безумного либерала",
+	"advancement.hbk.kirill_end_of_world.title": "И тут она собралась и уехала в Германию…",
+	"advancement.hbk.kirill_end_of_world.description": "Переживите конец света и победите Кирилла"
 }
