@@ -19,6 +19,7 @@ import dev.kirill.hbk.network.ModNetworking;
 public class HbkClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		KirillDoomMusic.register();
 		ModEntityModelLayers.register();
 		ArmorRenderer.register(UraniumArmorRenderer::new, ModItems.URANIUM_HELMET, ModItems.URANIUM_CHESTPLATE,
 				ModItems.URANIUM_LEGGINGS, ModItems.URANIUM_BOOTS);
