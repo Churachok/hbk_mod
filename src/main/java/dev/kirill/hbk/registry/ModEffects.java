@@ -4,6 +4,7 @@ import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.effect.SimpleModEffect;
 import dev.kirill.hbk.effect.SoulfulnessEffect;
 import dev.kirill.hbk.effect.DiabetesEffect;
+import dev.kirill.hbk.effect.GoshasRageEffect;
 import dev.kirill.hbk.effect.HeartyLunchEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -76,6 +77,18 @@ public final class ModEffects {
 							Attributes.MOVEMENT_SPEED,
 							HbkMod.id("heaviness_speed"),
 							-0.20,
+							AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
+					)
+	);
+
+	public static final Holder.Reference<MobEffect> GOSHAS_RAGE = Registry.registerForHolder(
+			BuiltInRegistries.MOB_EFFECT,
+			HbkMod.id("goshas_rage"),
+			new GoshasRageEffect(0x00A7C8)
+					.addAttributeModifier(
+							Attributes.MAX_HEALTH,
+							HbkMod.id("goshas_rage_health"),
+							-0.5,
 							AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
 					)
 	);

@@ -4,9 +4,13 @@
 	"compatibilityLevel": "JAVA_25",
 	"client": [
 		"AvatarRendererMixin",
+		"EntityRendererMixin",
+		"GameRendererMixin",
+		"GameRendererInvoker",
 		"LivingEntityRendererMixin",
 		"ItemInHandLayerMixin",
 		"KeyboardInputMixin",
+		"LevelRendererMixin",
 		"MinecraftAttackMixin"
 	],
 	"injectors": {

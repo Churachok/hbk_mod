@@ -1,5 +1,7 @@
 package dev.kirill.hbk;
 
+import dev.kirill.hbk.effect.GoshasRageEffect;
+import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
 import dev.kirill.hbk.world.ModWorldData;
@@ -8,6 +10,7 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.Vec3;
 
 public final class NpcGameTests {
 	@GameTest
@@ -88,6 +91,49 @@ public final class NpcGameTests {
 			test.assertTrue(buckwheat == 1, "Anton must always drop exactly one buckwheat, even without a player kill");
 			anton.discard();
 		}
+	}
+
+	@GameTest
+	public void goshasRagePotionDropsAtRequestedRates(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		int goshaPotions = 0;
+		int pillagerPotions = 0;
+		for (int trial = 0; trial < 256; trial++) {
+			var gosha = test.spawn(ModEntityTypes.GOSHA, 2, 2, 2);
+			gosha.hurtServer(level, level.damageSources().playerAttack(player), 1000);
+			goshaPotions += collectRagePotions(test);
+			gosha.discard();
+
+			var pillager = test.spawn(EntityTypes.PILLAGER, 2, 2, 2);
+			pillager.hurtServer(level, level.damageSources().playerAttack(player), 1000);
+			pillagerPotions += collectRagePotions(test);
+			pillager.discard();
+		}
+		test.assertTrue(goshaPotions >= 90 && goshaPotions <= 170,
+				"Gosha must drop the potion approximately 50% of the time, got " + goshaPotions + "/256");
+		test.assertTrue(pillagerPotions >= 10 && pillagerPotions <= 45,
+				"Pillagers must drop the potion approximately 10% of the time, got " + pillagerPotions + "/256");
+		var drinker = test.spawn(EntityTypes.COW, 3, 2, 2);
+		ModItems.GOSHAS_RAGE_BOTTLE.finishUsingItem(
+				new net.minecraft.world.item.ItemStack(ModItems.GOSHAS_RAGE_BOTTLE), level, drinker);
+		var rage = drinker.getEffect(ModEffects.GOSHAS_RAGE);
+		test.assertTrue(rage != null && rage.getDuration() == GoshasRageEffect.DURATION_TICKS,
+				"The registered bottle item must apply two minutes of Gosha's Rage when drunk");
+		drinker.discard();
+		test.succeed();
+	}
+
+	private static int collectRagePotions(GameTestHelper test) {
+		int count = 0;
+		for (var entity : test.getEntities(EntityTypes.ITEM)) {
+			var stack = entity.getItem();
+			if (stack.is(ModItems.GOSHAS_RAGE_BOTTLE)) {
+				count += stack.getCount();
+			}
+			entity.discard();
+		}
+		return count;
 	}
 
 	@GameTest
@@ -238,6 +284,55 @@ public final class NpcGameTests {
 		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
 				.getKey(ModEntityTypes.CATGIRL).equals(HbkMod.id("catgirl")),
 				"Catgirl summon identifier must be hbk:catgirl");
+		test.succeed();
+	}
+
+	@GameTest
+	public void goshasRageHalvesHealthAndTriplesPlayerDamage(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var gosha = test.spawn(ModEntityTypes.GOSHA, 2, 2, 2);
+		var victim = test.spawn(EntityTypes.COW, 3, 2, 2);
+		var waterPos = test.absolutePos(new net.minecraft.core.BlockPos(1, 2, 1));
+		try {
+			player.invulnerableTime = 0;
+			player.setPos(test.absoluteVec(new Vec3(2.5, 2, 2.5)));
+			player.setHealth(player.getMaxHealth());
+			test.assertTrue(gosha.doHurtTarget(level, player), "Gosha's successful hit must hurt the player");
+			var rage = player.getEffect(ModEffects.GOSHAS_RAGE);
+			test.assertTrue(rage != null && rage.getDuration() == GoshasRageEffect.DURATION_TICKS,
+					"Gosha's hit must apply two minutes of rage");
+			test.assertTrue(player.getMaxHealth() == 10.0f && player.getHealth() <= 10.0f,
+					"Gosha's Rage must halve maximum health and clamp current health");
+
+			victim.setHealth(victim.getMaxHealth());
+			victim.hurtServer(level, level.damageSources().playerAttack(player), 2.0f);
+			test.assertTrue(victim.getHealth() == victim.getMaxHealth() - 6.0f,
+					"All player-caused damage must be tripled by Gosha's Rage");
+
+			level.setBlockAndUpdate(waterPos, Blocks.WATER.defaultBlockState());
+			victim.addEffect(new net.minecraft.world.effect.MobEffectInstance(ModEffects.GOSHAS_RAGE,
+					GoshasRageEffect.DURATION_TICKS));
+			victim.setPos(Vec3.atCenterOf(waterPos));
+			victim.setHealth(victim.getMaxHealth());
+			victim.tick();
+			test.assertTrue(victim.isInWaterOrRain(), "The water-damage fixture must put its victim in water");
+			victim.tickCount = 20;
+			victim.invulnerableTime = 0;
+			float healthBeforeWater = victim.getHealth();
+			ModEffects.GOSHAS_RAGE.value().applyEffectTick(level, victim, 0);
+			test.assertTrue(victim.getHealth() < healthBeforeWater,
+					"Water contact must damage an entity with Gosha's Rage");
+
+			player.removeEffect(ModEffects.GOSHAS_RAGE);
+			test.assertTrue(player.getMaxHealth() == 20.0f,
+					"Maximum health must return to normal when Gosha's Rage ends");
+		} finally {
+			player.discard();
+			level.removeBlock(waterPos, false);
+			gosha.discard();
+			victim.discard();
+		}
 		test.succeed();
 	}
 

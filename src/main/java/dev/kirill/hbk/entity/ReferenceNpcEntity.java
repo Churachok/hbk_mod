@@ -1,9 +1,13 @@
 package dev.kirill.hbk.entity;
 
+import dev.kirill.hbk.effect.GoshasRageEffect;
+import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,6 +80,16 @@ public class ReferenceNpcEntity extends PathfinderMob {
 				&& source.getEntity() instanceof LivingEntity attacker && this.canAttack(attacker)) {
 			this.arm();
 			this.setTarget(attacker);
+		}
+		return hurt;
+	}
+
+	@Override
+	public boolean doHurtTarget(ServerLevel level, Entity target) {
+		boolean hurt = super.doHurtTarget(level, target);
+		if (hurt && this.isNpc("gosha") && target instanceof Player player) {
+			player.addEffect(new MobEffectInstance(ModEffects.GOSHAS_RAGE,
+					GoshasRageEffect.DURATION_TICKS, 0, false, true, true), this);
 		}
 		return hurt;
 	}
