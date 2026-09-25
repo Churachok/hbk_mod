@@ -123,6 +123,8 @@
 	"item.hbk.vlad_spawn_egg": "Vlad Spawn Egg",
 	"entity.hbk.lex": "Lex",
 	"item.hbk.lex_spawn_egg": "Lex Spawn Egg",
+	"entity.hbk.furry_wolf": "Furry Wolf",
+	"item.hbk.pink_furry_wolf_spawn_egg": "Furry Wolf Spawn Egg",
 	"item.hbk.redstone_pickaxe": "Redstone Pickaxe",
 	"advancement.hbk.hentai_beginnings.title": "The Beginning of Hentai Days",
 	"advancement.hbk.hentai_beginnings.description": "Obtain any one of the seven penis weapons",
@@ -150,5 +152,7 @@
 	"advancement.hbk.first_season_finished.title": "The First Seazon Is Over",
 	"advancement.hbk.first_season_finished.description": "Defeat the Mad Liberal",
 	"advancement.hbk.kirill_end_of_world.title": "And Then She Packed Up and Left for Germany…",
-	"advancement.hbk.kirill_end_of_world.description": "Survive the end of the world and defeat Kirill"
+	"advancement.hbk.kirill_end_of_world.description": "Survive the end of the world and defeat Kirill",
+	"entity.hbk.catgirl": "Catgirl",
+	"item.hbk.catgirl_spawn_egg": "Catgirl Spawn Egg"
 }

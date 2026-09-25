@@ -292,6 +292,14 @@ public class ModItems {
 	public static final Item LEX_SPAWN_EGG = register(
 			"lex_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.LEX));
 
+	public static final Item PINK_FURRY_WOLF_SPAWN_EGG = register(
+			"pink_furry_wolf_spawn_egg", SpawnEggItem::new,
+			new Item.Properties().spawnEgg(ModEntityTypes.PINK_FURRY_WOLF));
+
+	public static final Item CATGIRL_SPAWN_EGG = register(
+			"catgirl_spawn_egg", SpawnEggItem::new,
+			new Item.Properties().spawnEgg(ModEntityTypes.CATGIRL));
+
 	private static <T extends Item> T register(String name, Function<Item.Properties, T> factory, Item.Properties properties) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, HbkMod.id(name));
 		T item = factory.apply(properties.setId(key));
@@ -388,7 +396,8 @@ public class ModItems {
 			output.accept(SASHA_SPAWN_EGG);
 			output.accept(VLAD_SPAWN_EGG);
 			output.accept(LEX_SPAWN_EGG);
-
+			output.accept(PINK_FURRY_WOLF_SPAWN_EGG);
+			output.accept(CATGIRL_SPAWN_EGG);
 		});
 
 		ResourceKey<CreativeModeTab> foodAndDrinks = ResourceKey.create(

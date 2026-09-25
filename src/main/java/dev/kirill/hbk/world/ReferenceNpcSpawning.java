@@ -29,6 +29,9 @@ public final class ReferenceNpcSpawning {
 				MobCategory.CREATURE, ModEntityTypes.GRISHA, 2, 1, 2);
 		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.DESERT),
 				MobCategory.CREATURE, ModEntityTypes.GOSHA, 2, 1, 1);
+		// Keep sheep biomes and group size, with a slightly higher weight than vanilla sheep (12).
+		BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(net.minecraft.world.entity.EntityTypes.SHEEP),
+				MobCategory.CREATURE, ModEntityTypes.PINK_FURRY_WOLF, 14, 4, 4);
 		for (var type : java.util.List.of(ModEntityTypes.ANTON, ModEntityTypes.GRISHA)) {
 			SpawnPlacements.register(type, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
 					(entityType, level, reason, pos, random) -> level.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON)
@@ -36,6 +39,10 @@ public final class ReferenceNpcSpawning {
 		}
 		SpawnPlacements.register(ModEntityTypes.GOSHA, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
 				(type, level, reason, pos, random) -> level.getBlockState(pos.below()).is(net.minecraft.world.level.block.Blocks.SAND)
+						&& level.getRawBrightness(pos, 0) > 8);
+		SpawnPlacements.register(ModEntityTypes.PINK_FURRY_WOLF, SpawnPlacementTypes.ON_GROUND,
+				Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+				(type, level, reason, pos, random) -> level.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON)
 						&& level.getRawBrightness(pos, 0) > 8);
 	}
 

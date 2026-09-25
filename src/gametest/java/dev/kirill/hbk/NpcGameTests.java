@@ -164,6 +164,83 @@ public final class NpcGameTests {
 		test.succeed();
 	}
 
+	@GameTest(maxTicks = 230)
+	public void pinkFurryWolfNeverRetaliates(GameTestHelper test) {
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var wolf = test.spawn(ModEntityTypes.PINK_FURRY_WOLF, 2, 2, 2);
+		boolean hurt = wolf.hurtServer(test.getLevel(), test.getLevel().damageSources().playerAttack(player), 1);
+		test.assertTrue(hurt, "Pink furry wolf must receive ordinary damage");
+		test.assertTrue(wolf.getMaxHealth() == 30, "Pink furry wolf must have 30 HP");
+		test.assertTrue(wolf.getTarget() == null, "Pink furry wolf must never target its attacker");
+		test.assertFalse(wolf.canAttack(player), "Pink furry wolf must be completely peaceful");
+		test.assertTrue(wolf.getMainHandItem().isEmpty(), "Pink furry wolf must not carry a weapon");
+		test.assertTrue(wolf.isFleeingFrom(player), "Pink furry wolf must flee from the entity that hit it");
+		test.assertTrue(wolf.isFleeing(), "Pink furry wolf must enter its synchronized four-legged fleeing state");
+		test.runAfterDelay(199, () -> test.assertTrue(wolf.isFleeing(), "Fleeing must last the full ten seconds"));
+		test.runAfterDelay(202, () -> {
+			test.assertFalse(wolf.isFleeing(), "Pink furry wolf must stop fleeing after ten seconds");
+			test.assertTrue(wolf.getTarget() == null, "Pink furry wolf must remain peaceful after fleeing");
+			test.succeed();
+		});
+	}
+
+	@GameTest
+	public void pinkFurryWolfDropsPinkWool(GameTestHelper test) {
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var level = test.getLevel();
+		int successfulDrops = 0;
+		for (int trial = 0; trial < 256; trial++) {
+			var wolf = test.spawn(ModEntityTypes.PINK_FURRY_WOLF, 2, 2, 2);
+			var color = net.minecraft.world.item.DyeColor.VALUES.get(trial % net.minecraft.world.item.DyeColor.VALUES.size());
+			wolf.setFurColor(color);
+			wolf.hurtServer(level, level.damageSources().playerAttack(player), 1000);
+			test.assertFalse(wolf.isAlive(), "Pink furry wolf drop trial must kill the wolf");
+			for (var entity : test.getEntities(EntityTypes.ITEM)) {
+				if (entity.getItem().is(net.minecraft.world.item.Items.WOOL.pick(color))) {
+					int count = entity.getItem().getCount();
+					test.assertTrue(count >= 1 && count <= 3, "Matching wool drop must contain 1-3 blocks, got " + count);
+					successfulDrops++;
+				} else {
+					test.fail("Furry wolf must not drop wool of a different colour: expected " + color.getName());
+				}
+				entity.discard();
+			}
+			wolf.discard();
+		}
+		test.assertTrue(successfulDrops >= 25 && successfulDrops <= 80,
+				"Expected approximately 20% matching wool drops, got " + successfulDrops + "/256");
+		test.succeed();
+	}
+
+	@GameTest
+	public void pinkFurryWolfSupportsEverySheepColor(GameTestHelper test) {
+		var wolf = test.spawn(ModEntityTypes.PINK_FURRY_WOLF, 2, 2, 2);
+		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+				.getKey(ModEntityTypes.PINK_FURRY_WOLF).equals(HbkMod.id("furry_wolf")),
+				"Furry wolf summon identifier must not contain the old pink prefix");
+		for (var color : net.minecraft.world.item.DyeColor.VALUES) {
+			wolf.setFurColor(color);
+			test.assertTrue(wolf.getFurColor() == color, "Pink furry wolf must retain colour " + color.getName());
+		}
+		test.assertTrue(ModItems.PINK_FURRY_WOLF_SPAWN_EGG instanceof net.minecraft.world.item.SpawnEggItem,
+				"All colour variants must continue to use the single furry wolf spawn egg");
+		test.succeed();
+	}
+
+	@GameTest
+	public void catgirlIsPeacefulAndUsesHerOwnEgg(GameTestHelper test) {
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var catgirl = test.spawn(ModEntityTypes.CATGIRL, 2, 2, 2);
+		test.assertTrue(catgirl.getMaxHealth() == 20, "Catgirl must have 20 HP");
+		test.assertTrue(catgirl.getTarget() == null && !catgirl.canAttack(player), "Catgirl must be completely peaceful");
+		test.assertTrue(ModItems.CATGIRL_SPAWN_EGG instanceof net.minecraft.world.item.SpawnEggItem,
+				"Catgirl must have her own spawn egg");
+		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+				.getKey(ModEntityTypes.CATGIRL).equals(HbkMod.id("catgirl")),
+				"Catgirl summon identifier must be hbk:catgirl");
+		test.succeed();
+	}
+
 	@GameTest
 	public void lexSurvivesDamageAndKill(GameTestHelper test) {
 		var lex = test.spawn(ModEntityTypes.LEX, 1, 2, 1);

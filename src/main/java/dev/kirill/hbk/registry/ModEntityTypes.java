@@ -2,6 +2,7 @@ package dev.kirill.hbk.registry;
 
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.entity.CjEntity;
+import dev.kirill.hbk.entity.CatgirlEntity;
 import dev.kirill.hbk.entity.ReferenceNpcEntity;
 import dev.kirill.hbk.entity.LexEntity;
 import dev.kirill.hbk.entity.SashaEntity;
@@ -17,6 +18,7 @@ import dev.kirill.hbk.entity.LizaEntity;
 import dev.kirill.hbk.entity.MadLiberalEntity;
 import dev.kirill.hbk.entity.NkvdEntity;
 import dev.kirill.hbk.entity.NurseEntity;
+import dev.kirill.hbk.entity.PinkFurryWolfEntity;
 import dev.kirill.hbk.entity.StalinEntity;
 import dev.kirill.hbk.entity.ColossalBombEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
@@ -168,6 +170,14 @@ public class ModEntityTypes {
 			EntityType.Builder.<LexEntity>of(LexEntity::new, MobCategory.CREATURE)
 					.sized(0.6f, 0.7f).eyeHeight(0.35f).clientTrackingRange(8).updateInterval(3));
 
+	public static final EntityType<PinkFurryWolfEntity> PINK_FURRY_WOLF = register("furry_wolf",
+			EntityType.Builder.<PinkFurryWolfEntity>of(PinkFurryWolfEntity::new, MobCategory.CREATURE)
+					.sized(0.7f, 1.95f).eyeHeight(1.72f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<CatgirlEntity> CATGIRL = register("catgirl",
+			EntityType.Builder.<CatgirlEntity>of(CatgirlEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
 	private static <T extends GiantBossEntity> EntityType.Builder<T> giant(EntityType.EntityFactory<T> factory) {
 		return EntityType.Builder.of(factory, MobCategory.MONSTER)
 				.sized(GiantBossEntity.HITBOX_WIDTH, GiantBossEntity.HITBOX_HEIGHT)
@@ -203,5 +213,7 @@ public class ModEntityTypes {
 		FabricDefaultAttributeRegistry.register(SASHA, ReferenceNpcEntity.createAttributes(20.0));
 		FabricDefaultAttributeRegistry.register(VLAD, ReferenceNpcEntity.createAttributes(20.0));
 		FabricDefaultAttributeRegistry.register(LEX, LexEntity.createAttributes().add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 20.0));
+		FabricDefaultAttributeRegistry.register(PINK_FURRY_WOLF, PinkFurryWolfEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(CATGIRL, CatgirlEntity.createAttributes());
 	}
 }
