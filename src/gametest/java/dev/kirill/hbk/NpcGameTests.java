@@ -14,6 +14,28 @@ import net.minecraft.world.phys.Vec3;
 
 public final class NpcGameTests {
 	@GameTest
+	public void hbkCreativeTabContainsEveryModItem(GameTestHelper test) {
+		var tab = net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB
+				.getValue(ModItems.HBK_CREATIVE_TAB_KEY);
+		test.assertTrue(tab != null, "HBK creative tab must be registered");
+		test.assertTrue(HbkMod.id("hbk_logo").equals(tab.getIconItem().get(
+				net.minecraft.core.component.DataComponents.ITEM_MODEL)),
+				"HBK creative tab must use the custom HBK logo model");
+		tab.buildContents(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(
+				test.getLevel().enabledFeatures(), true, test.getLevel().registryAccess()));
+		var displayedItems = tab.getDisplayItems().stream()
+				.map(net.minecraft.world.item.ItemStack::getItem)
+				.collect(java.util.stream.Collectors.toSet());
+		var registeredModItems = net.minecraft.core.registries.BuiltInRegistries.ITEM.stream()
+				.filter(item -> HbkMod.MOD_ID.equals(
+						net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getNamespace()))
+				.collect(java.util.stream.Collectors.toSet());
+		test.assertTrue(displayedItems.equals(registeredModItems),
+				"HBK creative tab must contain every registered mod item exactly once");
+		test.succeed();
+	}
+
+	@GameTest
 	public void memberWeaponsHaveNoRecipes(GameTestHelper test) {
 		var level = test.getLevel();
 		var displayContext = net.minecraft.world.item.crafting.display.SlotDisplayContext.fromLevel(level);
@@ -211,14 +233,14 @@ public final class NpcGameTests {
 	}
 
 	@GameTest(maxTicks = 230)
-	public void pinkFurryWolfNeverRetaliates(GameTestHelper test) {
+	public void pinkFurryWolfFleesAfterBeingHit(GameTestHelper test) {
 		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
 		var wolf = test.spawn(ModEntityTypes.PINK_FURRY_WOLF, 2, 2, 2);
 		boolean hurt = wolf.hurtServer(test.getLevel(), test.getLevel().damageSources().playerAttack(player), 1);
 		test.assertTrue(hurt, "Pink furry wolf must receive ordinary damage");
 		test.assertTrue(wolf.getMaxHealth() == 30, "Pink furry wolf must have 30 HP");
 		test.assertTrue(wolf.getTarget() == null, "Pink furry wolf must never target its attacker");
-		test.assertFalse(wolf.canAttack(player), "Pink furry wolf must be completely peaceful");
+		test.assertFalse(wolf.canAttack(player), "Pink furry wolf must never acquire an attack target");
 		test.assertTrue(wolf.getMainHandItem().isEmpty(), "Pink furry wolf must not carry a weapon");
 		test.assertTrue(wolf.isFleeingFrom(player), "Pink furry wolf must flee from the entity that hit it");
 		test.assertTrue(wolf.isFleeing(), "Pink furry wolf must enter its synchronized four-legged fleeing state");
@@ -228,6 +250,44 @@ public final class NpcGameTests {
 			test.assertTrue(wolf.getTarget() == null, "Pink furry wolf must remain peaceful after fleeing");
 			test.succeed();
 		});
+	}
+
+	@GameTest
+	public void pinkFurryWolfRarelyRetaliatesWithGoshasRage(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		int retaliations = 0;
+		for (int trial = 0; trial < 256; trial++) {
+			player.removeEffect(ModEffects.GOSHAS_RAGE);
+			player.setHealth(10.0f);
+			player.invulnerableTime = 0;
+			var wolf = test.spawn(ModEntityTypes.PINK_FURRY_WOLF, 2, 2, 2);
+			boolean hurt = wolf.hurtServer(level, level.damageSources().playerAttack(player), 1.0f);
+			test.assertTrue(hurt && wolf.isFleeingFrom(player),
+					"Furry wolf must receive the hit and flee regardless of retaliation");
+			var rage = player.getEffect(ModEffects.GOSHAS_RAGE);
+			if (rage != null) {
+				retaliations++;
+				test.assertTrue(rage.getDuration() == GoshasRageEffect.DURATION_TICKS,
+						"A retaliating furry wolf must apply two minutes of Gosha's Rage");
+				test.assertTrue(Math.abs(player.getHealth() - 4.0f) < 0.001f,
+						"The retaliation must deal exactly three hearts before applying the effect");
+				test.assertTrue(player.getLastDamageSource() != null
+						&& player.getLastDamageSource().getEntity() == wolf,
+						"The furry wolf must be the source of retaliation damage");
+			} else {
+				test.assertTrue(player.getHealth() == 10.0f,
+						"A normal flee reaction must not damage the player");
+			}
+			test.assertTrue(wolf.getTarget() == null && !wolf.canAttack(player),
+					"Retaliation must not turn the furry wolf into an aggressive mob");
+			wolf.discard();
+		}
+		player.removeEffect(ModEffects.GOSHAS_RAGE);
+		player.discard();
+		test.assertTrue(retaliations >= 10 && retaliations <= 50,
+				"Expected approximately 10% furry retaliation, got " + retaliations + "/256");
+		test.succeed();
 	}
 
 	@GameTest
