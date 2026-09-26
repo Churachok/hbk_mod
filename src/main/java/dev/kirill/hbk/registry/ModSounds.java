@@ -9,6 +9,7 @@ public final class ModSounds {
 	public static final SoundEvent GOOSE_HONK = register("goose_honk");
 	public static final SoundEvent MUSIC_DISC_HBKAU = register("music_disc.hbkau");
 	public static final SoundEvent KIRILL_DOOM_MUSIC = register("music.kirill_doom");
+	public static final SoundEvent MAD_LIBERAL_MUSIC = register("music.mad_liberal");
 
 	private ModSounds() {
 	}

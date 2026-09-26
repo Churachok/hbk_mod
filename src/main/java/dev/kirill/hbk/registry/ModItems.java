@@ -30,6 +30,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.JukeboxSong;
@@ -109,6 +110,17 @@ public class ModItems {
 			FlyingCarpetItem::new,
 			new Item.Properties().stacksTo(1)
 	);
+
+	public static final Item IMPROVED_OAK_BOAT = improvedBoat("improved_oak_boat", ModEntityTypes.IMPROVED_OAK_BOAT);
+	public static final Item IMPROVED_SPRUCE_BOAT = improvedBoat("improved_spruce_boat", ModEntityTypes.IMPROVED_SPRUCE_BOAT);
+	public static final Item IMPROVED_BIRCH_BOAT = improvedBoat("improved_birch_boat", ModEntityTypes.IMPROVED_BIRCH_BOAT);
+	public static final Item IMPROVED_JUNGLE_BOAT = improvedBoat("improved_jungle_boat", ModEntityTypes.IMPROVED_JUNGLE_BOAT);
+	public static final Item IMPROVED_ACACIA_BOAT = improvedBoat("improved_acacia_boat", ModEntityTypes.IMPROVED_ACACIA_BOAT);
+	public static final Item IMPROVED_CHERRY_BOAT = improvedBoat("improved_cherry_boat", ModEntityTypes.IMPROVED_CHERRY_BOAT);
+	public static final Item IMPROVED_DARK_OAK_BOAT = improvedBoat("improved_dark_oak_boat", ModEntityTypes.IMPROVED_DARK_OAK_BOAT);
+	public static final Item IMPROVED_PALE_OAK_BOAT = improvedBoat("improved_pale_oak_boat", ModEntityTypes.IMPROVED_PALE_OAK_BOAT);
+	public static final Item IMPROVED_MANGROVE_BOAT = improvedBoat("improved_mangrove_boat", ModEntityTypes.IMPROVED_MANGROVE_BOAT);
+	public static final Item IMPROVED_BAMBOO_RAFT = improvedBoat("improved_bamboo_raft", ModEntityTypes.IMPROVED_BAMBOO_RAFT);
 
 	public static final Item SICKLE_AND_HAMMER = register(
 			"sickle_and_hammer",
@@ -320,6 +332,10 @@ public class ModItems {
 				new Item.Properties().useBlockDescriptionPrefix());
 	}
 
+	private static Item improvedBoat(String name, net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.vehicle.boat.AbstractBoat> type) {
+		return register(name, properties -> new BoatItem(type, properties), new Item.Properties().stacksTo(1));
+	}
+
 	private static Item armor(String name, ArmorType type) {
 		return register(name, Item::new, new Item.Properties()
 				.humanoidArmor(ModArmorMaterials.URANIUM, type)
@@ -430,6 +446,16 @@ public class ModItems {
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
 			output.accept(FLYING_CARPET);
+			output.accept(IMPROVED_OAK_BOAT);
+			output.accept(IMPROVED_SPRUCE_BOAT);
+			output.accept(IMPROVED_BIRCH_BOAT);
+			output.accept(IMPROVED_JUNGLE_BOAT);
+			output.accept(IMPROVED_ACACIA_BOAT);
+			output.accept(IMPROVED_CHERRY_BOAT);
+			output.accept(IMPROVED_DARK_OAK_BOAT);
+			output.accept(IMPROVED_PALE_OAK_BOAT);
+			output.accept(IMPROVED_MANGROVE_BOAT);
+			output.accept(IMPROVED_BAMBOO_RAFT);
 			output.accept(BALALAIKA_PICKAXE);
 			output.accept(MUSIC_DISC_HBKAU);
 			output.accept(REDSTONE_PICKAXE);

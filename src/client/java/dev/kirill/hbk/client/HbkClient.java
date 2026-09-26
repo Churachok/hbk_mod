@@ -13,6 +13,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import dev.kirill.hbk.network.ModNetworking;
 
@@ -20,7 +21,7 @@ public class HbkClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		GoshasRageClient.register();
-		KirillDoomMusic.register();
+		BossFightMusic.register();
 		ModEntityModelLayers.register();
 		ArmorRenderer.register(UraniumArmorRenderer::new, ModItems.URANIUM_HELMET, ModItems.URANIUM_CHESTPLATE,
 				ModItems.URANIUM_LEGGINGS, ModItems.URANIUM_BOOTS);
@@ -54,6 +55,7 @@ public class HbkClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntityTypes.FOUNDING_PENIS_PROJECTILE, context -> new ThrownItemRenderer<>(context, 3.0f, true));
 		EntityRendererRegistry.register(ModEntityTypes.COLOSSAL_BOMB, context -> new ThrownItemRenderer<>(context, 8.0f, true));
 		EntityRendererRegistry.register(ModEntityTypes.FLYING_CARPET, FlyingCarpetRenderer::new);
+		registerImprovedBoatRenderers();
 		LivingEntityRenderLayerRegistrationCallback.EVENT.register((entityType, renderer, helper, context) -> {
 			if (entityType == EntityTypes.PLAYER) {
 				@SuppressWarnings("unchecked")
@@ -66,6 +68,36 @@ public class HbkClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(ModNetworking.OpenStrangeChestPayload.TYPE, (payload, context) ->
 				context.client().execute(() -> context.client().setScreenAndShow(new StrangeChestScreen(payload.pos())))
 		);
+	}
+
+	private static void registerImprovedBoatRenderers() {
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_OAK_BOAT,
+				context -> improvedBoatRenderer(context, "oak"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_SPRUCE_BOAT,
+				context -> improvedBoatRenderer(context, "spruce"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_BIRCH_BOAT,
+				context -> improvedBoatRenderer(context, "birch"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_JUNGLE_BOAT,
+				context -> improvedBoatRenderer(context, "jungle"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_ACACIA_BOAT,
+				context -> improvedBoatRenderer(context, "acacia"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_CHERRY_BOAT,
+				context -> improvedBoatRenderer(context, "cherry"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_DARK_OAK_BOAT,
+				context -> improvedBoatRenderer(context, "dark_oak"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_PALE_OAK_BOAT,
+				context -> improvedBoatRenderer(context, "pale_oak"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_MANGROVE_BOAT,
+				context -> improvedBoatRenderer(context, "mangrove"));
+		EntityRendererRegistry.register(ModEntityTypes.IMPROVED_BAMBOO_RAFT,
+				context -> improvedBoatRenderer(context, "bamboo"));
+	}
+
+	private static ImprovedBoatRenderer improvedBoatRenderer(
+			EntityRendererProvider.Context context,
+			String wood
+	) {
+		return new ImprovedBoatRenderer(context, HbkMod.id("textures/entity/improved_boat/" + wood + ".png"));
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})

@@ -76,8 +76,9 @@ public final class KirillDoomEntity extends HumanoidBossEntity {
 		this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 1.0));
 		this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 24.0f));
 		this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
-		this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, MadLiberalEntity.class, true));
+		this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Player.class, true));
 	}
 
 	@Override

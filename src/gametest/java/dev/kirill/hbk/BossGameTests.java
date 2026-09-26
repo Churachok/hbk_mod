@@ -3,12 +3,36 @@ package dev.kirill.hbk;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.Items;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 public final class BossGameTests {
+	@GameTest(maxTicks = 80)
+	public void kirillAndMadLiberalPrioritizeEachOtherOverPlayers(GameTestHelper test) {
+		for (int x = 0; x < 7; x++) {
+			for (int z = 0; z < 7; z++) {
+				test.setBlock(x, 1, z, net.minecraft.world.level.block.Blocks.STONE);
+			}
+		}
+		var player = test.makeMockServerPlayerInLevel();
+		BlockPos playerPos = test.absolutePos(new BlockPos(3, 2, 5));
+		player.teleportTo(playerPos.getX() + 0.5, playerPos.getY(), playerPos.getZ() + 0.5);
+		var liberal = test.spawn(ModEntityTypes.MAD_LIBERAL, 2, 2, 2);
+		var kirill = test.spawn(ModEntityTypes.KIRILL_DOOM, 4, 2, 2);
+		liberal.setTarget(player);
+		kirill.setTarget(player);
+
+		test.succeedWhen(() -> {
+			test.assertTrue(liberal.getTarget() == kirill,
+					"Mad Liberal must target Kirill before a nearby player");
+			test.assertTrue(kirill.getTarget() == liberal,
+					"Kirill Doom must target Mad Liberal before a nearby player");
+		});
+	}
+
 	@GameTest
 	public void bossesHaveRequestedHealthAndArmorBehavior(GameTestHelper test) {
 		var level = test.getLevel();
@@ -30,10 +54,12 @@ public final class BossGameTests {
 		test.assertTrue(Math.abs((before - liberal.getHealth()) - 5.0f) < 0.01f,
 				"Phase-one armor must absorb 90% of arrow damage");
 
-		liberal.setHealth(190.0f);
-		before = liberal.getHealth();
-		liberal.hurtServer(level, level.damageSources().arrow(arrow, player), 20.0f);
-		test.assertTrue(Math.abs((before - liberal.getHealth()) - 20.0f) < 0.01f,
+		var phaseTwoLiberal = test.spawn(ModEntityTypes.MAD_LIBERAL, 2, 2, 3);
+		phaseTwoLiberal.setNoAi(true);
+		phaseTwoLiberal.setHealth(190.0f);
+		before = phaseTwoLiberal.getHealth();
+		phaseTwoLiberal.hurtServer(level, level.damageSources().arrow(arrow, player), 20.0f);
+		test.assertTrue(Math.abs((before - phaseTwoLiberal.getHealth()) - 20.0f) < 0.01f,
 				"Broken armor must stop reducing arrow damage");
 		test.succeed();
 	}

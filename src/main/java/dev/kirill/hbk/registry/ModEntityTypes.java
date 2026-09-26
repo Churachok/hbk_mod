@@ -12,6 +12,7 @@ import dev.kirill.hbk.entity.GiantBossEntity;
 import dev.kirill.hbk.entity.GiantRocketEntity;
 import dev.kirill.hbk.entity.FlyingBlockEntity;
 import dev.kirill.hbk.entity.FlyingCarpetEntity;
+import dev.kirill.hbk.entity.ImprovedBoatEntity;
 import dev.kirill.hbk.entity.KirillEntity;
 import dev.kirill.hbk.entity.KirillDoomEntity;
 import dev.kirill.hbk.entity.LizaEntity;
@@ -29,6 +30,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+
+import java.util.function.Supplier;
 
 public class ModEntityTypes {
 	public static final EntityType<StalinEntity> STALIN = register(
@@ -138,6 +141,27 @@ public class ModEntityTypes {
 					.updateInterval(1)
 	);
 
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_OAK_BOAT = improvedBoat(
+			"improved_oak_boat", () -> ModItems.IMPROVED_OAK_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_SPRUCE_BOAT = improvedBoat(
+			"improved_spruce_boat", () -> ModItems.IMPROVED_SPRUCE_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_BIRCH_BOAT = improvedBoat(
+			"improved_birch_boat", () -> ModItems.IMPROVED_BIRCH_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_JUNGLE_BOAT = improvedBoat(
+			"improved_jungle_boat", () -> ModItems.IMPROVED_JUNGLE_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_ACACIA_BOAT = improvedBoat(
+			"improved_acacia_boat", () -> ModItems.IMPROVED_ACACIA_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_CHERRY_BOAT = improvedBoat(
+			"improved_cherry_boat", () -> ModItems.IMPROVED_CHERRY_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_DARK_OAK_BOAT = improvedBoat(
+			"improved_dark_oak_boat", () -> ModItems.IMPROVED_DARK_OAK_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_PALE_OAK_BOAT = improvedBoat(
+			"improved_pale_oak_boat", () -> ModItems.IMPROVED_PALE_OAK_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_MANGROVE_BOAT = improvedBoat(
+			"improved_mangrove_boat", () -> ModItems.IMPROVED_MANGROVE_BOAT);
+	public static final EntityType<ImprovedBoatEntity> IMPROVED_BAMBOO_RAFT = improvedBoat(
+			"improved_bamboo_raft", () -> ModItems.IMPROVED_BAMBOO_RAFT);
+
 	public static final EntityType<ReferenceNpcEntity> ANTON = register("anton",
 			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
 					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
@@ -185,6 +209,13 @@ public class ModEntityTypes {
 				.canSpawnFarFromPlayer()
 				.clientTrackingRange(16)
 				.updateInterval(3);
+	}
+
+	private static EntityType<ImprovedBoatEntity> improvedBoat(String name, Supplier<net.minecraft.world.item.Item> dropItem) {
+		return register(name, EntityType.Builder.<ImprovedBoatEntity>of(
+				(type, level) -> new ImprovedBoatEntity(type, level, dropItem),
+				MobCategory.MISC
+		).sized(1.7f, 0.65f).clientTrackingRange(10).updateInterval(1));
 	}
 
 	private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {

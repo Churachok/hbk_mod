@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "hbk:improved_boats",
+  "ingredients": [
+    "minecraft:spruce_boat",
+    "minecraft:blast_furnace"
+  ],
+  "result": {
+    "id": "hbk:improved_spruce_boat"
+  }
+}

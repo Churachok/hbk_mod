@@ -18,5 +18,13 @@
 				"stream": true
 			}
 		]
+	},
+	"music.mad_liberal": {
+		"sounds": [
+			{
+				"name": "hbk:music/mad_liberal",
+				"stream": true
+			}
+		]
 	}
 }
