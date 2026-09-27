@@ -2,12 +2,16 @@ package dev.kirill.hbk.entity;
 
 import java.util.EnumSet;
 
+import dev.kirill.hbk.effect.GoshasRageEffect;
+import dev.kirill.hbk.registry.ModEffects;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -31,9 +35,11 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
-/** A deliberately harmless wanderer: it never acquires or attacks a target. */
+/** A peaceful wanderer that only rarely swats a player before fleeing. */
 public final class PinkFurryWolfEntity extends PathfinderMob {
 	public static final int FLEE_DURATION_TICKS = 10 * 20;
+	public static final float RETALIATION_CHANCE = 0.10f;
+	public static final float RETALIATION_DAMAGE = 6.0f;
 	private static final EntityDataAccessor<Boolean> FLEEING = SynchedEntityData.defineId(
 			PinkFurryWolfEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final EntityDataAccessor<Integer> FUR_COLOR = SynchedEntityData.defineId(
@@ -92,6 +98,14 @@ public final class PinkFurryWolfEntity extends PathfinderMob {
 	public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
 		boolean hurt = super.hurtServer(level, source, amount);
 		if (hurt && this.isAlive() && source.getEntity() instanceof LivingEntity attacker) {
+			if (attacker instanceof Player player && this.random.nextFloat() < RETALIATION_CHANCE) {
+				this.getLookControl().setLookAt(player, 30.0f, 30.0f);
+				this.swing(InteractionHand.MAIN_HAND);
+				if (player.hurtServer(level, this.damageSources().mobAttack(this), RETALIATION_DAMAGE)) {
+					player.addEffect(new MobEffectInstance(ModEffects.GOSHAS_RAGE,
+							GoshasRageEffect.DURATION_TICKS, 0, false, true, true), this);
+				}
+			}
 			this.fleeAttacker = attacker;
 			this.fleeTicks = FLEE_DURATION_TICKS;
 			this.entityData.set(FLEEING, true);

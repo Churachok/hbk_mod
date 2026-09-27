@@ -21,10 +21,12 @@ import dev.kirill.hbk.item.RationItem;
 import dev.kirill.hbk.item.ShovelSwordItem;
 import dev.kirill.hbk.item.SickleAndHammerItem;
 import dev.kirill.hbk.item.StewItem;
+import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
@@ -34,6 +36,7 @@ import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.JukeboxSong;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.core.component.DataComponents;
@@ -49,6 +52,11 @@ import java.util.List;
 import java.util.Optional;
 
 public class ModItems {
+	public static final ResourceKey<CreativeModeTab> HBK_CREATIVE_TAB_KEY = ResourceKey.create(
+			Registries.CREATIVE_MODE_TAB,
+			HbkMod.id("hbk")
+	);
+
 	private static final ResourceKey<JukeboxSong> HBKAU_JUKEBOX_SONG = ResourceKey.create(
 			Registries.JUKEBOX_SONG,
 			HbkMod.id("hbkau")
@@ -374,7 +382,22 @@ public class ModItems {
 		return stack.is(ATTACKING_MEMBER) || stack.is(COLOSSAL_MEMBER);
 	}
 
+	private static ItemStack createHbkCreativeTabIcon() {
+		ItemStack icon = new ItemStack(Items.PAPER);
+		icon.set(DataComponents.ITEM_MODEL, HbkMod.id("hbk_logo"));
+		return icon;
+	}
+
 	public static void register() {
+		Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, HBK_CREATIVE_TAB_KEY,
+				FabricCreativeModeTab.builder()
+						.title(Component.translatable("itemGroup.hbk"))
+						.icon(ModItems::createHbkCreativeTabIcon)
+						.displayItems((parameters, output) -> BuiltInRegistries.ITEM.stream()
+								.filter(item -> HbkMod.MOD_ID.equals(BuiltInRegistries.ITEM.getKey(item).getNamespace()))
+								.forEach(item -> output.accept(item)))
+						.build());
+
 		ResourceKey<CreativeModeTab> naturalBlocks = ResourceKey.create(
 				Registries.CREATIVE_MODE_TAB,
 				Identifier.withDefaultNamespace("natural_blocks")

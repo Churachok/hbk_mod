@@ -177,5 +177,6 @@
 	"advancement.hbk.kirill_end_of_world.title": "И тут она собралась и уехала в Германию…",
 	"advancement.hbk.kirill_end_of_world.description": "Переживите конец света и победите Кирилла",
 	"entity.hbk.catgirl": "Кошкодевочка",
-	"item.hbk.catgirl_spawn_egg": "Яйцо призыва кошкодевочки"
+	"item.hbk.catgirl_spawn_egg": "Яйцо призыва кошкодевочки",
+	"itemGroup.hbk": "HBK"
 }
