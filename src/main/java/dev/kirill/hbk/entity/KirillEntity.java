@@ -27,7 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
 /** A peaceful wanderer who only fights entities that attack him first. */
-public final class KirillEntity extends PathfinderMob implements RangedAttackMob {
+public class KirillEntity extends PathfinderMob implements RangedAttackMob {
 	public KirillEntity(EntityType<? extends KirillEntity> type, Level level) {
 		super(type, level);
 		this.setPersistenceRequired();
@@ -96,10 +96,14 @@ public final class KirillEntity extends PathfinderMob implements RangedAttackMob
 		double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
 		bullet.shoot(dx, dy + horizontalDistance * 0.08, dz, MemberWeaponItem.BULLET_SPEED, 0.15f);
 		level.addFreshEntity(bullet);
+		this.playRangedAttackSound(level);
+		this.swing(InteractionHand.MAIN_HAND, true);
+	}
+
+	protected void playRangedAttackSound(ServerLevel level) {
 		level.playSound(null, this.getX(), this.getEyeY(), this.getZ(),
 				SoundEvents.SNOWBALL_THROW, SoundSource.NEUTRAL, 0.8f,
 				0.75f + this.getRandom().nextFloat() * 0.15f);
-		this.swing(InteractionHand.MAIN_HAND, true);
 	}
 
 	@Override

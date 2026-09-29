@@ -12,6 +12,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
+import java.util.UUID;
+
 public final class ModNetworking {
 	private ModNetworking() {
 	}
@@ -92,8 +94,70 @@ public final class ModNetworking {
 		}
 	}
 
+	public record UnknownEncounterPayload(int entityId, boolean active) implements CustomPacketPayload {
+		public static final Type<UnknownEncounterPayload> TYPE = new Type<>(HbkMod.id("unknown_encounter"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, UnknownEncounterPayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> {
+					buffer.writeVarInt(payload.entityId);
+					buffer.writeBoolean(payload.active);
+				},
+				buffer -> new UnknownEncounterPayload(buffer.readVarInt(), buffer.readBoolean())
+		);
+
+		@Override
+		public Type<? extends CustomPacketPayload> type() {
+			return TYPE;
+		}
+	}
+
+	public record UnknownTypingPayload(String message) implements CustomPacketPayload {
+		public static final Type<UnknownTypingPayload> TYPE = new Type<>(HbkMod.id("unknown_typing"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, UnknownTypingPayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> buffer.writeUtf(payload.message),
+				buffer -> new UnknownTypingPayload(buffer.readUtf())
+		);
+
+		@Override
+		public Type<? extends CustomPacketPayload> type() {
+			return TYPE;
+		}
+	}
+
+	public record UnknownMusicPayload(boolean playing) implements CustomPacketPayload {
+		public static final Type<UnknownMusicPayload> TYPE = new Type<>(HbkMod.id("unknown_music"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, UnknownMusicPayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> buffer.writeBoolean(payload.playing),
+				buffer -> new UnknownMusicPayload(buffer.readBoolean())
+		);
+
+		@Override
+		public Type<? extends CustomPacketPayload> type() {
+			return TYPE;
+		}
+	}
+
+	public record UnknownRemovePayload(int entityId, UUID entityUuid) implements CustomPacketPayload {
+		public static final Type<UnknownRemovePayload> TYPE = new Type<>(HbkMod.id("unknown_remove"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, UnknownRemovePayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> {
+					buffer.writeVarInt(payload.entityId);
+					buffer.writeUUID(payload.entityUuid);
+				},
+				buffer -> new UnknownRemovePayload(buffer.readVarInt(), buffer.readUUID())
+		);
+
+		@Override
+		public Type<? extends CustomPacketPayload> type() {
+			return TYPE;
+		}
+	}
+
 	public static void register() {
 		PayloadTypeRegistry.clientboundPlay().register(OpenStrangeChestPayload.TYPE, OpenStrangeChestPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(UnknownEncounterPayload.TYPE, UnknownEncounterPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(UnknownTypingPayload.TYPE, UnknownTypingPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(UnknownMusicPayload.TYPE, UnknownMusicPayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(UnknownRemovePayload.TYPE, UnknownRemovePayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AnswerStrangeChestPayload.TYPE, AnswerStrangeChestPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(CarpetInputPayload.TYPE, CarpetInputPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(FireAttackingMemberPayload.TYPE, FireAttackingMemberPayload.CODEC);

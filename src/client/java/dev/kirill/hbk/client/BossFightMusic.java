@@ -24,6 +24,10 @@ public final class BossFightMusic {
 	}
 
 	private static void tick(Minecraft client) {
+		if (UnknownEncounterClient.isMusicActive()) {
+			stop(client);
+			return;
+		}
 		if (client.level == null || client.player == null) {
 			stop(client);
 			return;

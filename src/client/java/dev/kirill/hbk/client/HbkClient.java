@@ -22,6 +22,7 @@ public class HbkClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		GoshasRageClient.register();
 		BossFightMusic.register();
+		UnknownEncounterClient.register();
 		ModEntityModelLayers.register();
 		ArmorRenderer.register(UraniumArmorRenderer::new, ModItems.URANIUM_HELMET, ModItems.URANIUM_CHESTPLATE,
 				ModItems.URANIUM_LEGGINGS, ModItems.URANIUM_BOOTS);
@@ -39,6 +40,7 @@ public class HbkClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntityTypes.NKVD, NkvdRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.NURSE, NurseRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.KIRILL, KirillRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.KIRILL_V2, KirillSecondRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.LIZA, LizaRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.ANTON, context -> new ReferenceNpcRenderer(context, "anton"));
 		EntityRendererRegistry.register(ModEntityTypes.DENIS, context -> new ReferenceNpcRenderer(context, "denis"));

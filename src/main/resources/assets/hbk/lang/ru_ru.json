@@ -7,6 +7,8 @@
 	"entity.hbk.nkvd": "Сотрудник НКВД",
 	"entity.hbk.nurse": "Медсестра",
 	"entity.hbk.kirill": "Кирилл",
+	"entity.hbk.kirill_v2": "Неизвестный",
+	"death.attack.hbk.lost_in_time": "%1$s потерялся во времени",
 	"entity.hbk.liza": "Лиза",
 	"entity.hbk.giant_rocket": "Ракета гиганта",
 	"entity.hbk.attacking_member_bullet": "Белая пуля",
@@ -178,5 +180,7 @@
 	"advancement.hbk.kirill_end_of_world.description": "Переживите конец света и победите Кирилла",
 	"entity.hbk.catgirl": "Кошкодевочка",
 	"item.hbk.catgirl_spawn_egg": "Яйцо призыва кошкодевочки",
-	"itemGroup.hbk": "HBK"
+	"itemGroup.hbk": "HBK",
+	"advancement.hbk.unknown.title": "???",
+	"advancement.hbk.unknown.description": "Найдите %s или он сам найдёт вас"
 }

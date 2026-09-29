@@ -1,0 +1,24 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": { "id": "minecraft:ender_eye" },
+    "title": {
+      "translate": "advancement.hbk.unknown.title",
+      "color": "black"
+    },
+    "description": {
+      "translate": "advancement.hbk.unknown.description",
+      "color": "dark_purple",
+      "with": [
+        { "text": "?????", "obfuscated": true }
+      ]
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "unlock": { "trigger": "minecraft:impossible" }
+  }
+}

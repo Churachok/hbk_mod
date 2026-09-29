@@ -3,6 +3,7 @@
 	"package": "dev.kirill.hbk.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
+		"AdvancementMixin",
 		"BlockStateBaseMixin",
 		"LivingEntityDamageMixin",
 		"OverworldBiomeBuilderMixin",
