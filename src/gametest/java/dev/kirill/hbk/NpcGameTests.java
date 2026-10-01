@@ -348,6 +348,157 @@ public final class NpcGameTests {
 	}
 
 	@GameTest
+	public void unknownIsCommandOnlyAndHas200Health(GameTestHelper test) {
+		var unknown = test.spawn(ModEntityTypes.KIRILL_V2, 2, 2, 2);
+		test.assertTrue(unknown.getMaxHealth() == 200.0f && unknown.getHealth() == 200.0f,
+				"The Unknown must spawn with 200 HP");
+		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
+				.getKey(ModEntityTypes.KIRILL_V2).equals(HbkMod.id("kirill_v2")),
+				"The Unknown summon identifier must remain hbk:kirill_v2");
+		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT
+				.getKey(dev.kirill.hbk.registry.ModSounds.UNKNOWN_MUSIC).equals(HbkMod.id("music.unknown")),
+				"The Unknown encounter music must be registered");
+		boolean hasSpawnEgg = net.minecraft.core.registries.BuiltInRegistries.ITEM.keySet().stream()
+				.anyMatch(id -> id.equals(HbkMod.id("kirill_v2_spawn_egg")));
+		test.assertFalse(hasSpawnEgg, "The Unknown must not have a spawn egg");
+		test.assertTrue(unknown.shouldBeSaved(),
+				"An ordinary command-summoned Unknown must remain persistent");
+		var legacyOrphan = test.spawn(ModEntityTypes.KIRILL_V2, 3, 2, 2);
+		legacyOrphan.setNoAi(true);
+		legacyOrphan.setInvulnerable(true);
+		legacyOrphan.setNoGravity(true);
+		test.assertFalse(legacyOrphan.shouldBeSaved(),
+				"A frozen legacy encounter Unknown must never be written back to the world save");
+		legacyOrphan.tick();
+		test.assertTrue(legacyOrphan.isRemoved(),
+				"A frozen legacy encounter Unknown must remove itself after loading");
+		test.succeed();
+	}
+
+	@GameTest(maxTicks = 610)
+	public void unknownEncounterRunsCutsceneKillsAndGrantsSecretAdvancement(GameTestHelper test) {
+		for (int x = 0; x <= 6; x++) {
+			for (int z = 0; z <= 8; z++) {
+				test.setBlock(x, 1, z, Blocks.STONE);
+			}
+		}
+		var player = test.makeMockServerPlayerInLevel();
+		Vec3 anchor = test.absoluteVec(new Vec3(3.5, 2.0, 1.5));
+		player.teleportTo(anchor.x, anchor.y, anchor.z);
+		player.setYRot(0.0f);
+		player.setXRot(0.0f);
+
+		var result = dev.kirill.hbk.world.UnknownEncounter.start(player);
+		test.assertTrue(result == dev.kirill.hbk.world.UnknownEncounter.StartResult.STARTED,
+				"The encounter must start when four blocks ahead are clear");
+		test.assertTrue(test.getEntities(ModEntityTypes.KIRILL_V2).size() == 1,
+				"The encounter must spawn exactly one Unknown");
+		var unknown = test.getEntities(ModEntityTypes.KIRILL_V2).getFirst();
+		test.assertFalse(unknown.shouldBeSaved(),
+				"A temporary encounter Unknown must never be persisted in the world save");
+		Vec3 portalPosition = unknown.position();
+		test.assertTrue(unknown.isInvisible(),
+				"The Unknown must remain hidden while the glitch portal opens");
+		Vec3 directionToPlayer = player.getEyePosition().subtract(unknown.getEyePosition()).normalize();
+		test.assertTrue(unknown.getLookAngle().dot(directionToPlayer) > 0.999
+					&& Math.abs(net.minecraft.util.Mth.wrapDegrees(unknown.yBodyRot - unknown.getYRot())) < 0.01,
+				"The Unknown's head and body must face the player immediately after spawning");
+		Vec3 loweredCameraTarget = new Vec3(unknown.getX(), unknown.getEyeY() - 0.3, unknown.getZ());
+		test.assertTrue(player.getLookAngle().dot(loweredCameraTarget.subtract(player.getEyePosition()).normalize()) > 0.999,
+				"The encounter must lock the player's camera slightly below the Unknown's eyes");
+
+		test.runAfterDelay(1, () -> player.teleportTo(anchor.x + 2.0, anchor.y, anchor.z));
+		Vec3[] heldUnknownPosition = new Vec3[1];
+		test.runAfterDelay(3, () -> test.assertTrue(player.position().distanceToSqr(anchor) < 1.0E-6,
+				"The encounter must keep the player fixed at the starting position"));
+		test.runAfterDelay(40, () -> test.assertTrue(unknown.isInvisible(),
+				"The portal must be visible before the Unknown appears"));
+		test.runAfterDelay(90, () -> {
+			test.assertFalse(unknown.isInvisible(),
+					"The Unknown must become visible only after the portal has opened");
+			test.assertTrue(unknown.position().distanceToSqr(player.position())
+						< portalPosition.distanceToSqr(player.position()),
+					"The Unknown must step out of the portal toward the player");
+		});
+		test.runAfterDelay(300, () -> test.assertFalse(unknown.isGrabbing(),
+				"The Unknown must pause after saying that everything falls into place"));
+		test.runAfterDelay(340, () -> {
+			var unknowns = test.getEntities(ModEntityTypes.KIRILL_V2);
+			test.assertTrue(unknowns.size() == 1 && unknowns.getFirst().isGrabbing(),
+					"The Unknown must approach the player and enter the grabbing animation");
+			test.assertTrue(unknowns.getFirst().position().subtract(player.position()).horizontalDistanceSqr()
+						<= 1.16 * 1.16,
+					"The Unknown must grab only after approaching within one block");
+			test.assertTrue(player.getY() >= anchor.y + 0.6,
+					"The Unknown must lift the player slightly while holding their neck");
+			test.assertTrue(player.isNoGravity(),
+					"Gravity must be disabled while the player is held to prevent falling jitter");
+			heldUnknownPosition[0] = unknowns.getFirst().position();
+		});
+		test.runAfterDelay(360, () -> {
+			var heldUnknown = test.getEntities(ModEntityTypes.KIRILL_V2).getFirst();
+			test.assertTrue(heldUnknownPosition[0] != null
+						&& heldUnknown.position().distanceToSqr(heldUnknownPosition[0]) < 1.0E-8
+						&& heldUnknown.getDeltaMovement().lengthSqr() < 1.0E-8,
+					"The Unknown must remain completely still throughout the neck grab");
+		});
+		test.runAfterDelay(460, () -> {
+			test.assertFalse(player.isAlive(), "The encounter must kill the player after the final typed message");
+			test.assertTrue(player.getLastDamageSource() != null
+						&& player.getLastDamageSource().is(dev.kirill.hbk.world.UnknownEncounter.LOST_IN_TIME_DAMAGE),
+					"The encounter must use the lost-in-time death cause");
+			var advancement = test.getLevel().getServer().getAdvancements().get(HbkMod.id("unknown"));
+			test.assertTrue(advancement != null
+					&& player.getAdvancements().getOrStartProgress(advancement).isDone(),
+					"The encounter death must grant the secret Unknown advancement");
+			var departingUnknowns = test.getEntities(ModEntityTypes.KIRILL_V2);
+			test.assertTrue(departingUnknowns.size() == 1 && !departingUnknowns.getFirst().isGrabbing(),
+					"The Unknown must lower his hand and remain while the departure portal opens");
+			test.assertFalse(player.isNoGravity(),
+					"The encounter must restore the player's gravity after death");
+			player.setHealth(player.getMaxHealth());
+			test.assertTrue(player.isAlive(),
+					"The departure regression fixture must restore a live player state");
+		});
+		test.runAfterDelay(510, () -> {
+			var returningUnknowns = test.getEntities(ModEntityTypes.KIRILL_V2);
+			test.assertTrue(returningUnknowns.size() == 1
+						&& returningUnknowns.getFirst().position().distanceToSqr(portalPosition)
+						< heldUnknownPosition[0].distanceToSqr(portalPosition),
+					"The Unknown must walk back toward the same glitch portal after killing the player");
+		});
+		test.runAfterDelay(580, () -> {
+			test.assertTrue(test.getEntities(ModEntityTypes.KIRILL_V2).isEmpty(),
+					"The Unknown must disappear inside the portal before it closes");
+			test.assertFalse(dev.kirill.hbk.world.UnknownEncounter.isActive(player),
+					"The departure must finish even if the player's alive state changes after death");
+			test.getLevel().getServer().getPlayerList().remove(player);
+			test.succeed();
+		});
+	}
+
+	@GameTest
+	public void unknownEncounterRequiresClearSpaceAhead(GameTestHelper test) {
+		for (int z = 0; z <= 6; z++) {
+			test.setBlock(2, 1, z, Blocks.STONE);
+		}
+		test.setBlock(2, 2, 3, Blocks.STONE);
+		var player = test.makeMockServerPlayerInLevel();
+		Vec3 position = test.absoluteVec(new Vec3(2.5, 2.0, 1.5));
+		player.teleportTo(position.x, position.y, position.z);
+		player.setYRot(0.0f);
+		player.setXRot(0.0f);
+
+		var result = dev.kirill.hbk.world.UnknownEncounter.start(player);
+		test.assertTrue(result == dev.kirill.hbk.world.UnknownEncounter.StartResult.BLOCKED,
+				"A block in front of the player must prevent the encounter");
+		test.assertTrue(test.getEntities(ModEntityTypes.KIRILL_V2).isEmpty(),
+				"A blocked encounter must not spawn the Unknown");
+		test.getLevel().getServer().getPlayerList().remove(player);
+		test.succeed();
+	}
+
+	@GameTest
 	public void goshasRageHalvesHealthAndTriplesPlayerDamage(GameTestHelper test) {
 		var level = test.getLevel();
 		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);

@@ -3,6 +3,7 @@ package dev.kirill.hbk.client.mixin;
 import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.entity.FlyingCarpetEntity;
 import dev.kirill.hbk.network.ModNetworking;
+import dev.kirill.hbk.client.UnknownEncounterClient;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.ClientInput;
@@ -23,7 +24,7 @@ public abstract class KeyboardInputMixin extends ClientInput {
 		if (player == null) {
 			return;
 		}
-		if (player.hasEffect(ModEffects.DROWSINESS)) {
+		if (UnknownEncounterClient.isActive() || player.hasEffect(ModEffects.DROWSINESS)) {
 			this.keyPresses = Input.EMPTY;
 			this.moveVector = Vec2.ZERO;
 			this.hbk$sendCarpetInput(player);

@@ -72,6 +72,41 @@ public final class MemberGameTests {
 	}
 
 	@GameTest
+	public void unknownAdvancementLoadsAndCanBeGranted(GameTestHelper test) {
+		var unknown = advancement(test, "unknown");
+		var display = unknown.value().display().orElseThrow();
+		test.assertTrue(display.getType() == net.minecraft.advancements.AdvancementType.TASK,
+				"Unknown advancement must use the same task frame as Suit Up");
+		test.assertTrue(display.shouldShowToast() && display.shouldAnnounceChat(),
+				"Unknown advancement must show a toast and announce in chat");
+		test.assertTrue(net.minecraft.network.chat.TextColor.fromLegacyFormat(
+				net.minecraft.ChatFormatting.BLACK).equals(display.getTitle().getStyle().getColor()),
+				"Unknown advancement title must be black");
+		test.assertTrue(net.minecraft.network.chat.TextColor.fromLegacyFormat(
+				net.minecraft.ChatFormatting.DARK_PURPLE).equals(display.getDescription().getStyle().getColor()),
+				"Unknown advancement description must be dark purple");
+		test.assertTrue(net.minecraft.network.chat.TextColor.fromLegacyFormat(
+				net.minecraft.ChatFormatting.BLACK).equals(
+						net.minecraft.advancements.Advancement.name(unknown).getStyle().getColor()),
+				"Unknown advancement chat brackets must be black");
+		test.assertTrue(display.getDescription().toFlatList().stream()
+				.anyMatch(component -> component.getStyle().isObfuscated()
+						&& component.getString().length() == 5
+						&& net.minecraft.network.chat.TextColor.fromLegacyFormat(
+								net.minecraft.ChatFormatting.DARK_PURPLE).equals(component.getStyle().getColor())),
+				"Unknown advancement description must contain five dark-purple obfuscated characters");
+		var player = test.makeMockServerPlayerInLevel();
+		try {
+			test.assertFalse(done(player, unknown), "Unknown advancement must not unlock automatically");
+			player.getAdvancements().award(unknown, "unlock");
+			test.assertTrue(done(player, unknown), "Unknown advancement must support manual granting");
+		} finally {
+			removePlayer(test, player);
+		}
+		test.succeed();
+	}
+
+	@GameTest
 	public void inventoryAchievementsAcceptEachOfSevenWeapons(GameTestHelper test) {
 		var beginning = advancement(test, "hentai_beginnings");
 		var vagina = advancement(test, "world_scale_vagina");

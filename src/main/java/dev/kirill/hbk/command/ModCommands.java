@@ -2,6 +2,8 @@ package dev.kirill.hbk.command;
 
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.world.GulagPlacer;
+import dev.kirill.hbk.world.UnknownEncounter;
+import net.minecraft.commands.arguments.EntityArgument;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -21,12 +23,41 @@ public final class ModCommands {
 	}
 
 	public static void register() {
-		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> dispatcher.register(
-				Commands.literal("gulag")
+		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
+			dispatcher.register(Commands.literal("gulag")
 						.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 						.executes(ctx -> locate(ctx.getSource()))
 						.then(Commands.literal("spawn").executes(ctx -> spawnHere(ctx.getSource())))
-		));
+			);
+			dispatcher.register(Commands.literal("unknown")
+					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.executes(ctx -> startUnknown(ctx.getSource(), ctx.getSource().getPlayerOrException()))
+					.then(Commands.argument("player", EntityArgument.player())
+							.executes(ctx -> startUnknown(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"))))
+			);
+		});
+	}
+
+	private static int startUnknown(CommandSourceStack source, ServerPlayer player) {
+		UnknownEncounter.StartResult result = UnknownEncounter.start(player);
+		return switch (result) {
+			case STARTED -> {
+				source.sendSuccess(() -> Component.literal("Неизвестный нашёл " + player.getScoreboardName() + "."), true);
+				yield 1;
+			}
+			case BLOCKED -> {
+				source.sendFailure(Component.literal("Перед игроком нет свободного места для Неизвестного."));
+				yield 0;
+			}
+			case ALREADY_ACTIVE -> {
+				source.sendFailure(Component.literal("Неизвестный уже смотрит на этого игрока."));
+				yield 0;
+			}
+			case UNAVAILABLE -> {
+				source.sendFailure(Component.literal("Событие Неизвестного сейчас недоступно."));
+				yield 0;
+			}
+		};
 	}
 
 	private static int locate(CommandSourceStack source) {

@@ -3,7 +3,9 @@
 	"package": "dev.kirill.hbk.client.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"client": [
+		"AdvancementToastMixin",
 		"AvatarRendererMixin",
+		"ChatComponentAccessor",
 		"EntityRendererMixin",
 		"GameRendererMixin",
 		"GameRendererInvoker",
@@ -11,7 +13,8 @@
 		"ItemInHandLayerMixin",
 		"KeyboardInputMixin",
 		"LevelRendererMixin",
-		"MinecraftAttackMixin"
+		"MinecraftAttackMixin",
+		"MouseHandlerMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

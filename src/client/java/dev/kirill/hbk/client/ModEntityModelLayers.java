@@ -13,6 +13,7 @@ public class ModEntityModelLayers {
 	public static final ModelLayerLocation IMPROVED_BOAT = new ModelLayerLocation(HbkMod.id("improved_boat"), "main");
 	public static final ModelLayerLocation PINK_FURRY_WOLF = new ModelLayerLocation(HbkMod.id("pink_furry_wolf"), "main");
 	public static final ModelLayerLocation CATGIRL = new ModelLayerLocation(HbkMod.id("catgirl"), "main");
+	public static final ModelLayerLocation KIRILL_V2 = new ModelLayerLocation(HbkMod.id("kirill_v2"), "main");
 
 	public static void register() {
 		ModelLayerRegistry.registerModelLayer(GIANT_BOSS, GiantBossModel::createBodyLayer);
@@ -22,6 +23,7 @@ public class ModEntityModelLayers {
 		ModelLayerRegistry.registerModelLayer(IMPROVED_BOAT, ImprovedBoatModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(PINK_FURRY_WOLF, PinkFurryWolfModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(CATGIRL, CatgirlModel::createBodyLayer);
+		ModelLayerRegistry.registerModelLayer(KIRILL_V2, KirillSecondModel::createBodyLayer);
 		for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
 			for (var material : UraniumArmorModel.Material.values()) {
 				ModelLayerRegistry.registerModelLayer(uraniumArmor(slot, material), () -> UraniumArmorModel.createLayer(slot, material));

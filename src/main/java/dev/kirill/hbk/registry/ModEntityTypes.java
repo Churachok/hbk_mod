@@ -14,6 +14,7 @@ import dev.kirill.hbk.entity.FlyingBlockEntity;
 import dev.kirill.hbk.entity.FlyingCarpetEntity;
 import dev.kirill.hbk.entity.ImprovedBoatEntity;
 import dev.kirill.hbk.entity.KirillEntity;
+import dev.kirill.hbk.entity.KirillSecondEntity;
 import dev.kirill.hbk.entity.KirillDoomEntity;
 import dev.kirill.hbk.entity.LizaEntity;
 import dev.kirill.hbk.entity.MadLiberalEntity;
@@ -81,6 +82,15 @@ public class ModEntityTypes {
 			EntityType.Builder.<KirillEntity>of(KirillEntity::new, MobCategory.CREATURE)
 					.sized(0.6f, 1.8f)
 					.eyeHeight(1.62f)
+					.clientTrackingRange(8)
+					.updateInterval(3)
+	);
+
+	public static final EntityType<KirillSecondEntity> KIRILL_V2 = register(
+			"kirill_v2",
+			EntityType.Builder.<KirillSecondEntity>of(KirillSecondEntity::new, MobCategory.CREATURE)
+					.sized(0.9f, 2.35f)
+					.eyeHeight(2.08f)
 					.clientTrackingRange(8)
 					.updateInterval(3)
 	);
@@ -235,6 +245,7 @@ public class ModEntityTypes {
 		FabricDefaultAttributeRegistry.register(NKVD, NkvdEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(NURSE, NurseEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(KIRILL, KirillEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(KIRILL_V2, KirillSecondEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(LIZA, LizaEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(ANTON, ReferenceNpcEntity.createAttributes(1.0));
 		FabricDefaultAttributeRegistry.register(DENIS, ReferenceNpcEntity.createAttributes(20.0));

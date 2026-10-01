@@ -26,5 +26,13 @@
 				"stream": true
 			}
 		]
+	},
+	"music.unknown": {
+		"sounds": [
+			{
+				"name": "hbk:music/kirill_doom",
+				"stream": true
+			}
+		]
 	}
 }

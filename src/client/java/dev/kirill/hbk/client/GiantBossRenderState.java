@@ -4,4 +4,5 @@ import net.minecraft.client.renderer.entity.state.HumanoidRenderState;
 
 public class GiantBossRenderState extends HumanoidRenderState {
 	public int armorCrackStage;
+	public float unknownGrabProgress;
 }

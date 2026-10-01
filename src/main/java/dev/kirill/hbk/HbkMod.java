@@ -15,6 +15,7 @@ import dev.kirill.hbk.registry.ModLoot;
 import dev.kirill.hbk.registry.ModSounds;
 import dev.kirill.hbk.world.ModWorldEvents;
 import dev.kirill.hbk.world.ReferenceNpcSpawning;
+import dev.kirill.hbk.world.UnknownEncounter;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ public class HbkMod implements ModInitializer {
 		ProgenitorTransformation.register();
 		UraniumArmorEffects.register();
 		ModWorldEvents.register();
+		UnknownEncounter.register();
 		ModCommands.register();
 		LOGGER.info("hbk is ready to walk.");
 	}

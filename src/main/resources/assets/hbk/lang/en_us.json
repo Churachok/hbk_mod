@@ -7,6 +7,8 @@
 	"entity.hbk.nkvd": "NKVD Officer",
 	"entity.hbk.nurse": "Nurse",
 	"entity.hbk.kirill": "Kirill",
+	"entity.hbk.kirill_v2": "Unknown",
+	"death.attack.hbk.lost_in_time": "%1$s was lost in time",
 	"entity.hbk.liza": "Liza",
 	"entity.hbk.giant_rocket": "Giant Rocket",
 	"entity.hbk.attacking_member_bullet": "White Bullet",
@@ -178,5 +180,7 @@
 	"advancement.hbk.kirill_end_of_world.description": "Survive the end of the world and defeat Kirill",
 	"entity.hbk.catgirl": "Catgirl",
 	"item.hbk.catgirl_spawn_egg": "Catgirl Spawn Egg",
-	"itemGroup.hbk": "HBK"
+	"itemGroup.hbk": "HBK",
+	"advancement.hbk.unknown.title": "???",
+	"advancement.hbk.unknown.description": "Find %s, or it will find you"
 }
