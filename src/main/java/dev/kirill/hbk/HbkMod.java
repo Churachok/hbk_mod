@@ -6,6 +6,7 @@ import dev.kirill.hbk.mechanic.ProgenitorTransformation;
 import dev.kirill.hbk.mechanic.UraniumArmorEffects;
 import dev.kirill.hbk.network.ModNetworking;
 import dev.kirill.hbk.registry.ModBlocks;
+import dev.kirill.hbk.registry.ModAttachments;
 import dev.kirill.hbk.registry.ModDataComponents;
 import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModEntityTypes;
@@ -27,6 +28,7 @@ public class HbkMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModAttachments.register();
 		ModDataComponents.register();
 		ModEffects.register();
 		ModSounds.register();

@@ -21,6 +21,7 @@ import dev.kirill.hbk.item.RationItem;
 import dev.kirill.hbk.item.ShovelSwordItem;
 import dev.kirill.hbk.item.SickleAndHammerItem;
 import dev.kirill.hbk.item.StewItem;
+import dev.kirill.hbk.item.ShpermaItem;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
@@ -61,6 +62,10 @@ public class ModItems {
 			Registries.JUKEBOX_SONG,
 			HbkMod.id("hbkau")
 	);
+	private static final ResourceKey<JukeboxSong> KONATA_THEME_JUKEBOX_SONG = ResourceKey.create(
+			Registries.JUKEBOX_SONG,
+			HbkMod.id("konata_theme")
+	);
 
 	public static final Item INFECTED_DIRT = block("infected_dirt", ModBlocks.INFECTED_DIRT);
 	public static final Item RADIOACTIVE_STONE = block("radioactive_stone", ModBlocks.RADIOACTIVE_STONE);
@@ -71,6 +76,11 @@ public class ModItems {
 			"uranium_235",
 			Item::new,
 			new Item.Properties().stacksTo(64).rarity(net.minecraft.world.item.Rarity.RARE)
+	);
+	public static final Item SHPERMA = register(
+			"shperma",
+			ShpermaItem::new,
+			new Item.Properties().stacksTo(64)
 	);
 	public static final Item SEDIMENT_MUD = block("sediment_mud", ModBlocks.SEDIMENT_MUD);
 	public static final Item TOXIC_WATER = block("toxic_water", ModBlocks.TOXIC_WATER);
@@ -221,6 +231,14 @@ public class ModItems {
 					.rarity(net.minecraft.world.item.Rarity.UNCOMMON)
 					.jukeboxPlayable(HBKAU_JUKEBOX_SONG)
 	);
+	public static final Item MUSIC_DISC_KONATA_THEME = register(
+			"music_disc_konata_theme",
+			Item::new,
+			new Item.Properties()
+					.stacksTo(1)
+					.rarity(net.minecraft.world.item.Rarity.UNCOMMON)
+					.jukeboxPlayable(KONATA_THEME_JUKEBOX_SONG)
+	);
 
 	public static final Item REDSTONE_PICKAXE = register(
 			"redstone_pickaxe",
@@ -328,6 +346,8 @@ public class ModItems {
 	public static final Item CATGIRL_SPAWN_EGG = register(
 			"catgirl_spawn_egg", SpawnEggItem::new,
 			new Item.Properties().spawnEgg(ModEntityTypes.CATGIRL));
+	public static final Item KONATA_SPAWN_EGG = register("konata_spawn_egg", SpawnEggItem::new,
+			new Item.Properties().spawnEgg(ModEntityTypes.KONATA));
 
 	private static <T extends Item> T register(String name, Function<Item.Properties, T> factory, Item.Properties properties) {
 		ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, HbkMod.id(name));
@@ -446,6 +466,7 @@ public class ModItems {
 			output.accept(LEX_SPAWN_EGG);
 			output.accept(PINK_FURRY_WOLF_SPAWN_EGG);
 			output.accept(CATGIRL_SPAWN_EGG);
+			output.accept(KONATA_SPAWN_EGG);
 		});
 
 		ResourceKey<CreativeModeTab> foodAndDrinks = ResourceKey.create(
@@ -481,6 +502,7 @@ public class ModItems {
 			output.accept(IMPROVED_BAMBOO_RAFT);
 			output.accept(BALALAIKA_PICKAXE);
 			output.accept(MUSIC_DISC_HBKAU);
+			output.accept(MUSIC_DISC_KONATA_THEME);
 			output.accept(REDSTONE_PICKAXE);
 			output.accept(SHOVEL_SWORD);
 			output.accept(WESTERN_CHESTPLATE);

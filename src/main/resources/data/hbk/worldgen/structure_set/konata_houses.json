@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 840192534,
+    "separation": 18,
+    "spacing": 54
+  },
+  "structures": [
+    {
+      "structure": "hbk:konata_house",
+      "weight": 1
+    }
+  ]
+}

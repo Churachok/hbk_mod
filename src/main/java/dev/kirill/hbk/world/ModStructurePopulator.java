@@ -26,6 +26,7 @@ public final class ModStructurePopulator {
 	private static final Identifier KIRILL_HOUSE = HbkMod.id("kirill_house");
 	private static final Identifier KIRILL_HOUSE_HBK = HbkMod.id("kirill_house_hbk");
 	private static final Identifier DENIS_HOUSE = HbkMod.id("denis_house");
+	private static final Identifier KONATA_HOUSE = HbkMod.id("konata_house");
 	private static final Identifier STALINKA = HbkMod.id("stalinka");
 	private static final Identifier GULAG = HbkMod.id("gulag");
 	private static final int VILLAGER_COUNT = 8;
@@ -64,8 +65,11 @@ public final class ModStructurePopulator {
 			}
 
 			if (!data.isStructurePopulated(populationKey)) {
+				boolean populated = true;
 				if (id.equals(KIRILL_HOUSE)) {
 					spawnNurse(level, box);
+				} else if (id.equals(KONATA_HOUSE)) {
+					populated = spawnKonata(level, box);
 				} else if (id.equals(STALINKA)) {
 					if (level.getRandom().nextFloat() < VILLAGER_CHANCE) {
 						spawnVillagers(level, box);
@@ -73,7 +77,9 @@ public final class ModStructurePopulator {
 				} else if (id.equals(GULAG)) {
 					populateGulag(level, box);
 				}
-				data.markStructurePopulated(populationKey);
+				if (populated) {
+					data.markStructurePopulated(populationKey);
+				}
 			}
 
 			if (id.equals(KIRILL_HOUSE) || id.equals(KIRILL_HOUSE_HBK)) {
@@ -129,7 +135,8 @@ public final class ModStructurePopulator {
 				.map(key -> key.identifier())
 				.filter(id -> id.getNamespace().equals(HbkMod.MOD_ID))
 				.filter(id -> id.equals(KIRILL_HOUSE) || id.equals(KIRILL_HOUSE_HBK)
-						|| id.equals(DENIS_HOUSE) || id.equals(STALINKA) || id.equals(GULAG))
+						|| id.equals(DENIS_HOUSE) || id.equals(KONATA_HOUSE)
+						|| id.equals(STALINKA) || id.equals(GULAG))
 				.orElse(null);
 	}
 
@@ -138,6 +145,17 @@ public final class ModStructurePopulator {
 		if (pos == null || ModEntityTypes.NURSE.spawn(level, pos, EntitySpawnReason.STRUCTURE) == null) {
 			HbkMod.LOGGER.warn("Could not spawn the nurse in Kirill's house at {}", box);
 		}
+	}
+
+	private static boolean spawnKonata(ServerLevel level, BoundingBox box) {
+		BlockPos pos = findStandingPosition(level, box, 200);
+		var konata = pos == null ? null : ModEntityTypes.KONATA.spawn(level, pos, EntitySpawnReason.STRUCTURE);
+		if (konata == null) {
+			HbkMod.LOGGER.warn("Could not spawn Konata in her house at {}", box);
+			return false;
+		}
+		konata.setPersistenceRequired();
+		return true;
 	}
 
 	private static boolean spawnKirillNear(ServerLevel level, BoundingBox box) {

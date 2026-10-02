@@ -1,0 +1,8 @@
+{
+  "comparator_output": 7,
+  "description": {
+    "translate": "jukebox_song.hbk.konata_theme"
+  },
+  "length_in_seconds": 102.067,
+  "sound_event": "hbk:music_disc.konata_theme"
+}
