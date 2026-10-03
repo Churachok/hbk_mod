@@ -5,6 +5,7 @@
 	"client": [
 		"AdvancementToastMixin",
 		"AvatarRendererMixin",
+		"BookViewScreenMixin",
 		"ChatComponentAccessor",
 		"EntityRendererMixin",
 		"GameRendererMixin",

@@ -3,6 +3,7 @@ package dev.kirill.hbk.world;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.registry.ModBlocks;
 import dev.kirill.hbk.registry.ModEntityTypes;
+import dev.kirill.hbk.registry.ModItems;
 import dev.kirill.hbk.util.NkvdSpawning;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -13,6 +14,12 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.npc.villager.Villager;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
+import net.minecraft.world.level.block.entity.BarrelBlockEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -29,6 +36,8 @@ public final class ModStructurePopulator {
 	private static final Identifier KONATA_HOUSE = HbkMod.id("konata_house");
 	private static final Identifier STALINKA = HbkMod.id("stalinka");
 	private static final Identifier GULAG = HbkMod.id("gulag");
+	private static final Identifier GRAVEYARD = HbkMod.id("graveyard");
+	private static final Identifier STALIN_DACHA = HbkMod.id("stalin_dacha");
 	private static final int VILLAGER_COUNT = 8;
 	private static final float VILLAGER_CHANCE = 0.60f;
 	private static final float LIZA_CHANCE = 0.60f;
@@ -60,6 +69,10 @@ public final class ModStructurePopulator {
 
 			String populationKey = id + "@" + start.getChunkPos().pack();
 			BoundingBox box = start.getBoundingBox();
+			if (id.equals(STALIN_DACHA)) {
+				populateStalinDacha(level, box, data, populationKey);
+				continue;
+			}
 			if (!level.hasChunksAt(box.minX(), box.minZ(), box.maxX(), box.maxZ())) {
 				continue;
 			}
@@ -76,9 +89,22 @@ public final class ModStructurePopulator {
 					}
 				} else if (id.equals(GULAG)) {
 					populateGulag(level, box);
+				} else if (id.equals(GRAVEYARD)) {
+					populated = placeRecipeChest(level, box);
 				}
 				if (populated) {
 					data.markStructurePopulated(populationKey);
+				}
+			}
+			if (id.equals(GULAG)) {
+				String suppliesKey = "gulag_supplies@" + start.getChunkPos().pack();
+				if (!data.isStructurePopulated(suppliesKey)) {
+					fillGulagBarrels(level, box);
+					data.markStructurePopulated(suppliesKey);
+				}
+				String compassKey = "gulag_compass@" + start.getChunkPos().pack();
+				if (!data.isStructurePopulated(compassKey) && placeGulagCompass(level, box)) {
+					data.markStructurePopulated(compassKey);
 				}
 			}
 
@@ -136,8 +162,126 @@ public final class ModStructurePopulator {
 				.filter(id -> id.getNamespace().equals(HbkMod.MOD_ID))
 				.filter(id -> id.equals(KIRILL_HOUSE) || id.equals(KIRILL_HOUSE_HBK)
 						|| id.equals(DENIS_HOUSE) || id.equals(KONATA_HOUSE)
-						|| id.equals(STALINKA) || id.equals(GULAG))
+						|| id.equals(STALINKA) || id.equals(GULAG) || id.equals(GRAVEYARD)
+						|| id.equals(STALIN_DACHA))
 				.orElse(null);
+	}
+
+	/** Residents can appear as soon as their part of the large template is loaded. */
+	private static void populateStalinDacha(ServerLevel level, BoundingBox box, ModWorldData data, String key) {
+		populateStalinDachaResidents(level, box, data, key);
+		if (!data.isStructurePopulated(key)
+				&& level.hasChunksAt(box.minX(), box.minZ(), box.maxX(), box.maxZ())
+				&& fillStalinDachaChests(level, box)) {
+			data.markStructurePopulated(key);
+		}
+	}
+
+	static void populateStalinDachaResidents(ServerLevel level, BoundingBox box, ModWorldData data, String key) {
+		for (int i = 0; i < 4; i++) {
+			String guardKey = "dacha_guard_" + i + "@" + key;
+			if (data.isStructurePopulated(guardKey)) {
+				continue;
+			}
+			BlockPos guardPos = findDachaStandingPosition(level, box, 120);
+			if (guardPos != null && ModEntityTypes.NKVD.spawn(level, guardPos, EntitySpawnReason.STRUCTURE) != null) {
+				data.markStructurePopulated(guardKey);
+			}
+		}
+		String grishaKey = "dacha_grisha@" + key;
+		if (!data.isStructurePopulated(grishaKey)) {
+			BlockPos grishaPos = findDachaStandingPosition(level, box, 120);
+			if (grishaPos != null && ModEntityTypes.GRISHA.spawn(level, grishaPos, EntitySpawnReason.STRUCTURE) != null) {
+				data.markStructurePopulated(grishaKey);
+			}
+		}
+	}
+
+	private static BlockPos findDachaStandingPosition(ServerLevel level, BoundingBox box, int attempts) {
+		RandomSource random = level.getRandom();
+		for (int attempt = 0; attempt < attempts; attempt++) {
+			int x = random.nextInt(box.minX() + 1, box.maxX());
+			int z = random.nextInt(box.minZ() + 1, box.maxZ());
+			if (!level.hasChunkAt(new BlockPos(x, box.minY(), z))) {
+				continue;
+			}
+			for (int y = box.minY() + 1; y < Math.min(box.minY() + 15, box.maxY()); y++) {
+				BlockPos pos = new BlockPos(x, y, z);
+				if (level.getBlockState(pos).isAir() && level.getBlockState(pos.above()).isAir()
+						&& level.getBlockState(pos.below()).isSolid()) {
+					return pos;
+				}
+			}
+		}
+		return null;
+	}
+
+	static boolean fillStalinDachaChests(ServerLevel level, BoundingBox box) {
+		java.util.ArrayList<ChestBlockEntity> chests = new java.util.ArrayList<>();
+		for (BlockPos pos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(),
+				box.maxX(), box.maxY(), box.maxZ())) {
+			if (level.getBlockState(pos).is(Blocks.CHEST)
+						&& level.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
+				chests.add(chest);
+			}
+		}
+		if (chests.isEmpty()) {
+			return false;
+		}
+		RandomSource random = level.getRandom();
+		for (ChestBlockEntity chest : chests) {
+			if (chest.getLootTable() != null) {
+				continue;
+			}
+			int rolls = 2 + random.nextInt(4);
+			for (int i = 0; i < rolls; i++) {
+				int roll = random.nextInt(100);
+				Item item = roll < 10 ? Items.DIAMOND
+						: roll < 14 ? Items.NETHERITE_SCRAP
+						: roll < 23 ? Items.GOLDEN_APPLE
+						: roll < 39 ? ModItems.CONDENSED_MILK
+						: roll < 55 ? ModItems.RATION
+						: roll < 69 ? ModItems.CURRANT_TINCTURE
+						: roll < 84 ? ModItems.BANDAGE
+						: roll < 92 ? ModItems.SICKLE_AND_HAMMER
+						: ModItems.MUSIC_DISC_USSR_ANTHEM;
+				int count = item == Items.DIAMOND || item == ModItems.RATION || item == ModItems.BANDAGE
+						? 1 + random.nextInt(3) : 1;
+				addToEmptySlot(chest, new ItemStack(item, count), random);
+			}
+			chest.setChanged();
+		}
+		return placeUniqueDachaItem(chests, ModItems.STALIN_PIPE, random)
+				&& placeUniqueDachaItem(chests, ModItems.STALIN_SPAWN_EGG, random);
+	}
+
+	private static boolean placeUniqueDachaItem(List<ChestBlockEntity> chests, Item item, RandomSource random) {
+		for (ChestBlockEntity chest : chests) {
+			for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+				if (chest.getItem(slot).is(item)) {
+					return true;
+				}
+			}
+		}
+		int first = random.nextInt(chests.size());
+		for (int offset = 0; offset < chests.size(); offset++) {
+			if (addToEmptySlot(chests.get((first + offset) % chests.size()), new ItemStack(item), random)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean addToEmptySlot(ChestBlockEntity chest, ItemStack stack, RandomSource random) {
+		int first = random.nextInt(chest.getContainerSize());
+		for (int offset = 0; offset < chest.getContainerSize(); offset++) {
+			int slot = (first + offset) % chest.getContainerSize();
+			if (chest.getItem(slot).isEmpty()) {
+				chest.setItem(slot, stack);
+				return true;
+			}
+		}
+		return false;
 	}
 
 	private static void spawnNurse(ServerLevel level, BoundingBox box) {
@@ -229,6 +373,117 @@ public final class ModStructurePopulator {
 		BlockPos origin = new BlockPos(box.minX(), box.minY(), box.minZ());
 		Vec3i size = new Vec3i(box.getXSpan(), box.getYSpan(), box.getZSpan());
 		NkvdSpawning.spawnSquadInArea(level, origin, size, NKVD_COUNT);
+	}
+
+	static void fillGulagBarrels(ServerLevel level, BoundingBox box) {
+		for (BlockPos pos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(),
+				box.maxX(), box.maxY(), box.maxZ())) {
+			if (!level.getBlockState(pos).is(Blocks.BARREL)
+					|| !(level.getBlockEntity(pos) instanceof BarrelBlockEntity barrel)
+					|| barrel.getLootTable() != null) {
+				continue;
+			}
+			int supplies = 1 + level.getRandom().nextInt(3);
+			for (int i = 0; i < supplies; i++) {
+				Item item = switch (level.getRandom().nextInt(3)) {
+					case 0 -> ModItems.RATION;
+					case 1 -> ModItems.STEW;
+					default -> ModItems.CONDENSED_MILK;
+				};
+				addToEmptySlot(barrel, new ItemStack(item, 1 + level.getRandom().nextInt(2)), level.getRandom());
+			}
+			if (level.getRandom().nextFloat() < 0.03f) {
+				addToEmptySlot(barrel, new ItemStack(ModItems.STALIN_SPAWN_EGG), level.getRandom());
+			}
+			barrel.setChanged();
+		}
+	}
+
+	/** Places one compass per Gulag, including Gulags generated before this item existed. */
+	static boolean placeGulagCompass(ServerLevel level, BoundingBox box) {
+		BarrelBlockEntity candidate = null;
+		int candidateSlot = -1;
+		int candidates = 0;
+		for (BlockPos pos : BlockPos.betweenClosed(box.minX(), box.minY(), box.minZ(),
+				box.maxX(), box.maxY(), box.maxZ())) {
+			if (!level.getBlockState(pos).is(Blocks.BARREL)
+					|| !(level.getBlockEntity(pos) instanceof BarrelBlockEntity barrel)
+					|| barrel.getLootTable() != null) {
+				continue;
+			}
+			for (int slot = 0; slot < barrel.getContainerSize(); slot++) {
+				if (barrel.getItem(slot).is(ModItems.RESET_COMPASS)) {
+					return true;
+				}
+			}
+			for (int slot = 0; slot < barrel.getContainerSize(); slot++) {
+				if (barrel.getItem(slot).isEmpty()) {
+					if (level.getRandom().nextInt(++candidates) == 0) {
+						candidate = barrel;
+						candidateSlot = slot;
+					}
+					break;
+				}
+			}
+		}
+		if (candidate == null) {
+			return false;
+		}
+		candidate.setItem(candidateSlot, new ItemStack(ModItems.RESET_COMPASS));
+		candidate.setChanged();
+		return true;
+	}
+
+	private static void addToEmptySlot(BarrelBlockEntity barrel, ItemStack stack, RandomSource random) {
+		int first = random.nextInt(barrel.getContainerSize());
+		for (int offset = 0; offset < barrel.getContainerSize(); offset++) {
+			int slot = (first + offset) % barrel.getContainerSize();
+			if (barrel.getItem(slot).isEmpty()) {
+				barrel.setItem(slot, stack);
+				return;
+			}
+		}
+	}
+
+	static boolean placeRecipeChest(ServerLevel level, BoundingBox box) {
+		// Search the perimeter so the book is visible outside the graveyard and existing blocks survive.
+		for (int distance = 2; distance <= 4; distance++) {
+			for (int x = box.minX() - distance; x <= box.maxX() + distance; x++) {
+				for (int z : new int[] {box.minZ() - distance, box.maxZ() + distance}) {
+					if (tryPlaceRecipeChest(level, box, x, z)) {
+						return true;
+					}
+				}
+			}
+			for (int z = box.minZ() - distance + 1; z < box.maxZ() + distance; z++) {
+				for (int x : new int[] {box.minX() - distance, box.maxX() + distance}) {
+					if (tryPlaceRecipeChest(level, box, x, z)) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	private static boolean tryPlaceRecipeChest(ServerLevel level, BoundingBox box, int x, int z) {
+		BlockPos column = new BlockPos(x, box.maxY(), z);
+		if (!level.hasChunkAt(column)) {
+			return false;
+		}
+		BlockPos pos = level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, column);
+		if (Math.abs(pos.getY() - box.minY()) > 5 || !level.getBlockState(pos).isAir()
+				|| !level.getBlockState(pos.above()).isAir() || !level.getBlockState(pos.below()).isSolid()) {
+			return false;
+		}
+		if (!level.setBlockAndUpdate(pos, Blocks.CHEST.defaultBlockState())) {
+			return false;
+		}
+		if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
+			chest.setItem(13, GraveyardRecipeBook.create());
+			return true;
+		}
+		return false;
 	}
 
 	private static BlockPos findStandingPosition(ServerLevel level, BoundingBox box, int attempts) {

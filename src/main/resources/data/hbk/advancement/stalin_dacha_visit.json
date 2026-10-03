@@ -1,0 +1,20 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {"id": "hbk:stalin_pipe"},
+    "title": {"translate": "advancement.hbk.stalin_dacha_visit.title"},
+    "description": {"translate": "advancement.hbk.stalin_dacha_visit.description"},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_dacha": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [{"condition": "minecraft:location_check", "predicate": {"structures": "hbk:stalin_dacha"}}]
+      }
+    }
+  }
+}

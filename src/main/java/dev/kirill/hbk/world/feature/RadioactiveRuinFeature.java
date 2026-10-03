@@ -1,21 +1,28 @@
 package dev.kirill.hbk.world.feature;
 
 import dev.kirill.hbk.registry.ModBlocks;
+import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.world.ModWorldgen;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 /** Procedurally assembles a different bombed-out concrete building on every placement. */
 public final class RadioactiveRuinFeature extends Feature<NoneFeatureConfiguration> {
+	private static final ResourceKey<LootTable> RUIN_CHEST_LOOT = ResourceKey.create(
+			Registries.LOOT_TABLE, HbkMod.id("chests/radioactive_ruin"));
 	public RadioactiveRuinFeature() {
 		super(NoneFeatureConfiguration.CODEC);
 	}
@@ -81,7 +88,26 @@ public final class RadioactiveRuinFeature extends Feature<NoneFeatureConfigurati
 
 		placeBrokenBeams(level, random, minX, minZ, groundY + 4, width, length);
 		placeWatchPost(level, random, centerX + width / 2 + 3, centerZ, groundY);
+		placeLootChest(level, random, minX, minZ, width, length, groundY);
 		return true;
+	}
+
+	static void placeLootChest(WorldGenLevel level, RandomSource random,
+			int minX, int minZ, int width, int length, int groundY) {
+		for (int attempt = 0; attempt < 20; attempt++) {
+			BlockPos pos = new BlockPos(minX + 1 + random.nextInt(width - 2), groundY + 1,
+					minZ + 1 + random.nextInt(length - 2));
+			if (!level.getBlockState(pos).isAir() || !level.getBlockState(pos.below()).isSolid()) {
+				continue;
+			}
+			if (level.setBlock(pos, Blocks.CHEST.defaultBlockState(), 2)
+					&& level.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
+				chest.setLootTable(RUIN_CHEST_LOOT);
+				chest.setLootTableSeed(random.nextLong());
+				chest.setChanged();
+				return;
+			}
+		}
 	}
 
 	private static BlockState ruinStone(RandomSource random) {

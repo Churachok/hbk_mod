@@ -15,6 +15,10 @@
 		},
 		{
 			"rolls": 1,
+			"entries": [{"type": "minecraft:item", "name": "hbk:kirill_glasses"}]
+		},
+		{
+			"rolls": 1,
 			"entries": [{
 				"type": "minecraft:item",
 				"name": "minecraft:netherite_ingot",

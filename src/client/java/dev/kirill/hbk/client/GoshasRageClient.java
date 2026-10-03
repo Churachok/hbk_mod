@@ -29,6 +29,9 @@ public final class GoshasRageClient {
 		if (isActive()) {
 			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(POST_EFFECT);
 			ownsPostEffect = true;
+		} else if (KirillGlassesClient.isActive()) {
+			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(KirillGlassesClient.POST_EFFECT);
+			ownsPostEffect = true;
 		} else if (ownsPostEffect) {
 			client.gameRenderer.checkEntityPostEffect(client.getCameraEntity());
 			ownsPostEffect = false;

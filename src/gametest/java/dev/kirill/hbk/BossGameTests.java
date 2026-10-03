@@ -6,10 +6,29 @@ import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 public final class BossGameTests {
+	@GameTest
+	public void kirillGlassesBoostPlayerAndProjectileDamage(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockServerPlayerInLevel();
+		player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(ModItems.KIRILL_GLASSES));
+		var meleeTarget = test.spawnWithNoFreeWill(EntityTypes.COW, 1, 2, 1);
+		meleeTarget.hurtServer(level, level.damageSources().playerAttack(player), 4.0f);
+		test.assertTrue(Math.abs(meleeTarget.getHealth() - (meleeTarget.getMaxHealth() - 6.0f)) < 0.01f,
+				"Glasses must increase direct player damage by 50%");
+		var arrow = new Arrow(EntityTypes.ARROW, level);
+		arrow.setOwner(player);
+		var rangedTarget = test.spawnWithNoFreeWill(EntityTypes.COW, 3, 2, 1);
+		rangedTarget.hurtServer(level, level.damageSources().arrow(arrow, player), 4.0f);
+		test.assertTrue(Math.abs(rangedTarget.getHealth() - (rangedTarget.getMaxHealth() - 6.0f)) < 0.01f,
+				"Glasses must increase projectile damage by 50%");
+		test.succeed();
+	}
 	@GameTest(maxTicks = 80)
 	public void kirillAndMadLiberalPrioritizeEachOtherOverPlayers(GameTestHelper test) {
 		for (int x = 0; x < 7; x++) {
@@ -89,6 +108,8 @@ public final class BossGameTests {
 				"Kirill Doom must drop four Founding Penis transformations");
 		test.assertTrue(count(test, ModItems.URANIUM_LEGGINGS) == 1,
 				"Kirill Doom must drop uranium leggings");
+		test.assertTrue(count(test, ModItems.KIRILL_GLASSES) == 1,
+				"Kirill Doom must drop his glasses");
 		test.assertTrue(count(test, Items.NETHERITE_INGOT) == 3,
 				"Kirill Doom must drop three netherite ingots");
 		test.assertTrue(count(test, Items.ENCHANTED_GOLDEN_APPLE) == 64,

@@ -1,0 +1,9 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 1917023775,
+    "separation": 64,
+    "spacing": 240
+  },
+  "structures": [{"structure": "hbk:stalin_dacha", "weight": 1}]
+}

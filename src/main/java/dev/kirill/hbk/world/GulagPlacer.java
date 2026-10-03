@@ -12,6 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 
 import java.util.Optional;
 
@@ -59,6 +60,12 @@ public final class GulagPlacer {
 		}
 
 		NkvdSpawning.spawnSquadInArea(level, origin, size, NKVD_COUNT);
+		BoundingBox box = new BoundingBox(origin.getX(), origin.getY(), origin.getZ(),
+				origin.getX() + size.getX() - 1, origin.getY() + size.getY() - 1, origin.getZ() + size.getZ() - 1);
+		ModStructurePopulator.fillGulagBarrels(level, box);
+		if (!ModStructurePopulator.placeGulagCompass(level, box)) {
+			HbkMod.LOGGER.warn("Could not place the reset compass in Gulag barrels at {}", origin);
+		}
 		HbkMod.LOGGER.info("Placed gulag at {}", origin);
 		return origin;
 	}

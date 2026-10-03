@@ -26,6 +26,7 @@ public class HbkClient implements ClientModInitializer {
 		ModEntityModelLayers.register();
 		ArmorRenderer.register(UraniumArmorRenderer::new, ModItems.URANIUM_HELMET, ModItems.URANIUM_CHESTPLATE,
 				ModItems.URANIUM_LEGGINGS, ModItems.URANIUM_BOOTS);
+		ArmorRenderer.register(KirillGlassesRenderer::new, ModItems.KIRILL_GLASSES);
 		EntityRendererRegistry.register(ModEntityTypes.STALIN, context -> new GiantBossRenderer<>(context, HbkMod.id("textures/entity/stalin.png")));
 		EntityRendererRegistry.register(ModEntityTypes.CJ, context -> new GiantBossRenderer<>(context, HbkMod.id("textures/entity/cj.png")));
 		EntityRendererRegistry.register(ModEntityTypes.MAD_LIBERAL, context -> new HumanoidBossRenderer<>(context,
