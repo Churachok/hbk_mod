@@ -193,6 +193,33 @@ public final class NpcGameTests {
 	}
 
 	@GameTest
+	public void konataHouseIsSmallAndRarerThanKirillHouse(GameTestHelper test) {
+		var level = test.getLevel();
+		var structureId = HbkMod.id("konata_house");
+		level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.STRUCTURE)
+				.getOrThrow(net.minecraft.resources.ResourceKey.create(
+						net.minecraft.core.registries.Registries.STRUCTURE, structureId));
+		level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.TEMPLATE_POOL)
+				.getOrThrow(net.minecraft.resources.ResourceKey.create(
+						net.minecraft.core.registries.Registries.TEMPLATE_POOL, structureId));
+		var structureSets = level.registryAccess().lookupOrThrow(net.minecraft.core.registries.Registries.STRUCTURE_SET);
+		var konataSet = structureSets.getOrThrow(net.minecraft.resources.ResourceKey.create(
+				net.minecraft.core.registries.Registries.STRUCTURE_SET, HbkMod.id("konata_houses")));
+		var kirillSet = structureSets.getOrThrow(net.minecraft.resources.ResourceKey.create(
+				net.minecraft.core.registries.Registries.STRUCTURE_SET, HbkMod.id("kirill_houses")));
+		var konataPlacement = (net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement)
+				konataSet.value().placement();
+		var kirillPlacement = (net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement)
+				kirillSet.value().placement();
+		test.assertTrue(konataPlacement.spacing() > kirillPlacement.spacing(),
+				"Konata's house must generate less often than Kirill's house");
+		var template = level.getStructureManager().get(structureId).orElseThrow();
+		test.assertTrue(template.getSize().getX() == 9 && template.getSize().getY() == 7
+				&& template.getSize().getZ() == 9, "Konata's house must stay compact");
+		test.succeed();
+	}
+
+	@GameTest
 	public void healthAndPermanentWeapons(GameTestHelper test) {
 		var anton = test.spawn(ModEntityTypes.ANTON, 1, 2, 1);
 		var lesha = test.spawn(ModEntityTypes.LESHA, 2, 2, 1);
@@ -344,6 +371,136 @@ public final class NpcGameTests {
 		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE
 				.getKey(ModEntityTypes.CATGIRL).equals(HbkMod.id("catgirl")),
 				"Catgirl summon identifier must be hbk:catgirl");
+		test.succeed();
+	}
+
+	@GameTest
+	public void konataHas20HealthAndMatchingSpawnEgg(GameTestHelper test) {
+		var thirdVariant = test.spawn(ModEntityTypes.TEST3_KONATA, 8, 2, 2);
+		test.assertTrue(thirdVariant.getType() != ModEntityTypes.TEST2_KONATA
+				&& thirdVariant.getMaxHealth() == 20, "Test 3 must be a separate entity type with 20 HP");
+		test.assertTrue(thirdVariant.getBbWidth() == 0.6f && thirdVariant.getBbHeight() == 1.8f,
+				"Test 3 must retain Konata's original full-size dimensions after the model swap");
+		var secondVariant = test.spawn(ModEntityTypes.TEST2_KONATA, 6, 2, 2);
+		test.assertTrue(secondVariant.getType() != ModEntityTypes.KONATA
+				&& secondVariant.getType() != ModEntityTypes.TEST_KONATA && secondVariant.getMaxHealth() == 20,
+				"Test 2 must be a separate entity type with 20 HP");
+		var variant = test.spawn(ModEntityTypes.TEST_KONATA, 4, 2, 2);
+		test.assertTrue(variant.getType() != ModEntityTypes.KONATA && variant.getMaxHealth() == 20,
+				"Test variant must be a separate entity type with 20 HP");
+		var konata = test.spawn(ModEntityTypes.KONATA, 2, 2, 2);
+		test.assertTrue(konata.getMaxHealth() == 20 && konata.getHealth() == 20,
+				"Konata must spawn with 20 HP");
+		test.assertTrue(konata.getBbWidth() == 0.55f && konata.getBbHeight() == 1.64f,
+				"Konata must use Test 3's compact dimensions after the model swap");
+		test.assertTrue(konata.getAmbientSoundInterval() == 240,
+				"Konata's voice clips must use the longer roaming ambient interval");
+		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.SOUND_EVENT
+				.getKey(dev.kirill.hbk.registry.ModSounds.KONATA_AMBIENT)
+				.equals(HbkMod.id("entity.konata.ambient")),
+				"Konata's ambient voice event must be registered");
+		for (var sound : java.util.List.of("shutdown", "startup", "info", "warning", "alert")) {
+			test.assertTrue(NpcGameTests.class.getResource(
+					"/assets/hbk/sounds/entity/konata/" + sound + ".ogg") != null,
+					"Konata's clean voice clip must be packaged: " + sound);
+		}
+		for (var sound : java.util.List.of("pupue", "good")) {
+			test.assertTrue(NpcGameTests.class.getResource(
+					"/assets/hbk/sounds/entity/konata/" + sound + ".ogg") != null,
+					"Konata's interaction voice clip must be packaged: " + sound);
+		}
+		test.assertTrue(ModItems.MUSIC_DISC_KONATA_THEME.components()
+				.get(net.minecraft.core.component.DataComponents.JUKEBOX_PLAYABLE) != null,
+				"Konata's theme disc must be jukebox-playable");
+		test.assertTrue(NpcGameTests.class.getResource(
+				"/assets/hbk/sounds/music_disc/konata_theme.ogg") != null,
+				"Konata's theme must be packaged as a streaming music-disc sound");
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		test.assertFalse(konata.canAttack(player), "Konata must be peaceful");
+		test.assertTrue(ModItems.KONATA_SPAWN_EGG.getDefaultInstance()
+				.get(net.minecraft.core.component.DataComponents.ENTITY_DATA).type() == ModEntityTypes.KONATA,
+				"Konata's egg must spawn Konata");
+		int itemsBefore = test.getEntities(EntityTypes.ITEM).size();
+		test.assertTrue(konata.interact(player, net.minecraft.world.InteractionHand.MAIN_HAND, konata.position())
+				== net.minecraft.world.InteractionResult.SUCCESS, "Konata must accept a right-click");
+		var drops = test.getEntities(EntityTypes.ITEM);
+		test.assertTrue(drops.size() == itemsBefore + 1
+				&& drops.stream().anyMatch(entity -> entity.getItem().is(ModItems.SHPERMA)),
+				"Right-clicking Konata must drop one Shperma item");
+		test.succeed();
+	}
+
+	@GameTest
+	public void konataLimitsEachPlayerToTenItemsPerDay(GameTestHelper test) {
+		var level = test.getLevel();
+		var konata = test.spawn(ModEntityTypes.KONATA, 2, 2, 2);
+		var firstPlayer = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		for (int i = 0; i < 9; i++) {
+			konata.interact(firstPlayer, net.minecraft.world.InteractionHand.MAIN_HAND, konata.position());
+		}
+		test.assertFalse(konata.isGoodGestureActive(),
+				"Konata must reserve the wink and thumbs-up gesture for the tenth daily item");
+		konata.interact(firstPlayer, net.minecraft.world.InteractionHand.MAIN_HAND, konata.position());
+		test.assertTrue(test.getEntities(EntityTypes.ITEM).size() == 10,
+				"Konata must give the first player exactly ten items");
+		var firstClaim = firstPlayer.getAttachedOrCreate(
+				dev.kirill.hbk.registry.ModAttachments.KONATA_DAILY_CLAIM);
+		test.assertTrue(firstClaim.count() == 10,
+				"Konata's daily item count must be stored on the player");
+		test.assertTrue(konata.isGoodGestureActive(),
+				"Konata must start her wink and thumbs-up gesture on the tenth daily item");
+
+		konata.interact(firstPlayer, net.minecraft.world.InteractionHand.MAIN_HAND, konata.position());
+		test.assertTrue(test.getEntities(EntityTypes.ITEM).size() == 10,
+				"The eleventh click on the same day must not drop an item");
+
+		var secondPlayer = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		konata.interact(secondPlayer, net.minecraft.world.InteractionHand.MAIN_HAND, konata.position());
+		test.assertTrue(test.getEntities(EntityTypes.ITEM).size() == 11,
+				"A second player must have an independent daily limit");
+
+		long currentDay = level.getOverworldClockTime() / 24_000L;
+		firstPlayer.setAttached(dev.kirill.hbk.registry.ModAttachments.KONATA_DAILY_CLAIM,
+				new dev.kirill.hbk.player.KonataDailyClaim(currentDay - 1, 10));
+		konata.interact(firstPlayer, net.minecraft.world.InteractionHand.MAIN_HAND, konata.position());
+		test.assertTrue(test.getEntities(EntityTypes.ITEM).size() == 12,
+				"The limit must reset at the start of a new Minecraft day");
+		var resetClaim = firstPlayer.getAttachedOrCreate(
+				dev.kirill.hbk.registry.ModAttachments.KONATA_DAILY_CLAIM);
+		test.assertTrue(resetClaim.count() == 1 && resetClaim.day() == currentDay,
+				"The new day's first item must start a new persistent counter");
+		test.succeed();
+	}
+
+	@GameTest
+	public void shpermaHealsOnTapAndFiresKirillBulletAfterCharging(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var playerPos = test.absolutePos(new net.minecraft.core.BlockPos(2, 2, 2));
+		player.teleportTo(playerPos.getX() + 0.5, playerPos.getY(), playerPos.getZ() + 0.5);
+		player.setHealth(16.0f);
+		player.getFoodData().setFoodLevel(16);
+		var stack = new net.minecraft.world.item.ItemStack(ModItems.SHPERMA, 2);
+		int duration = ModItems.SHPERMA.getUseDuration(stack, player);
+		test.assertTrue(ModItems.SHPERMA.getUseAnimation(stack) == net.minecraft.world.item.ItemUseAnimation.BOW,
+				"Shperma must use the bow charging animation");
+
+		boolean tapped = ModItems.SHPERMA.releaseUsing(stack, level, player, duration);
+		test.assertTrue(tapped, "A quick release must be handled");
+		test.assertTrue(player.getHealth() == 18.0f && player.getFoodData().getFoodLevel() == 18,
+				"A quick release must restore exactly one heart and one full hunger icon");
+		test.assertTrue(stack.getCount() == 1, "Healing must consume one item");
+
+		int bulletsBefore = test.getEntities(ModEntityTypes.ATTACKING_MEMBER_BULLET).size();
+		boolean fired = ModItems.SHPERMA.releaseUsing(stack, level, player,
+				duration - dev.kirill.hbk.item.ShpermaItem.CHARGE_TICKS);
+		var bullets = test.getEntities(ModEntityTypes.ATTACKING_MEMBER_BULLET);
+		test.assertTrue(fired && bullets.size() == bulletsBefore + 1,
+				"A one-second charge must fire one of Kirill's bullets");
+		var bullet = bullets.getLast();
+		test.assertTrue(bullet.getOwner() == player && bullet.getDeltaMovement().lengthSqr() > 1.0,
+				"The charged projectile must belong to the player and travel at bullet speed");
+		test.assertTrue(stack.isEmpty(), "Firing must consume one item");
 		test.succeed();
 	}
 

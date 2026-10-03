@@ -52,6 +52,10 @@ public class HbkClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntityTypes.LEX, LexRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.PINK_FURRY_WOLF, PinkFurryWolfRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.CATGIRL, CatgirlRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.KONATA, Test3KonataRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.TEST_KONATA, TestKonataRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.TEST2_KONATA, Test2KonataRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.TEST3_KONATA, KonataRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.GIANT_ROCKET, context -> new ThrownItemRenderer<>(context, 1.75f, true));
 		EntityRendererRegistry.register(ModEntityTypes.ATTACKING_MEMBER_BULLET, context -> new ThrownItemRenderer<>(context, 0.55f, true));
 		EntityRendererRegistry.register(ModEntityTypes.FOUNDING_PENIS_PROJECTILE, context -> new ThrownItemRenderer<>(context, 3.0f, true));

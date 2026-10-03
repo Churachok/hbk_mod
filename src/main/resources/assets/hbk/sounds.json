@@ -3,10 +3,36 @@
 		"subtitle": "subtitles.hbk.goose_honk",
 		"sounds": ["hbk:goose_honk"]
 	},
+	"entity.konata.ambient": {
+		"subtitle": "subtitles.hbk.konata.ambient",
+		"sounds": [
+			"hbk:entity/konata/shutdown",
+			"hbk:entity/konata/startup",
+			"hbk:entity/konata/info",
+			"hbk:entity/konata/warning",
+			"hbk:entity/konata/alert"
+		]
+	},
+	"entity.konata.pupue": {
+		"subtitle": "subtitles.hbk.konata.pupue",
+		"sounds": ["hbk:entity/konata/pupue"]
+	},
+	"entity.konata.good": {
+		"subtitle": "subtitles.hbk.konata.good",
+		"sounds": ["hbk:entity/konata/good"]
+	},
 	"music_disc.hbkau": {
 		"sounds": [
 			{
 				"name": "hbk:music_disc/hbkau",
+				"stream": true
+			}
+		]
+	},
+	"music_disc.konata_theme": {
+		"sounds": [
+			{
+				"name": "hbk:music_disc/konata_theme",
 				"stream": true
 			}
 		]

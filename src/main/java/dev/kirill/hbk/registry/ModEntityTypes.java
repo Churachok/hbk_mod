@@ -3,6 +3,7 @@ package dev.kirill.hbk.registry;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.entity.CjEntity;
 import dev.kirill.hbk.entity.CatgirlEntity;
+import dev.kirill.hbk.entity.KonataEntity;
 import dev.kirill.hbk.entity.ReferenceNpcEntity;
 import dev.kirill.hbk.entity.LexEntity;
 import dev.kirill.hbk.entity.SashaEntity;
@@ -212,6 +213,22 @@ public class ModEntityTypes {
 			EntityType.Builder.<CatgirlEntity>of(CatgirlEntity::new, MobCategory.CREATURE)
 					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
 
+	public static final EntityType<KonataEntity> KONATA = register("konata",
+			EntityType.Builder.<KonataEntity>of(KonataEntity::new, MobCategory.CREATURE)
+					.sized(0.55f, 1.64f).eyeHeight(1.47f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<KonataEntity> TEST_KONATA = register("test",
+			EntityType.Builder.<KonataEntity>of(KonataEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<KonataEntity> TEST2_KONATA = register("test2",
+			EntityType.Builder.<KonataEntity>of(KonataEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
+	public static final EntityType<KonataEntity> TEST3_KONATA = register("test3",
+			EntityType.Builder.<KonataEntity>of(KonataEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
+
 	private static <T extends GiantBossEntity> EntityType.Builder<T> giant(EntityType.EntityFactory<T> factory) {
 		return EntityType.Builder.of(factory, MobCategory.MONSTER)
 				.sized(GiantBossEntity.HITBOX_WIDTH, GiantBossEntity.HITBOX_HEIGHT)
@@ -257,5 +274,9 @@ public class ModEntityTypes {
 		FabricDefaultAttributeRegistry.register(LEX, LexEntity.createAttributes().add(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH, 20.0));
 		FabricDefaultAttributeRegistry.register(PINK_FURRY_WOLF, PinkFurryWolfEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(CATGIRL, CatgirlEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(KONATA, KonataEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(TEST_KONATA, KonataEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(TEST2_KONATA, KonataEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(TEST3_KONATA, KonataEntity.createAttributes());
 	}
 }
