@@ -1,0 +1,15 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {"id": "hbk:shperma"},
+    "title": {"translate": "advancement.hbk.sweet_tooth.title"},
+    "description": {"translate": "advancement.hbk.sweet_tooth.description"},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "eat": {"trigger": "minecraft:impossible"}
+  }
+}

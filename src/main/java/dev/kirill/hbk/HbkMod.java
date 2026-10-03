@@ -11,6 +11,7 @@ import dev.kirill.hbk.registry.ModDataComponents;
 import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModFeatures;
+import dev.kirill.hbk.registry.ModGameRules;
 import dev.kirill.hbk.registry.ModItems;
 import dev.kirill.hbk.registry.ModLoot;
 import dev.kirill.hbk.registry.ModSounds;
@@ -28,6 +29,7 @@ public class HbkMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModGameRules.register();
 		ModAttachments.register();
 		ModDataComponents.register();
 		ModEffects.register();
