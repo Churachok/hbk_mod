@@ -18,6 +18,8 @@ import dev.kirill.hbk.item.FlyingCarpetItem;
 import dev.kirill.hbk.item.GoldenCrownItem;
 import dev.kirill.hbk.item.GoshasRageBottleItem;
 import dev.kirill.hbk.item.RationItem;
+import dev.kirill.hbk.item.ResetCompassItem;
+import dev.kirill.hbk.item.StalinPipeItem;
 import dev.kirill.hbk.item.ShovelSwordItem;
 import dev.kirill.hbk.item.SickleAndHammerItem;
 import dev.kirill.hbk.item.StewItem;
@@ -66,6 +68,8 @@ public class ModItems {
 			Registries.JUKEBOX_SONG,
 			HbkMod.id("konata_theme")
 	);
+	private static final ResourceKey<JukeboxSong> USSR_ANTHEM_JUKEBOX_SONG = ResourceKey.create(
+			Registries.JUKEBOX_SONG, HbkMod.id("ussr_anthem"));
 
 	public static final Item INFECTED_DIRT = block("infected_dirt", ModBlocks.INFECTED_DIRT);
 	public static final Item RADIOACTIVE_STONE = block("radioactive_stone", ModBlocks.RADIOACTIVE_STONE);
@@ -86,6 +90,9 @@ public class ModItems {
 	public static final Item TOXIC_WATER = block("toxic_water", ModBlocks.TOXIC_WATER);
 	public static final Item SCORCHED_STONE = block("scorched_stone", ModBlocks.SCORCHED_STONE);
 	public static final Item RADIOACTIVE_SAND = block("radioactive_sand", ModBlocks.RADIOACTIVE_SAND);
+	public static final Item RESET_COMPASS = register(
+			"reset_compass", ResetCompassItem::new, new Item.Properties().stacksTo(1)
+	);
 	public static final Item DEAD_GRASS = block("dead_grass", ModBlocks.DEAD_GRASS);
 	public static final Item INFECTED_BUSH = block("infected_bush", ModBlocks.INFECTED_BUSH);
 	public static final Item MOLDY_MOSS = block("moldy_moss", ModBlocks.MOLDY_MOSS);
@@ -165,6 +172,12 @@ public class ModItems {
 	public static final Item URANIUM_CHESTPLATE = armor("uranium_chestplate", ArmorType.CHESTPLATE);
 	public static final Item URANIUM_LEGGINGS = armor("uranium_leggings", ArmorType.LEGGINGS);
 	public static final Item URANIUM_BOOTS = armor("uranium_boots", ArmorType.BOOTS);
+	public static final Item KIRILL_GLASSES = register(
+			"kirill_glasses",
+			Item::new,
+			new Item.Properties().humanoidArmor(ArmorMaterials.LEATHER, ArmorType.HELMET)
+					.rarity(net.minecraft.world.item.Rarity.EPIC)
+	);
 
 	public static final Item ATTACKING_MEMBER = register(
 			"attacking_member",
@@ -239,6 +252,13 @@ public class ModItems {
 					.rarity(net.minecraft.world.item.Rarity.UNCOMMON)
 					.jukeboxPlayable(KONATA_THEME_JUKEBOX_SONG)
 	);
+	public static final Item MUSIC_DISC_USSR_ANTHEM = register(
+			"music_disc_ussr_anthem", Item::new,
+			new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.RARE)
+					.jukeboxPlayable(USSR_ANTHEM_JUKEBOX_SONG));
+	public static final Item STALIN_PIPE = register(
+			"stalin_pipe", StalinPipeItem::new,
+			new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC));
 
 	public static final Item REDSTONE_PICKAXE = register(
 			"redstone_pickaxe",
@@ -503,6 +523,8 @@ public class ModItems {
 			output.accept(BALALAIKA_PICKAXE);
 			output.accept(MUSIC_DISC_HBKAU);
 			output.accept(MUSIC_DISC_KONATA_THEME);
+			output.accept(MUSIC_DISC_USSR_ANTHEM);
+			output.accept(STALIN_PIPE);
 			output.accept(REDSTONE_PICKAXE);
 			output.accept(SHOVEL_SWORD);
 			output.accept(WESTERN_CHESTPLATE);
@@ -510,6 +532,7 @@ public class ModItems {
 			output.accept(URANIUM_CHESTPLATE);
 			output.accept(URANIUM_LEGGINGS);
 			output.accept(URANIUM_BOOTS);
+			output.accept(KIRILL_GLASSES);
 			output.accept(ATTACKING_MEMBER);
 			output.accept(ARMORED_MEMBER);
 			output.accept(COLOSSAL_MEMBER);

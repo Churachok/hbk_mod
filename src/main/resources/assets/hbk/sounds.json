@@ -29,6 +29,9 @@
 			}
 		]
 	},
+	"music_disc.ussr_anthem": {
+		"sounds": [{"name": "hbk:music_disc/ussr_anthem", "stream": true}]
+	},
 	"music_disc.konata_theme": {
 		"sounds": [
 			{

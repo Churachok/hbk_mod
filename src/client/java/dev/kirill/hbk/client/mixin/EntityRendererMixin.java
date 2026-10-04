@@ -1,6 +1,7 @@
 package dev.kirill.hbk.client.mixin;
 
 import dev.kirill.hbk.client.GoshasRageClient;
+import dev.kirill.hbk.client.KirillGlassesClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
@@ -18,6 +19,8 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
 	private void hbk$markRageOutline(T entity, S state, float tickProgress, CallbackInfo ci) {
 		if (GoshasRageClient.isActive() && entity instanceof LivingEntity) {
 			state.outlineColor = hbk$encodeProjectedVerticalBounds(state);
+		} else if (KirillGlassesClient.isActive() && entity instanceof LivingEntity) {
+			state.outlineColor = 0xFFFF1010;
 		}
 	}
 

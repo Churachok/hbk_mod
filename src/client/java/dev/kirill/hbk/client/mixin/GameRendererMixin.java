@@ -1,6 +1,6 @@
 package dev.kirill.hbk.client.mixin;
 
-import dev.kirill.hbk.client.GoshasRageClient;
+import dev.kirill.hbk.client.KirillGlassesClient;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -20,7 +20,7 @@ public abstract class GameRendererMixin {
 	@Redirect(method = "render", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/LevelRenderer;doEntityOutline()V"))
 	private void hbk$deferRageEntityOutline(LevelRenderer levelRenderer) {
-		if (!GoshasRageClient.isActive()) {
+		if (!KirillGlassesClient.hasMobOutline()) {
 			levelRenderer.doEntityOutline();
 		}
 	}
@@ -29,7 +29,7 @@ public abstract class GameRendererMixin {
 			target = "Lnet/minecraft/client/renderer/fog/FogRenderer;endFrame()V", shift = At.Shift.BEFORE))
 	private void hbk$drawRageEntityOutlineAfterPostEffect(DeltaTracker deltaTracker, boolean renderLevel,
 			CallbackInfo ci) {
-		if (renderLevel && GoshasRageClient.isActive()) {
+		if (renderLevel && KirillGlassesClient.hasMobOutline()) {
 			this.minecraft.levelRenderer.doEntityOutline();
 		}
 	}

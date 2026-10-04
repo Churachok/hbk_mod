@@ -24,6 +24,7 @@ import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.CrossbowAttackMob;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -37,13 +38,16 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import java.util.UUID;
 
 public class NkvdEntity extends Monster implements CrossbowAttackMob {
 	private static final EntityDataAccessor<Boolean> IS_CHARGING = SynchedEntityData.defineId(NkvdEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> PIPE_GUARD = SynchedEntityData.defineId(NkvdEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final double ATTACK_DAMAGE = 12.0 * 0.4;
 	private static final double ARROW_DAMAGE = 8.5 * 0.4;
 
 	private boolean villageRaider;
+	private UUID guardOwner;
 
 	public NkvdEntity(EntityType<? extends NkvdEntity> type, Level level) {
 		super(type, level);
@@ -68,10 +72,21 @@ public class NkvdEntity extends Monster implements CrossbowAttackMob {
 		return this.villageRaider;
 	}
 
+	public void setGuardOwner(Player player) {
+		this.guardOwner = player.getUUID();
+		this.entityData.set(PIPE_GUARD, true);
+		this.setTarget(null);
+	}
+
+	public boolean isPipeGuard() {
+		return this.entityData.get(PIPE_GUARD);
+	}
+
 	@Override
 	protected void defineSynchedData(SynchedEntityData.Builder builder) {
 		super.defineSynchedData(builder);
 		builder.define(IS_CHARGING, false);
+		builder.define(PIPE_GUARD, false);
 	}
 
 	@Override
@@ -84,6 +99,8 @@ public class NkvdEntity extends Monster implements CrossbowAttackMob {
 		this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
 		this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Villager.class, 10, true, false, this::isVillageTarget));
 		this.targetSelector.addGoal(2, new HurtByTargetGoal(this, StalinEntity.class, NkvdEntity.class));
+		this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, LivingEntity.class, 10, true, false,
+				(entity, level) -> this.isPipeGuard() && isPipeGuardEnemy(entity)));
 		this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, CjEntity.class, true, this::isDefaultCombatTarget));
 		this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, Player.class, true, this::isDefaultCombatTarget));
 		this.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(this, Mob.class, 10, true, false, this::isDefaultMobPrey));
@@ -94,15 +111,48 @@ public class NkvdEntity extends Monster implements CrossbowAttackMob {
 	}
 
 	private boolean isDefaultCombatTarget(LivingEntity entity, ServerLevel level) {
-		return !this.isVillageRaider();
+		return !this.isVillageRaider() && !this.isPipeGuard();
 	}
 
 	private boolean isDefaultMobPrey(LivingEntity entity, ServerLevel level) {
-		return !this.isVillageRaider() && isPrey(entity, level);
+		return !this.isVillageRaider() && !this.isPipeGuard() && isPrey(entity, level);
 	}
 
 	private static boolean isPrey(LivingEntity entity, ServerLevel level) {
-		return !(entity instanceof StalinEntity) && !(entity instanceof NkvdEntity) && !(entity instanceof Player);
+		return !(entity instanceof StalinEntity) && !(entity instanceof NkvdEntity) && !(entity instanceof Player)
+				&& !(entity instanceof ReferenceNpcEntity npc && npc.isNpc("grisha"));
+	}
+
+	public static boolean isPipeGuardEnemy(LivingEntity entity) {
+		return entity instanceof Enemy && (!(entity instanceof NkvdEntity nkvd) || !nkvd.isPipeGuard());
+	}
+
+	@Override
+	public boolean canAttack(LivingEntity target) {
+		if (target instanceof ReferenceNpcEntity npc && npc.isNpc("grisha")) {
+			return false;
+		}
+		if (this.isPipeGuard() && !isPipeGuardEnemy(target)) {
+			return false;
+		}
+		return super.canAttack(target);
+	}
+
+	@Override
+	public void setTarget(LivingEntity target) {
+		super.setTarget(target == null || this.canAttack(target) ? target : null);
+	}
+
+	@Override
+	public void aiStep() {
+		super.aiStep();
+		if (this.isPipeGuard() && !this.level().isClientSide() && this.tickCount % 40 == 0
+				&& this.level() instanceof ServerLevel level) {
+			Player owner = level.getPlayerByUUID(this.guardOwner);
+			if (owner != null && this.distanceToSqr(owner) > 144.0 && this.getTarget() == null) {
+				this.getNavigation().moveTo(owner, 1.3);
+			}
+		}
 	}
 
 	@Override
@@ -185,11 +235,23 @@ public class NkvdEntity extends Monster implements CrossbowAttackMob {
 	protected void addAdditionalSaveData(ValueOutput output) {
 		super.addAdditionalSaveData(output);
 		output.putBoolean("village_raider", this.villageRaider);
+		if (this.guardOwner != null) {
+			output.putString("pipe_guard_owner", this.guardOwner.toString());
+		}
 	}
 
 	@Override
 	protected void readAdditionalSaveData(ValueInput input) {
 		super.readAdditionalSaveData(input);
 		this.villageRaider = input.getBooleanOr("village_raider", false);
+		String owner = input.getStringOr("pipe_guard_owner", "");
+		if (!owner.isEmpty()) {
+			try {
+				this.guardOwner = UUID.fromString(owner);
+				this.entityData.set(PIPE_GUARD, true);
+			} catch (IllegalArgumentException ignored) {
+				this.guardOwner = null;
+			}
+		}
 	}
 }

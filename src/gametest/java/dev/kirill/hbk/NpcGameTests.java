@@ -165,13 +165,13 @@ public final class NpcGameTests {
 		for (long key = 1; key <= 100; key++) {
 			test.assertFalse(data.isNpcChunkHandled(key), "New chunks must not already be handled");
 			data.markNpcChunkHandled(key);
-			test.assertTrue(data.isSashaSpawnRollDue() == (key % 20 == 0), "Roll only every 20 unique chunks");
+			test.assertTrue(data.isSashaSpawnRollDue() == (key % 5 == 0), "Roll only every five unique chunks");
 			data.markNpcChunkHandled(key);
-			test.assertTrue(data.isSashaSpawnRollDue() == (key % 20 == 0), "Reloading a chunk must not advance cadence");
+			test.assertTrue(data.isSashaSpawnRollDue() == (key % 5 == 0), "Reloading a chunk must not advance cadence");
 			var json = ModWorldData.CODEC.encodeStart(com.mojang.serialization.JsonOps.INSTANCE, data).getOrThrow();
 			data = ModWorldData.CODEC.parse(com.mojang.serialization.JsonOps.INSTANCE, json).getOrThrow();
 			test.assertTrue(data.isNpcChunkHandled(key), "Handled chunks must persist");
-			test.assertTrue(data.isSashaSpawnRollDue() == (key % 20 == 0), "Cadence must persist");
+			test.assertTrue(data.isSashaSpawnRollDue() == (key % 5 == 0), "Cadence must persist");
 		}
 		test.succeed();
 	}

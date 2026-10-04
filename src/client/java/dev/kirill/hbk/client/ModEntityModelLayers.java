@@ -20,6 +20,9 @@ public class ModEntityModelLayers {
 	public static final ModelLayerLocation KIRILL_V2 = new ModelLayerLocation(HbkMod.id("kirill_v2"), "main");
 
 	public static void register() {
+		for (var material : KirillGlassesModel.Material.values()) {
+			ModelLayerRegistry.registerModelLayer(kirillGlasses(material), () -> KirillGlassesModel.createLayer(material));
+		}
 		ModelLayerRegistry.registerModelLayer(GIANT_BOSS, GiantBossModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(MAD_LIBERAL, MadLiberalModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(ANTON, ReferenceNpcModel::createAntonBodyLayer);
@@ -41,5 +44,9 @@ public class ModEntityModelLayers {
 
 	public static ModelLayerLocation uraniumArmor(EquipmentSlot slot, UraniumArmorModel.Material material) {
 		return new ModelLayerLocation(HbkMod.id("uranium_armor"), slot.getName() + "_" + material.name().toLowerCase(java.util.Locale.ROOT));
+	}
+
+	public static ModelLayerLocation kirillGlasses(KirillGlassesModel.Material material) {
+		return new ModelLayerLocation(HbkMod.id("kirill_glasses"), material.name().toLowerCase(java.util.Locale.ROOT));
 	}
 }

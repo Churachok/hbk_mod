@@ -170,7 +170,7 @@ public class ModWorldData extends SavedData {
 
 	/** The saved unique-chunk set also preserves the cadence across restarts. */
 	public boolean isSashaSpawnRollDue() {
-		return !this.npcChunks.isEmpty() && this.npcChunks.size() % 20 == 0;
+		return !this.npcChunks.isEmpty() && this.npcChunks.size() % 5 == 0;
 	}
 
 	public boolean isStructurePopulated(String key) {

@@ -14,6 +14,18 @@
         }
       ],
       "rolls": 1.0
+    },
+    {
+      "conditions": [{ "condition": "minecraft:survives_explosion" }],
+      "entries": [{
+        "type": "minecraft:item",
+        "name": "hbk:shperma",
+        "functions": [{
+          "function": "minecraft:set_count",
+          "count": { "type": "minecraft:uniform", "min": 1, "max": 3 }
+        }]
+      }],
+      "rolls": 1
     }
   ],
   "random_sequence": "hbk:blocks/sperm"

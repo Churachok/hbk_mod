@@ -22,19 +22,19 @@ public final class ReferenceNpcSpawning {
 	}
 
 	public static void register() {
-		// Match the vanilla pig/wolf biome lists without replacing their spawns.
-		BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(net.minecraft.world.entity.EntityTypes.PIG),
-				MobCategory.CREATURE, ModEntityTypes.ANTON, 3, 1, 2);
-		BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(net.minecraft.world.entity.EntityTypes.WOLF),
-				MobCategory.CREATURE, ModEntityTypes.GRISHA, 2, 1, 2);
+		// Vanilla pigs use weight 10 and groups of four.
+		BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld(),
+				MobCategory.CREATURE, ModEntityTypes.ANTON, 10, 4, 4);
+		BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld(),
+				MobCategory.CREATURE, ModEntityTypes.GRISHA, 10, 4, 4);
 		BiomeModifications.addSpawn(BiomeSelectors.includeByKey(Biomes.DESERT),
-				MobCategory.CREATURE, ModEntityTypes.GOSHA, 2, 1, 1);
+				MobCategory.CREATURE, ModEntityTypes.GOSHA, 10, 4, 4);
 		// Keep sheep biomes and group size, with a slightly higher weight than vanilla sheep (12).
 		BiomeModifications.addSpawn(BiomeSelectors.spawnsOneOf(net.minecraft.world.entity.EntityTypes.SHEEP),
 				MobCategory.CREATURE, ModEntityTypes.PINK_FURRY_WOLF, 14, 4, 4);
 		for (var type : java.util.List.of(ModEntityTypes.ANTON, ModEntityTypes.GRISHA)) {
 			SpawnPlacements.register(type, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-					(entityType, level, reason, pos, random) -> level.getBlockState(pos.below()).is(BlockTags.ANIMALS_SPAWNABLE_ON)
+					(entityType, level, reason, pos, random) -> level.getBlockState(pos.below()).isSolid()
 							&& level.getRawBrightness(pos, 0) > 8);
 		}
 		SpawnPlacements.register(ModEntityTypes.GOSHA, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
@@ -46,7 +46,7 @@ public final class ReferenceNpcSpawning {
 						&& level.getRawBrightness(pos, 0) > 8);
 	}
 
-	/** One saved 10% roll per 20 explored chunks, followed by a 50% roll for Lesha. */
+	/** One saved 25% roll per five explored chunks, followed by a 50% roll for Lesha. */
 	public static void trySpawnSasha(ServerLevel level, LevelChunk chunk) {
 		if (level.getDifficulty() == Difficulty.PEACEFUL || !level.getGameRules().get(GameRules.SPAWN_MOBS)
 				|| !level.getGameRules().get(GameRules.SPAWN_MONSTERS)) {
@@ -67,7 +67,7 @@ public final class ReferenceNpcSpawning {
 			}
 		}
 		data.markNpcChunkHandled(key);
-		if (!data.isSashaSpawnRollDue() || level.getRandom().nextFloat() >= 0.10f) {
+		if (!data.isSashaSpawnRollDue() || level.getRandom().nextFloat() >= 0.25f) {
 			return;
 		}
 		for (int attempt = 0; attempt < 16; attempt++) {

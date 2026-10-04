@@ -46,10 +46,10 @@ public final class ModBlocks {
 	public static final Block ROTTEN_EARTH = simple("rotten_earth", MapColor.DIRT, 0.55f, SoundType.ROOTED_DIRT);
 	public static final Block SPERM = register("sperm",
 			properties -> new SpermBlock(properties.mapColor(MapColor.SNOW).noCollision().noOcclusion()
-					.liquid().replaceable().strength(100.0f).sound(SoundType.SLIME_BLOCK)));
+					.strength(0.6f).sound(SoundType.SLIME_BLOCK)));
 	public static final Block BLOODY_SPERM = register("bloody_sperm",
 			properties -> new BloodySpermBlock(properties.mapColor(MapColor.COLOR_RED).noCollision().noOcclusion()
-					.liquid().replaceable().strength(100.0f).sound(SoundType.HONEY_BLOCK)));
+					.strength(0.6f).sound(SoundType.HONEY_BLOCK)));
 	public static final Block RUINED_CONCRETE = simple("ruined_concrete", MapColor.STONE, 1.8f, SoundType.STONE);
 	public static final Block BUILDING_DEBRIS = simple("building_debris", MapColor.COLOR_BLACK, 1.35f, SoundType.TUFF);
 	public static final Block CRIMSON_MONUMENT = simple("crimson_monument", MapColor.COLOR_RED, 2.2f, SoundType.NETHER_BRICKS);

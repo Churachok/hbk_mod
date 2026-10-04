@@ -107,7 +107,7 @@ public class ReferenceNpcEntity extends PathfinderMob {
 
 	@Override
 	public boolean removeWhenFarAway(double distanceToClosestPlayer) {
-		return this.isNpc("sasha");
+		return false;
 	}
 
 	@Override

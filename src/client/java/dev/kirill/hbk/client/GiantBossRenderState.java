@@ -6,4 +6,5 @@ public class GiantBossRenderState extends HumanoidRenderState {
 	public int armorCrackStage;
 	public float unknownGrabProgress;
 	public float konataGoodGestureProgress;
+	public boolean pipeGuard;
 }

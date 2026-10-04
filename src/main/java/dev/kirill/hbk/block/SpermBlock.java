@@ -3,9 +3,11 @@ package dev.kirill.hbk.block;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -30,6 +32,10 @@ public final class SpermBlock extends HalfTransparentBlock {
 			InsideBlockEffectApplier effects, boolean intersects) {
 		if (intersects) {
 			entity.makeStuckInBlock(state, new Vec3(0.34, 0.12, 0.34));
+			if (level instanceof ServerLevel serverLevel && entity instanceof LivingEntity living
+					&& living.tickCount % 30 == 0) {
+				living.hurtServer(serverLevel, level.damageSources().magic(), 1.0f);
+			}
 		}
 	}
 

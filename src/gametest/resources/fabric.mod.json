@@ -9,7 +9,10 @@
 			"dev.kirill.hbk.NpcGameTests",
 			"dev.kirill.hbk.MemberGameTests",
 			"dev.kirill.hbk.BossGameTests",
-			"dev.kirill.hbk.ImprovedBoatGameTests"
+			"dev.kirill.hbk.ImprovedBoatGameTests",
+			"dev.kirill.hbk.world.SpawnAndGraveyardGameTests",
+			"dev.kirill.hbk.world.StalinDachaGameTests",
+			"dev.kirill.hbk.world.feature.RadioactiveRuinGameTests"
 		]
 	}
 }

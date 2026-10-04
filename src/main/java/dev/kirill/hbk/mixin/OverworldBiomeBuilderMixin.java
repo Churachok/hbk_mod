@@ -20,16 +20,8 @@ public abstract class OverworldBiomeBuilderMixin {
 	private void hbk$addCustomBiomes(CallbackInfo ci) {
 		MIDDLE_BIOMES_VARIANT[4][0] = ModWorldgen.RADIOACTIVE_WASTELAND;
 
-		// These remain variant-only slots, so the biome forms rare islands. Across the
-		// complete vanilla parameter map their combined volume is ~10% above all three
-		// Badlands variants (the terracotta biomes), matching the intended rarity.
+		// A single variant-only climate slot keeps this biome an occasional island.
+		// The previous eight slots produced several patches within a few chunks.
 		MIDDLE_BIOMES_VARIANT[3][0] = ModWorldgen.PAST_GORNOSLAVYANSK;
-		MIDDLE_BIOMES_VARIANT[4][1] = ModWorldgen.PAST_GORNOSLAVYANSK;
-		MIDDLE_BIOMES_VARIANT[0][4] = ModWorldgen.PAST_GORNOSLAVYANSK;
-		MIDDLE_BIOMES_VARIANT[2][4] = ModWorldgen.PAST_GORNOSLAVYANSK;
-		MIDDLE_BIOMES_VARIANT[4][4] = ModWorldgen.PAST_GORNOSLAVYANSK;
-		MIDDLE_BIOMES_VARIANT[1][0] = ModWorldgen.PAST_GORNOSLAVYANSK;
-		MIDDLE_BIOMES_VARIANT[0][1] = ModWorldgen.PAST_GORNOSLAVYANSK;
-		MIDDLE_BIOMES_VARIANT[0][3] = ModWorldgen.PAST_GORNOSLAVYANSK;
 	}
 }
