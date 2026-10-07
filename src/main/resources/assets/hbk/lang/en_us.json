@@ -1,4 +1,9 @@
 {
+	"entity.hbk.squirrel": "Squirrel",
+	"message.hbk.squirrel_started": "A squirrel appeared for %s.",
+	"message.hbk.squirrel_blocked": "There is no clear ground near this player for a squirrel.",
+	"message.hbk.squirrel_already_active": "This player already has a squirrel.",
+	"message.hbk.squirrel_unavailable": "The squirrel encounter is currently unavailable.",
 	"entity.hbk.stalin": "hbk",
 	"entity.hbk.cj": "Giant CJ",
 	"entity.hbk.mad_liberal": "Mad Liberal",

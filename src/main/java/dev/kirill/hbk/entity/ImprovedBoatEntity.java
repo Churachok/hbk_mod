@@ -1,5 +1,6 @@
 package dev.kirill.hbk.entity;
 
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.vehicle.boat.Boat;
@@ -16,6 +17,8 @@ import java.util.function.Supplier;
  */
 public final class ImprovedBoatEntity extends Boat {
 	public static final double SPEED_MULTIPLIER = 1.6;
+	public static final double PASSENGER_RIDE_HEIGHT = 13.0 / 16.0;
+	public static final float PASSENGER_FORWARD_OFFSET = 7.0f / 16.0f;
 
 	public ImprovedBoatEntity(
 			EntityType<? extends ImprovedBoatEntity> type,
@@ -47,5 +50,15 @@ public final class ImprovedBoatEntity extends Boat {
 	@Override
 	protected int getMaxPassengers() {
 		return 1;
+	}
+
+	@Override
+	protected double rideHeight(EntityDimensions dimensions) {
+		return PASSENGER_RIDE_HEIGHT;
+	}
+
+	@Override
+	protected float getSinglePassengerXOffset() {
+		return PASSENGER_FORWARD_OFFSET;
 	}
 }

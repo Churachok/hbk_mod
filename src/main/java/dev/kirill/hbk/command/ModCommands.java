@@ -5,6 +5,7 @@ import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.registry.ModGameRules;
 import dev.kirill.hbk.world.GulagPlacer;
 import dev.kirill.hbk.world.UnknownEncounter;
+import dev.kirill.hbk.world.SquirrelEncounter;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
@@ -46,7 +47,34 @@ public final class ModCommands {
 											.executes(ctx -> setKonataShpermLimit(ctx.getSource(),
 													IntegerArgumentType.getInteger(ctx, "amount"))))))
 			);
+			dispatcher.register(Commands.literal("squirrel")
+					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.executes(ctx -> startSquirrel(ctx.getSource(), ctx.getSource().getPlayerOrException()))
+					.then(Commands.argument("player", EntityArgument.player())
+							.executes(ctx -> startSquirrel(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"))))
+			);
 		});
+	}
+
+	private static int startSquirrel(CommandSourceStack source, ServerPlayer player) {
+		return switch (SquirrelEncounter.start(player)) {
+			case STARTED -> {
+				source.sendSuccess(() -> Component.translatable("message.hbk.squirrel_started", player.getScoreboardName()), false);
+				yield 1;
+			}
+			case BLOCKED -> {
+				source.sendFailure(Component.translatable("message.hbk.squirrel_blocked"));
+				yield 0;
+			}
+			case ALREADY_ACTIVE -> {
+				source.sendFailure(Component.translatable("message.hbk.squirrel_already_active"));
+				yield 0;
+			}
+			case UNAVAILABLE -> {
+				source.sendFailure(Component.translatable("message.hbk.squirrel_unavailable"));
+				yield 0;
+			}
+		};
 	}
 
 	private static int getKonataShpermLimit(CommandSourceStack source) {

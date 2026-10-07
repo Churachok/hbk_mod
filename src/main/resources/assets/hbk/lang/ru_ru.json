@@ -1,4 +1,9 @@
 {
+	"entity.hbk.squirrel": "Белка",
+	"message.hbk.squirrel_started": "Белка появилась для %s.",
+	"message.hbk.squirrel_blocked": "Рядом с игроком нет свободной земли для белки.",
+	"message.hbk.squirrel_already_active": "У этого игрока уже есть белка.",
+	"message.hbk.squirrel_unavailable": "Встреча с белкой сейчас недоступна.",
 	"entity.hbk.stalin": "Гигантский Сталин",
 	"entity.hbk.cj": "Гигантский СиДжей",
 	"entity.hbk.mad_liberal": "Безумный либерал",

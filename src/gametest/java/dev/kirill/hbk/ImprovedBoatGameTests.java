@@ -6,6 +6,7 @@ import dev.kirill.hbk.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -62,6 +63,23 @@ public final class ImprovedBoatGameTests {
 
 		test.assertTrue(ImprovedBoatEntity.SPEED_MULTIPLIER == 1.6,
 				"Improved boats must be exactly 60 percent faster");
+		test.succeed();
+	}
+
+	@GameTest
+	public void improvedBoatPlacesDriverOnSeat(GameTestHelper test) {
+		ImprovedBoatEntity boat = ModEntityTypes.IMPROVED_OAK_BOAT.create(
+				test.getLevel(), EntitySpawnReason.COMMAND);
+		test.assertTrue(boat != null, "Improved boat entity must be constructible");
+		boat.snapTo(2.0, 3.0, 4.0, 0.0f, 0.0f);
+
+		Vec3 ridingPosition = boat.getPassengerRidingPosition(test.makeMockServerPlayerInLevel());
+		test.assertTrue(Math.abs(ridingPosition.y - boat.getY()
+				- ImprovedBoatEntity.PASSENGER_RIDE_HEIGHT) < 1.0E-6,
+				"Driver must sit on top of the raised seat instead of below the hull");
+		test.assertTrue(Math.abs(ridingPosition.z - boat.getZ()
+				- ImprovedBoatEntity.PASSENGER_FORWARD_OFFSET) < 1.0E-6,
+				"Driver must be centered over the visible seat");
 		test.succeed();
 	}
 }
