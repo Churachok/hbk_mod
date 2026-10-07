@@ -27,14 +27,19 @@ public final class GoshasRageClient {
 	}
 
 	private static void tick(Minecraft client) {
+		Identifier effect = null;
 		if (client.player != null && client.player.hasEffect(ModEffects.HAND_IMMORTALITY)) {
-			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(CURRANT_EFFECT);
-			ownsPostEffect = true;
+			effect = CURRANT_EFFECT;
 		} else if (isActive()) {
-			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(POST_EFFECT);
-			ownsPostEffect = true;
+			effect = POST_EFFECT;
 		} else if (KirillGlassesClient.isActive()) {
-			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(KirillGlassesClient.POST_EFFECT);
+			effect = KirillGlassesClient.POST_EFFECT;
+		}
+		if (client.player != null && client.player.hasEffect(ModEffects.ONIGIRI)) {
+			effect = HbkMod.id(effect == null ? "onigiri" : effect.getPath() + "_onigiri");
+		}
+		if (effect != null) {
+			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(effect);
 			ownsPostEffect = true;
 		} else if (ownsPostEffect) {
 			client.gameRenderer.checkEntityPostEffect(client.getCameraEntity());

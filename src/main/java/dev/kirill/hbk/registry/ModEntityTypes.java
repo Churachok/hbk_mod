@@ -25,6 +25,8 @@ import dev.kirill.hbk.entity.NurseEntity;
 import dev.kirill.hbk.entity.PinkFurryWolfEntity;
 import dev.kirill.hbk.entity.StalinEntity;
 import dev.kirill.hbk.entity.ColossalBombEntity;
+import dev.kirill.hbk.entity.LebedevHeadEntity;
+import dev.kirill.hbk.entity.SovietBusEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,6 +39,14 @@ import net.minecraft.world.entity.MobCategory;
 import java.util.function.Supplier;
 
 public class ModEntityTypes {
+	public static final EntityType<SovietBusEntity> SOVIET_BUS = register("soviet_bus",
+			EntityType.Builder.<SovietBusEntity>of(SovietBusEntity::new, MobCategory.MISC)
+					.sized((float) SovietBusEntity.WIDTH, (float) SovietBusEntity.HEIGHT)
+					.clientTrackingRange(12).updateInterval(1).fireImmune());
+	public static final EntityType<LebedevHeadEntity> LEBEDEV_HEAD = register("lebedev_head",
+			EntityType.Builder.<LebedevHeadEntity>of(LebedevHeadEntity::new, MobCategory.MISC)
+					.sized(LebedevHeadEntity.HEAD_SIZE, LebedevHeadEntity.HEAD_SIZE)
+					.clientTrackingRange(8).updateInterval(1));
 	public static final EntityType<StalinEntity> STALIN = register(
 			"stalin",
 			giant(StalinEntity::new)
@@ -260,6 +270,7 @@ public class ModEntityTypes {
 	}
 
 	public static void registerAttributes() {
+		FabricDefaultAttributeRegistry.register(LEBEDEV_HEAD, LebedevHeadEntity.createSulfurCubeAttributes());
 		FabricDefaultAttributeRegistry.register(STALIN, StalinEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(CJ, CjEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(MAD_LIBERAL, MadLiberalEntity.createAttributes());

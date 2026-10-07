@@ -19,6 +19,7 @@ import dev.kirill.hbk.registry.ModSounds;
 import dev.kirill.hbk.world.ModWorldEvents;
 import dev.kirill.hbk.world.ReferenceNpcSpawning;
 import dev.kirill.hbk.world.UnknownEncounter;
+import dev.kirill.hbk.world.SovietBusEvent;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
@@ -51,6 +52,7 @@ public class HbkMod implements ModInitializer {
 		UraniumArmorEffects.register();
 		ModWorldEvents.register();
 		UnknownEncounter.register();
+		SovietBusEvent.register();
 		ModCommands.register();
 		LOGGER.info("hbk is ready to walk.");
 	}

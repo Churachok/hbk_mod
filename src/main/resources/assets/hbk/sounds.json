@@ -1,4 +1,8 @@
 {
+	"bus_horn": {
+		"subtitle": "subtitles.hbk.bus_horn",
+		"sounds": ["hbk:bus_horn"]
+	},
 	"goose_honk": {
 		"subtitle": "subtitles.hbk.goose_honk",
 		"sounds": ["hbk:goose_honk"]

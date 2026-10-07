@@ -1,0 +1,43 @@
+{
+  "targets": {
+    "onigiri_swap": {}
+  },
+  "passes": [
+    {
+      "vertex_shader": "minecraft:core/screenquad",
+      "fragment_shader": "hbk:post/onigiri",
+      "inputs": [
+        {
+          "sampler_name": "Scene",
+          "target": "minecraft:main"
+        }
+      ],
+      "output": "onigiri_swap"
+    },
+    {
+      "vertex_shader": "minecraft:core/screenquad",
+      "fragment_shader": "minecraft:post/blit",
+      "inputs": [
+        {
+          "sampler_name": "In",
+          "target": "onigiri_swap"
+        }
+      ],
+      "uniforms": {
+        "BlitConfig": [
+          {
+            "name": "ColorModulate",
+            "type": "vec4",
+            "value": [
+              1,
+              1,
+              1,
+              1
+            ]
+          }
+        ]
+      },
+      "output": "minecraft:main"
+    }
+  ]
+}

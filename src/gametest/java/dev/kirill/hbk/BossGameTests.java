@@ -109,6 +109,8 @@ public final class BossGameTests {
 				"Mad Liberal must always drop one Armored Member");
 		test.assertTrue(count(test, ModItems.URANIUM_CHESTPLATE) == 1,
 				"Mad Liberal must always drop one uranium chestplate");
+		test.assertTrue(count(test, ModItems.LEBEDEV_HEAD) == 1,
+				"Mad Liberal must always drop exactly one Alexander Lebedev head");
 		test.assertTrue(done(test, player, "first_season_finished"),
 				"Killing Mad Liberal must grant its advancement");
 		clearItems(test);

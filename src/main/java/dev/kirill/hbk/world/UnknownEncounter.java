@@ -74,7 +74,7 @@ public final class UnknownEncounter {
 	}
 
 	public static StartResult start(ServerPlayer player) {
-		if (!player.isAlive()) {
+		if (!player.isAlive() || SovietBusEvent.isActive(player)) {
 			return StartResult.UNAVAILABLE;
 		}
 		if (ACTIVE.containsKey(player.getUUID())) {
@@ -368,6 +368,9 @@ public final class UnknownEncounter {
 	}
 
 	private static boolean canTriggerNaturally(ServerPlayer player) {
+		if (SovietBusEvent.isActive(player)) {
+			return false;
+		}
 		if (!player.isAlive() || player.isCreative() || player.isSpectator()
 				|| player.isPassenger() || !player.onGround()) {
 			return false;

@@ -28,6 +28,8 @@ public class HbkClient implements ClientModInitializer {
 		UnknownEncounterClient.register();
 		UnknownDeathClient.register();
 		ModEntityModelLayers.register();
+		EntityRendererRegistry.register(ModEntityTypes.LEBEDEV_HEAD, LebedevHeadRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.SOVIET_BUS, SovietBusRenderer::new);
 		ArmorRenderer.register(UraniumArmorRenderer::new, ModItems.URANIUM_HELMET, ModItems.URANIUM_CHESTPLATE,
 				ModItems.URANIUM_LEGGINGS, ModItems.URANIUM_BOOTS);
 		ArmorRenderer.register(KirillGlassesRenderer::new, ModItems.KIRILL_GLASSES);

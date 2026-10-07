@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": ["minecraft:bread", "#minecraft:fishes"],
+  "result": {"id": "hbk:onigiri", "count": 1}
+}

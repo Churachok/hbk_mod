@@ -41,7 +41,13 @@ public final class GraveyardRecipePages {
 		for (int line = 0; line < Math.min(2, title.size()); line++) {
 			graphics.text(font, title.get(line), left, top + 45 + line * 10, 0x38271C, false);
 		}
-		if (diagram.smithing) {
+		if (diagram.smelting) {
+			drawSlot(graphics, font, diagram.inputs.getFirst(), left + 18, top + 89, mouseX, mouseY);
+			graphics.text(font, "→", left + 49, top + 94, 0x38271C, false);
+			drawSlot(graphics, font, diagram.result, left + 79, top + 89, mouseX, mouseY);
+			graphics.text(font, Component.translatable("book.hbk.recipes.smelting.time"),
+					left, top + 125, 0x5B4737, false);
+		} else if (diagram.smithing) {
 			for (int slot = 0; slot < 3; slot++) {
 				drawSlot(graphics, font, diagram.inputs.get(slot), left + slot * 24, top + 89, mouseX, mouseY);
 			}
@@ -86,11 +92,15 @@ public final class GraveyardRecipePages {
 					result.has("count") ? result.get("count").getAsInt() : 1);
 			List<ItemStack> inputs = new ArrayList<>();
 			String type = json.get("type").getAsString();
+			if (type.equals("minecraft:smelting")) {
+				inputs.add(stack(json.get("ingredient").getAsString(), 1));
+				return new RecipeDiagram(inputs, output, false, false, true);
+			}
 			if (type.equals("minecraft:smithing_transform")) {
 				inputs.add(stack(json.get("template").getAsString(), 1));
 				inputs.add(stack(json.get("base").getAsString(), 1));
 				inputs.add(stack(json.get("addition").getAsString(), 1));
-				return new RecipeDiagram(inputs, output, false, true);
+				return new RecipeDiagram(inputs, output, false, true, false);
 			}
 			if (type.equals("minecraft:crafting_shaped")) {
 				var pattern = json.getAsJsonArray("pattern");
@@ -102,7 +112,7 @@ public final class GraveyardRecipePages {
 						inputs.add(symbol.equals(" ") ? ItemStack.EMPTY : stack(keys.get(symbol).getAsString(), 1));
 					}
 				}
-				return new RecipeDiagram(inputs, output, false, false);
+				return new RecipeDiagram(inputs, output, false, false, false);
 			}
 			for (var ingredient : json.getAsJsonArray("ingredients")) {
 				inputs.add(stack(ingredient.getAsString(), 1));
@@ -110,7 +120,7 @@ public final class GraveyardRecipePages {
 			while (inputs.size() < 9) {
 				inputs.add(ItemStack.EMPTY);
 			}
-			return new RecipeDiagram(inputs, output, true, false);
+			return new RecipeDiagram(inputs, output, true, false, false);
 		} catch (Exception error) {
 			HbkMod.LOGGER.warn("Could not read graveyard recipe diagram {}", path, error);
 			return null;
@@ -118,12 +128,15 @@ public final class GraveyardRecipePages {
 	}
 
 	private static ItemStack stack(String id, int count) {
+		if (id.equals("#minecraft:fishes")) {
+			return new ItemStack(net.minecraft.world.item.Items.COD, count);
+		}
 		if (id.equals("#minecraft:wool_carpets")) {
 			return new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.parse("minecraft:white_carpet")), count);
 		}
 		return new ItemStack(BuiltInRegistries.ITEM.getValue(Identifier.parse(id)), count);
 	}
 
-	private record RecipeDiagram(List<ItemStack> inputs, ItemStack result, boolean shapeless, boolean smithing) {
+	private record RecipeDiagram(List<ItemStack> inputs, ItemStack result, boolean shapeless, boolean smithing, boolean smelting) {
 	}
 }

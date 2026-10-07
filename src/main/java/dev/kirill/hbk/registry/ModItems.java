@@ -25,6 +25,9 @@ import dev.kirill.hbk.item.ShovelSwordItem;
 import dev.kirill.hbk.item.SickleAndHammerItem;
 import dev.kirill.hbk.item.StewItem;
 import dev.kirill.hbk.item.ShpermaItem;
+import dev.kirill.hbk.item.OnigiriItem;
+import dev.kirill.hbk.item.HardKirillKettleItem;
+import dev.kirill.hbk.item.LebedevHeadItem;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
@@ -123,6 +126,19 @@ public class ModItems {
 					.food(new FoodProperties.Builder().nutrition(10).saturationModifier(0.8f).alwaysEdible().build())
 					.usingConvertsTo(Items.IRON_NUGGET)
 	);
+
+	public static final Item ONIGIRI = register("onigiri", OnigiriItem::new,
+			new Item.Properties().food(new FoodProperties.Builder()
+					.nutrition(6).saturationModifier(0.6f).alwaysEdible().build()));
+	public static final Item KIRILL_KETTLE = register("kirill_kettle", Item::new,
+			new Item.Properties().stacksTo(16));
+	public static final Item HARD_KIRILL_KETTLE = register("hard_kirill_kettle", HardKirillKettleItem::new,
+			new Item.Properties().stacksTo(16)
+					.food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).alwaysEdible().build())
+					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+					.usingConvertsTo(KIRILL_KETTLE));
+	public static final Item LEBEDEV_HEAD = register("lebedev_head", LebedevHeadItem::new,
+			new Item.Properties().stacksTo(16));
 
 	public static final Item BANDAGE = register(
 			"bandage",
@@ -498,6 +514,8 @@ public class ModItems {
 				Identifier.withDefaultNamespace("food_and_drinks")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(foodAndDrinks).register(output -> {
+			output.accept(ONIGIRI);
+			output.accept(HARD_KIRILL_KETTLE);
 			output.accept(BUCKWHEAT);
 			output.accept(CURRANT_TINCTURE);
 			output.accept(GOSHAS_RAGE_BOTTLE);
@@ -513,6 +531,8 @@ public class ModItems {
 				Identifier.withDefaultNamespace("tools_and_utilities")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
+			output.accept(KIRILL_KETTLE);
+			output.accept(LEBEDEV_HEAD);
 			output.accept(FLYING_CARPET);
 			output.accept(IMPROVED_OAK_BOAT);
 			output.accept(IMPROVED_SPRUCE_BOAT);
