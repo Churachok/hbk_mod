@@ -1,0 +1,7 @@
+{
+  "type": "hbk:grove_street",
+  "biomes": "#hbk:has_structure/grove_street",
+  "step": "surface_structures",
+  "terrain_adaptation": "beard_box",
+  "spawn_overrides": {}
+}

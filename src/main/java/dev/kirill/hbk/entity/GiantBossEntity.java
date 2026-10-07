@@ -41,6 +41,8 @@ public abstract class GiantBossEntity extends Monster {
 		this.xpReward = 150;
 		this.bossEvent = new ServerBossEvent(this.getUUID(), this.getDisplayName(), color, BossEvent.BossBarOverlay.PROGRESS);
 		this.bossEvent.setPlayBossMusic(true);
+		this.bossEvent.setDarkenScreen(true);
+		this.bossEvent.setCreateWorldFog(true);
 	}
 
 	public abstract float getExplosionPower();
@@ -108,6 +110,7 @@ public abstract class GiantBossEntity extends Monster {
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
+		BossLocalWeather.tick(level, this);
 		this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
 		this.bossEvent.setName(this.getDisplayName());
 	}

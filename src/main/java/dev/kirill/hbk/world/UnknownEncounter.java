@@ -8,7 +8,6 @@ import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -38,6 +37,7 @@ public final class UnknownEncounter {
 	private static final double SPAWN_DISTANCE = 4.0;
 	private static final int PORTAL_OPEN_TICKS = 60;
 	private static final int PORTAL_EXIT_TICKS = 20;
+	private static final double PORTAL_ENTRY_DISTANCE = 0.55;
 	private static final double PORTAL_EXIT_DISTANCE = 0.8;
 	private static final int DEPARTURE_PORTAL_OPEN_TICKS = 40;
 	private static final int PORTAL_RETURN_TICKS = 40;
@@ -84,7 +84,8 @@ public final class UnknownEncounter {
 		ServerLevel level = player.level();
 		Vec3 forward = horizontalLook(player);
 		Vec3 spawnPosition = player.position().add(forward.scale(SPAWN_DISTANCE));
-		if (!hasClearSpace(level, player, forward, spawnPosition)) {
+		Vec3 entryPosition = spawnPosition.add(forward.scale(PORTAL_ENTRY_DISTANCE));
+		if (!hasClearSpace(level, player, forward, entryPosition)) {
 			return StartResult.BLOCKED;
 		}
 
@@ -92,13 +93,15 @@ public final class UnknownEncounter {
 		if (unknown == null) {
 			return StartResult.UNAVAILABLE;
 		}
-		unknown.snapTo(spawnPosition.x, spawnPosition.y, spawnPosition.z,
+		unknown.snapTo(entryPosition.x, entryPosition.y, entryPosition.z,
 				player.getYRot() + 180.0f, 0.0f);
 		unknown.setNoAi(true);
 		unknown.setNoGravity(true);
 		unknown.setInvulnerable(true);
 		unknown.markEncounterEntity(player.getUUID());
 		unknown.setPortalHidden(true);
+		unknown.startPortalOpening();
+		unknown.setPortalPosition(spawnPosition);
 		if (!level.noCollision(unknown) || !level.addFreshEntity(unknown)) {
 			unknown.discard();
 			return StartResult.BLOCKED;
@@ -232,7 +235,6 @@ public final class UnknownEncounter {
 			KirillSecondEntity unknown, Encounter encounter) {
 		if (encounter.phase == Phase.PORTAL) {
 			unknown.setPortalHidden(true);
-			renderPortal(level, encounter);
 			encounter.phaseTicks++;
 			if (encounter.phaseTicks >= PORTAL_OPEN_TICKS) {
 				unknown.setPortalHidden(false);
@@ -240,17 +242,18 @@ public final class UnknownEncounter {
 				encounter.phaseTicks = 0;
 			}
 		} else if (encounter.phase == Phase.EMERGING) {
-			renderPortal(level, encounter);
 			Vec3 exitDirection = encounter.anchor.subtract(encounter.portalPosition).horizontal().normalize();
 			Vec3 exitTarget = encounter.portalPosition.add(exitDirection.scale(PORTAL_EXIT_DISTANCE));
 			Vec3 movement = exitTarget.subtract(unknown.position());
 			if (movement.lengthSqr() > 1.0E-8) {
 				unknown.setPos(unknown.position().add(movement.normalize().scale(
-						Math.min(PORTAL_EXIT_DISTANCE / PORTAL_EXIT_TICKS, movement.length()))));
+						Math.min((PORTAL_ENTRY_DISTANCE + PORTAL_EXIT_DISTANCE) / PORTAL_EXIT_TICKS,
+								movement.length()))));
 				facePlayer(unknown, player);
 			}
 			encounter.phaseTicks++;
 			if (encounter.phaseTicks >= PORTAL_EXIT_TICKS) {
+				unknown.setPortalVisible(false);
 				unknown.setPos(exitTarget);
 				unknown.setDeltaMovement(Vec3.ZERO);
 				encounter.phase = Phase.DIALOGUE;
@@ -301,7 +304,6 @@ public final class UnknownEncounter {
 	private static boolean tickDeparture(ServerLevel level, ServerPlayer player, KirillSecondEntity unknown,
 			Encounter encounter) {
 		if (encounter.phase == Phase.DEPARTURE_PORTAL) {
-			renderPortal(level, encounter);
 			encounter.phaseTicks++;
 			if (encounter.phaseTicks >= DEPARTURE_PORTAL_OPEN_TICKS) {
 				encounter.phase = Phase.RETURNING;
@@ -309,7 +311,6 @@ public final class UnknownEncounter {
 				encounter.departureStartPosition = unknown.position();
 			}
 		} else if (encounter.phase == Phase.RETURNING) {
-			renderPortal(level, encounter);
 			encounter.phaseTicks++;
 			double progress = Mth.clamp(encounter.phaseTicks / (double) PORTAL_RETURN_TICKS, 0.0, 1.0);
 			double easedProgress = progress * progress * (3.0 - 2.0 * progress);
@@ -319,48 +320,20 @@ public final class UnknownEncounter {
 			if (encounter.phaseTicks >= PORTAL_RETURN_TICKS) {
 				unknown.setPos(encounter.portalPosition);
 				unknown.setPortalHidden(true);
-				sendRemoveUnknown(player, unknown.getId(), unknown.getUUID());
-				unknown.discard();
+				unknown.startPortalClosing();
 				encounter.phase = Phase.PORTAL_CLOSING;
 				encounter.phaseTicks = 0;
 			}
 		} else if (encounter.phase == Phase.PORTAL_CLOSING) {
-			renderPortal(level, encounter);
 			encounter.phaseTicks++;
 			if (encounter.phaseTicks >= PORTAL_CLOSE_TICKS) {
+				unknown.setPortalVisible(false);
+				sendRemoveUnknown(player, unknown.getId(), unknown.getUUID());
+				unknown.discard();
 				return true;
 			}
 		}
 		return false;
-	}
-
-	private static void renderPortal(ServerLevel level, Encounter encounter) {
-		Vec3 center = encounter.portalPosition.add(0.0, 1.15, 0.0);
-		Vec3 towardPlayer = encounter.anchor.subtract(encounter.portalPosition).horizontal().normalize();
-		Vec3 right = new Vec3(-towardPlayer.z, 0.0, towardPlayer.x);
-		int animationTick = encounter.phaseTicks;
-		level.sendParticles(ParticleTypes.REVERSE_PORTAL, center.x, center.y, center.z,
-				14, 0.5, 0.85, 0.12, 0.03);
-		if ((animationTick & 1) == 0) {
-			for (int i = 0; i < 12; i++) {
-				double angle = Math.PI * 2.0 * i / 12.0 + animationTick * 0.09;
-				Vec3 point = center.add(right.scale(Math.cos(angle) * 0.72))
-						.add(0.0, Math.sin(angle) * 1.08, 0.0);
-				level.sendParticles(i % 3 == 0 ? ParticleTypes.ELECTRIC_SPARK : ParticleTypes.REVERSE_PORTAL,
-						point.x, point.y, point.z, 1, 0.025, 0.025, 0.025, 0.01);
-			}
-		}
-		if (animationTick % 3 == 0) {
-			for (int i = 0; i < 4; i++) {
-				double sideways = (level.getRandom().nextDouble() - 0.5) * 1.65;
-				double vertical = level.getRandom().nextDouble() * 2.2 - 1.1;
-				double depth = (level.getRandom().nextDouble() - 0.5) * 0.3;
-				Vec3 glitch = center.add(right.scale(sideways)).add(towardPlayer.scale(depth))
-						.add(0.0, vertical, 0.0);
-				level.sendParticles(ParticleTypes.ELECTRIC_SPARK, glitch.x, glitch.y, glitch.z,
-						2, 0.16, 0.015, 0.16, 0.02);
-			}
-		}
 	}
 
 	private static void finishEncounter(MinecraftServer server, ServerLevel level, ServerPlayer player,
@@ -376,12 +349,17 @@ public final class UnknownEncounter {
 			player.setHealth(0.0f);
 			player.die(damage);
 		}
+		sendMusicState(player, false);
+		if (ServerPlayNetworking.canSend(player, ModNetworking.UnknownDeathPayload.TYPE)) {
+			ServerPlayNetworking.send(player, ModNetworking.UnknownDeathPayload.INSTANCE);
+		}
 		var advancement = server.getAdvancements().get(HbkMod.id("unknown"));
 		if (advancement != null) {
 			player.getAdvancements().award(advancement, "unlock");
 		}
 		unknown.stopGrabbing();
 		unknown.setPortalHidden(false);
+		unknown.startPortalOpening();
 		unknown.setDeltaMovement(Vec3.ZERO);
 		encounter.departureStartPosition = unknown.position();
 		encounter.phase = Phase.DEPARTURE_PORTAL;
@@ -445,15 +423,16 @@ public final class UnknownEncounter {
 	}
 
 	private static boolean hasClearSpace(ServerLevel level, ServerPlayer player, Vec3 forward,
-			Vec3 spawnPosition) {
-		for (double distance = 0.75; distance <= SPAWN_DISTANCE; distance += 0.5) {
+			Vec3 entryPosition) {
+		for (double distance = 0.75; distance <= SPAWN_DISTANCE + PORTAL_ENTRY_DISTANCE; distance += 0.5) {
 			Vec3 sample = player.position().add(forward.scale(distance));
 			if (!level.noBlockCollision(null, ModEntityTypes.KIRILL_V2.getDimensions().makeBoundingBox(sample))) {
 				return false;
 			}
 		}
-		return level.getWorldBorder().isWithinBounds(
-				ModEntityTypes.KIRILL_V2.getDimensions().makeBoundingBox(spawnPosition));
+		return level.noBlockCollision(null, ModEntityTypes.KIRILL_V2.getDimensions().makeBoundingBox(entryPosition))
+				&& level.getWorldBorder().isWithinBounds(
+						ModEntityTypes.KIRILL_V2.getDimensions().makeBoundingBox(entryPosition));
 	}
 
 	private static void removeUnknown(MinecraftServer server, Encounter encounter) {

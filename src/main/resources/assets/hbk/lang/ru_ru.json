@@ -71,7 +71,7 @@
 	"item.hbk.uranium_chestplate": "Урановый нагрудник",
 	"item.hbk.uranium_leggings": "Урановые поножи",
 	"item.hbk.uranium_boots": "Урановые ботинки",
-	"item.hbk.kirill_glasses": "Очки Кирилла — конца света",
+	"item.hbk.kirill_glasses": "Очки Кирилла",
 	"item.hbk.attacking_member": "Атакующий Член",
 	"item.hbk.armored_member": "Бронированный член",
 	"item.hbk.colossal_member": "Колоссальный член",
@@ -169,6 +169,7 @@
 	"advancement.hbk.graveyard_visit.description": "Посетите кладбище",
 	"advancement.hbk.stalin_dacha_visit.title": "Национальный секрет",
 	"advancement.hbk.stalin_dacha_visit.description": "Войдите в Дачу Сталина",
+	"advancement.hbk.grove_street_visit.description": "Войдите на Grove Street",
 	"advancement.hbk.world_scale_vagina.title": "Пизда мирового масштаба",
 	"advancement.hbk.world_scale_vagina.description": "Получите female vagina",
 	"advancement.hbk.gornoslavyansk_visit.title": "Осталось 0",
@@ -208,5 +209,12 @@
 	"book.hbk.recipes.crafting": "ВЕРСТАК 3×3",
 	"book.hbk.recipes.smithing": "КУЗНЕЧНЫЙ СТОЛ",
 	"book.hbk.recipes.shapeless": "Бесформенный рецепт",
-	"book.hbk.recipes.shaped": "Рецепт с формой"
+	"book.hbk.recipes.shaped": "Рецепт с формой",
+	"container.hbk.improved_boat": "Топливо лодки",
+	"screen.hbk.improved_boat.fuel": "Топливо",
+	"screen.hbk.improved_boat.remaining": "Горит ещё: %s с",
+	"message.hbk.improved_boat.fuel_loaded": "Топливо загружено",
+	"item.hbk.improved_boat.fuel_hint": "ПКМ с топливом: загрузить. Shift+ПКМ: открыть бак",
+	"entity.hbk.fellas": "Братки",
+	"item.hbk.fellas_spawn_egg": "Яйцо призыва братка"
 }

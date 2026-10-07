@@ -6,6 +6,7 @@ import dev.kirill.hbk.item.MemberWeaponItem;
 import dev.kirill.hbk.mechanic.ProgenitorTransformation;
 import dev.kirill.hbk.player.MechanicsPlayerData;
 import dev.kirill.hbk.registry.ModEntityTypes;
+import dev.kirill.hbk.registry.ModBlocks;
 import dev.kirill.hbk.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.advancements.AdvancementHolder;
@@ -260,8 +261,8 @@ public final class MemberGameTests {
 					bullet.tick();
 				}
 				test.assertTrue(bullet.isRemoved(), "Projectile must hit the target");
-				test.assertTrue(mode == 0 ? level.getBlockState(center).isAir() : level.getBlockState(center).is(Blocks.SAND),
-						"Only the RMB explosive shot should destroy terrain");
+				test.assertTrue(level.getBlockState(center).is(ModBlocks.SPERM),
+						"Both member projectiles must replace the struck block with sperm");
 				player.getCooldowns().removeCooldown(player.getCooldowns().getCooldownGroup(stack));
 			}
 		} finally {

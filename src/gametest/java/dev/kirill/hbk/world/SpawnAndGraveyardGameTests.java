@@ -26,7 +26,7 @@ public final class SpawnAndGraveyardGameTests {
 	@GameTest
 	public void npcSpawnsMatchPigWeight(GameTestHelper test) {
 		var spawns = test.getLevel().getBiome(test.absolutePos(new BlockPos(2, 2, 2)))
-				.value().getMobSettings().getMobs(MobCategory.CREATURE).unwrap();
+				.value().getMobSettings().getMobs(MobCategory.MONSTER).unwrap();
 		assertPigLikeSpawn(test, spawns, ModEntityTypes.ANTON);
 		assertPigLikeSpawn(test, spawns, ModEntityTypes.GRISHA);
 		test.succeed();

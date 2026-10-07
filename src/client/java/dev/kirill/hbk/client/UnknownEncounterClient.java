@@ -56,7 +56,6 @@ public final class UnknownEncounterClient {
 						startMusic(context.client());
 					} else {
 						stopMusic(context.client());
-						scheduleUnknownRemoval(context.client(), unknownEntityId, unknownEntityUuid);
 					}
 				})
 		);
@@ -229,7 +228,7 @@ public final class UnknownEncounterClient {
 			super(ModSounds.UNKNOWN_MUSIC, SoundSource.MUSIC, RandomSource.create());
 			this.client = client;
 			this.volume = 0.85f;
-			this.pitch = 0.86f;
+			this.pitch = 1.0f;
 			this.looping = true;
 			this.attenuation = SoundInstance.Attenuation.NONE;
 			this.relative = true;

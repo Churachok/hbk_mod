@@ -15,12 +15,19 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Input;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 public final class FlyingCarpetEntity extends Entity {
+	private static final Set<UUID> PROTECTED_FALLS = new HashSet<>();
 	private boolean returnsItem = true;
 	private int emptyTicks;
 	private boolean forward;
@@ -49,6 +56,19 @@ public final class FlyingCarpetEntity extends Entity {
 	@Override
 	public void tick() {
 		super.tick();
+		if (this.level() instanceof ServerLevel level && (level.isRainingAt(this.blockPosition())
+				|| BossLocalWeather.isStormAt(level, this.blockPosition()))) {
+			for (Entity passenger : this.getPassengers()) {
+				if (passenger instanceof LivingEntity living) {
+					living.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 20 * 240, 0, false, false));
+					living.fallDistance = 0.0f;
+					PROTECTED_FALLS.add(living.getUUID());
+				}
+			}
+			this.ejectPassengers();
+			this.returnItem(level);
+			return;
+		}
 		Entity passenger = this.getFirstPassenger();
 		if (!(passenger instanceof Player player)) {
 			this.clearControls();
@@ -78,6 +98,12 @@ public final class FlyingCarpetEntity extends Entity {
 				.add(-forward.z * sideInput * speed, this.jump ? 0.36 : forwardInput * look.y * 0.34, forward.x * sideInput * speed);
 		this.setDeltaMovement(movement);
 		this.move(MoverType.SELF, movement);
+	}
+
+	public static void finishProtectedFall(ServerPlayer player) {
+		if (player.onGround() && PROTECTED_FALLS.remove(player.getUUID())) {
+			player.removeEffect(MobEffects.SLOW_FALLING);
+		}
 	}
 
 	@Override

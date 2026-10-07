@@ -48,6 +48,17 @@
 			}
 		]
 	},
+	"music.stalin_boss": {
+		"sounds": [
+			{
+				"name": "hbk:music/stalin_boss",
+				"stream": true
+			}
+		]
+	},
+	"music.cj_boss": {
+		"sounds": [{"name": "hbk:music/cj_boss", "stream": true}]
+	},
 	"music.mad_liberal": {
 		"sounds": [
 			{
@@ -59,9 +70,12 @@
 	"music.unknown": {
 		"sounds": [
 			{
-				"name": "hbk:music/kirill_doom",
+				"name": "hbk:music/unknown",
 				"stream": true
 			}
 		]
+	},
+	"unknown_death": {
+		"sounds": ["hbk:unknown_death"]
 	}
 }

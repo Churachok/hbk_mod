@@ -15,6 +15,7 @@ import dev.kirill.hbk.item.CondensedMilkItem;
 import dev.kirill.hbk.item.BandageItem;
 import dev.kirill.hbk.item.BuckwheatItem;
 import dev.kirill.hbk.item.FlyingCarpetItem;
+import dev.kirill.hbk.item.ImprovedBoatItem;
 import dev.kirill.hbk.item.GoldenCrownItem;
 import dev.kirill.hbk.item.GoshasRageBottleItem;
 import dev.kirill.hbk.item.RationItem;
@@ -35,7 +36,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.JukeboxSong;
@@ -350,6 +350,9 @@ public class ModItems {
 	public static final Item LESHA_SPAWN_EGG = register(
 			"lesha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.LESHA));
 
+	public static final Item FELLAS_SPAWN_EGG = register(
+			"fellas_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.FELLAS));
+
 	public static final Item SASHA_SPAWN_EGG = register(
 			"sasha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.SASHA));
 
@@ -381,7 +384,7 @@ public class ModItems {
 	}
 
 	private static Item improvedBoat(String name, net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.vehicle.boat.AbstractBoat> type) {
-		return register(name, properties -> new BoatItem(type, properties), new Item.Properties().stacksTo(1));
+		return register(name, properties -> new ImprovedBoatItem(type, properties), new Item.Properties().stacksTo(1));
 	}
 
 	private static Item armor(String name, ArmorType type) {
@@ -397,9 +400,9 @@ public class ModItems {
 				.durability(336)
 				.rarity(net.minecraft.world.item.Rarity.RARE)
 				.delayedComponent(DataComponents.BLOCKS_ATTACKS, provider -> new BlocksAttacks(
-						0.25f,
+						0.0f,
 						1.0f,
-						List.of(new BlocksAttacks.DamageReduction(90.0f, Optional.empty(), 0.0f, 1.0f)),
+						List.of(new BlocksAttacks.DamageReduction(360.0f, Optional.empty(), 0.0f, 1.0f)),
 						new BlocksAttacks.ItemDamageFunction(3.0f, 1.0f, 1.0f),
 						Optional.of(provider.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
 						Optional.of(SoundEvents.SHIELD_BLOCK),
@@ -482,6 +485,7 @@ public class ModItems {
 			output.accept(GRISHA_SPAWN_EGG);
 			output.accept(LESHA_SPAWN_EGG);
 			output.accept(SASHA_SPAWN_EGG);
+			output.accept(FELLAS_SPAWN_EGG);
 			output.accept(VLAD_SPAWN_EGG);
 			output.accept(LEX_SPAWN_EGG);
 			output.accept(PINK_FURRY_WOLF_SPAWN_EGG);

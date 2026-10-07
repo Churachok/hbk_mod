@@ -21,8 +21,8 @@ public final class ColossalMemberItem extends MemberWeaponItem {
 	private static final int PROJECTILE_COUNT = 100;
 	private static final float PROJECTILE_DAMAGE = 40.0f;
 	private static final float PROJECTILE_SPEED = 2.2f;
-	private static final int BURST_COOLDOWN_TICKS = 60 * 20;
-	private static final int EXPLOSION_COOLDOWN_TICKS = 40 * 20;
+	private static final int BURST_COOLDOWN_TICKS = 2 * 20;
+	private static final int EXPLOSION_COOLDOWN_TICKS = 30 * 20;
 	public static final float EXPLOSION_POWER = 16.0f;
 
 	private final Map<UUID, Integer> burstReadyAt = new HashMap<>();

@@ -1,5 +1,6 @@
 package dev.kirill.hbk;
 
+import dev.kirill.hbk.entity.BossLocalWeather;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
@@ -12,6 +13,18 @@ import net.minecraft.world.item.Items;
 import net.minecraft.gametest.framework.GameTestHelper;
 
 public final class BossGameTests {
+	@GameTest
+	public void bossStormStaysWithinBattleRadius(GameTestHelper test) {
+		var level = test.getLevel();
+		var boss = test.spawnWithNoFreeWill(ModEntityTypes.CJ, 2, 2, 2);
+		test.assertTrue(BossLocalWeather.isStormAt(level, boss.blockPosition()),
+				"Boss must create a local storm around the fight");
+		test.assertFalse(BossLocalWeather.isStormAt(level, boss.blockPosition().offset(33, 0, 0)),
+				"Storm must end outside its 32-block radius");
+		boss.discard();
+		test.succeed();
+	}
+
 	@GameTest
 	public void kirillGlassesBoostPlayerAndProjectileDamage(GameTestHelper test) {
 		var level = test.getLevel();

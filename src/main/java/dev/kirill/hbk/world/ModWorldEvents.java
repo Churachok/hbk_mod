@@ -1,6 +1,8 @@
 package dev.kirill.hbk.world;
 
 import dev.kirill.hbk.entity.StalinEntity;
+import dev.kirill.hbk.entity.FlyingCarpetEntity;
+import dev.kirill.hbk.entity.BossLocalWeather;
 import dev.kirill.hbk.mechanic.UraniumArmorEffects;
 import dev.kirill.hbk.player.MechanicsPlayerData;
 import dev.kirill.hbk.registry.ModEffects;
@@ -43,6 +45,8 @@ public final class ModWorldEvents {
 
 		long time = level.getGameTime();
 		for (ServerPlayer player : level.players()) {
+			BossLocalWeather.updatePlayer(level, player);
+			FlyingCarpetEntity.finishProtectedFall(player);
 			tickCondensedMilk(player);
 			tickRation(player);
 			tickGooseSounds(player);
@@ -67,19 +71,10 @@ public final class ModWorldEvents {
 
 		if (time % STRUCTURE_INTERVAL == 0) {
 			for (ServerPlayer player : level.players()) {
-				for (int dx = -3; dx <= 3; dx++) {
-					for (int dz = -3; dz <= 3; dz++) {
-						LevelChunk nearby = level.getChunkSource().getChunkNow(player.chunkPosition().x() + dx, player.chunkPosition().z() + dz);
-						if (nearby != null) {
-							ReferenceNpcSpawning.trySpawnSasha(level, nearby);
-						}
-					}
-				}
-			}
-			for (ServerPlayer player : level.players()) {
 				LevelChunk chunk = level.getChunkSource().getChunkNow(player.chunkPosition().x(), player.chunkPosition().z());
 				if (chunk != null) {
 					ModStructurePopulator.tryPopulateInChunk(level, chunk);
+					GroveStreetPopulation.tick(level, chunk);
 				}
 			}
 		}

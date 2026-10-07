@@ -1,5 +1,6 @@
 package dev.kirill.hbk.registry;
 
+import dev.kirill.hbk.entity.FellasEntity;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.entity.CjEntity;
 import dev.kirill.hbk.entity.CatgirlEntity;
@@ -59,6 +60,10 @@ public class ModEntityTypes {
 					.sized(0.9f, 2.7f).eyeHeight(2.43f).canSpawnFarFromPlayer()
 					.clientTrackingRange(16).updateInterval(2).notInPeaceful()
 	);
+
+	public static final EntityType<FellasEntity> FELLAS = register("fellas",
+			EntityType.Builder.<FellasEntity>of(FellasEntity::new, MobCategory.CREATURE)
+					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<NkvdEntity> NKVD = register(
 			"nkvd",
@@ -174,7 +179,7 @@ public class ModEntityTypes {
 			"improved_bamboo_raft", () -> ModItems.IMPROVED_BAMBOO_RAFT);
 
 	public static final EntityType<ReferenceNpcEntity> ANTON = register("anton",
-			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.MONSTER)
 					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<ReferenceNpcEntity> DENIS = register("denis",
@@ -182,15 +187,15 @@ public class ModEntityTypes {
 					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<ReferenceNpcEntity> GOSHA = register("gosha",
-			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.MONSTER)
 					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<ReferenceNpcEntity> GRISHA = register("grisha",
-			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.MONSTER)
 					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<ReferenceNpcEntity> LESHA = register("lesha",
-			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.CREATURE)
+			EntityType.Builder.<ReferenceNpcEntity>of(ReferenceNpcEntity::new, MobCategory.MONSTER)
 					.sized(0.6f, 1.8f).eyeHeight(1.62f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<SashaEntity> SASHA = register("sasha",
@@ -206,7 +211,7 @@ public class ModEntityTypes {
 					.sized(0.6f, 0.7f).eyeHeight(0.35f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<PinkFurryWolfEntity> PINK_FURRY_WOLF = register("furry_wolf",
-			EntityType.Builder.<PinkFurryWolfEntity>of(PinkFurryWolfEntity::new, MobCategory.CREATURE)
+			EntityType.Builder.<PinkFurryWolfEntity>of(PinkFurryWolfEntity::new, MobCategory.MONSTER)
 					.sized(0.7f, 1.95f).eyeHeight(1.72f).clientTrackingRange(8).updateInterval(3));
 
 	public static final EntityType<CatgirlEntity> CATGIRL = register("catgirl",
@@ -242,7 +247,7 @@ public class ModEntityTypes {
 		return register(name, EntityType.Builder.<ImprovedBoatEntity>of(
 				(type, level) -> new ImprovedBoatEntity(type, level, dropItem),
 				MobCategory.MISC
-		).sized(1.7f, 0.65f).clientTrackingRange(10).updateInterval(1));
+		).sized(2.6f, 0.65f).clientTrackingRange(10).updateInterval(1));
 	}
 
 	private static <T extends Entity> EntityType<T> register(String name, EntityType.Builder<T> builder) {
@@ -259,6 +264,7 @@ public class ModEntityTypes {
 		FabricDefaultAttributeRegistry.register(CJ, CjEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(MAD_LIBERAL, MadLiberalEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(KIRILL_DOOM, KirillDoomEntity.createAttributes());
+		FabricDefaultAttributeRegistry.register(FELLAS, FellasEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(NKVD, NkvdEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(NURSE, NurseEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(KIRILL, KirillEntity.createAttributes());
