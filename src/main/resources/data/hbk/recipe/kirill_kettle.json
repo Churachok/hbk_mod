@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": ["minecraft:furnace", "minecraft:glass_bottle"],
+  "result": {"id": "hbk:kirill_kettle", "count": 1}
+}

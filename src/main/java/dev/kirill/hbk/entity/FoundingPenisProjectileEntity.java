@@ -4,6 +4,7 @@ import dev.kirill.hbk.item.MemberDestruction;
 import dev.kirill.hbk.mechanic.ProgenitorTransformation;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +50,9 @@ public final class FoundingPenisProjectileEntity extends ThrowableItemProjectile
 	protected void onHit(HitResult result) {
 		super.onHit(result);
 		if (this.level() instanceof ServerLevel level) {
+			BlockPos spermPosition = ProjectileSpermImpact.eligiblePosition(level, result);
 			detonate(level);
+			ProjectileSpermImpact.replace(level, spermPosition);
 		}
 	}
 

@@ -30,12 +30,14 @@ public abstract class HumanoidBossEntity extends Monster {
 		this.bossEvent = new ServerBossEvent(this.getUUID(), this.getDisplayName(), color,
 				BossEvent.BossBarOverlay.PROGRESS);
 		this.bossEvent.setPlayBossMusic(true);
+		this.bossEvent.setDarkenScreen(true);
 		this.bossEvent.setCreateWorldFog(true);
 	}
 
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
+		BossLocalWeather.tick(level, this);
 		this.bossEvent.setProgress(this.getHealth() / this.getMaxHealth());
 		this.bossEvent.setName(this.getDisplayName());
 	}

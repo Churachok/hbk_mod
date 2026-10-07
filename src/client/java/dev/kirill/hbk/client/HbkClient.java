@@ -3,6 +3,7 @@ package dev.kirill.hbk.client;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
+import dev.kirill.hbk.menu.ModMenuTypes;
 import net.fabricmc.fabric.api.client.rendering.v1.ArmorRenderer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -15,15 +16,20 @@ import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.gui.screens.MenuScreens;
 import dev.kirill.hbk.network.ModNetworking;
 
 public class HbkClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		MenuScreens.register(ModMenuTypes.IMPROVED_BOAT_FUEL, ImprovedBoatFuelScreen::new);
 		GoshasRageClient.register();
 		BossFightMusic.register();
 		UnknownEncounterClient.register();
+		UnknownDeathClient.register();
 		ModEntityModelLayers.register();
+		EntityRendererRegistry.register(ModEntityTypes.LEBEDEV_HEAD, LebedevHeadRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.SOVIET_BUS, SovietBusRenderer::new);
 		ArmorRenderer.register(UraniumArmorRenderer::new, ModItems.URANIUM_HELMET, ModItems.URANIUM_CHESTPLATE,
 				ModItems.URANIUM_LEGGINGS, ModItems.URANIUM_BOOTS);
 		ArmorRenderer.register(KirillGlassesRenderer::new, ModItems.KIRILL_GLASSES);
@@ -38,6 +44,7 @@ public class HbkClient implements ClientModInitializer {
 				HbkMod.id("textures/entity/mad_liberal_cracked_4.png")));
 		EntityRendererRegistry.register(ModEntityTypes.KIRILL_DOOM, context -> new HumanoidBossRenderer<>(context, 1.5f,
 				HbkMod.id("textures/entity/kirill_doom.png")));
+		EntityRendererRegistry.register(ModEntityTypes.FELLAS, FellasRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.NKVD, NkvdRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.NURSE, NurseRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.KIRILL, KirillRenderer::new);

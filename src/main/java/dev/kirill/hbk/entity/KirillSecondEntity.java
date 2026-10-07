@@ -12,6 +12,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.UUID;
 
@@ -23,6 +26,14 @@ public final class KirillSecondEntity extends KirillEntity {
 			KirillSecondEntity.class, EntityDataSerializers.INT);
 	private static final EntityDataAccessor<Boolean> PORTAL_HIDDEN = SynchedEntityData.defineId(
 			KirillSecondEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Boolean> PORTAL_VISIBLE = SynchedEntityData.defineId(
+			KirillSecondEntity.class, EntityDataSerializers.BOOLEAN);
+	private static final EntityDataAccessor<Vector3fc> PORTAL_POSITION = SynchedEntityData.defineId(
+			KirillSecondEntity.class, EntityDataSerializers.VECTOR3);
+	private static final EntityDataAccessor<Integer> PORTAL_OPEN_START_TICK = SynchedEntityData.defineId(
+			KirillSecondEntity.class, EntityDataSerializers.INT);
+	private static final EntityDataAccessor<Integer> PORTAL_CLOSE_START_TICK = SynchedEntityData.defineId(
+			KirillSecondEntity.class, EntityDataSerializers.INT);
 	private boolean activeEncounterEntity;
 
 	public KirillSecondEntity(EntityType<? extends KirillSecondEntity> type, Level level) {
@@ -39,6 +50,10 @@ public final class KirillSecondEntity extends KirillEntity {
 		super.defineSynchedData(builder);
 		builder.define(GRAB_START_TICK, -1);
 		builder.define(PORTAL_HIDDEN, false);
+		builder.define(PORTAL_VISIBLE, false);
+		builder.define(PORTAL_POSITION, new Vector3f());
+		builder.define(PORTAL_OPEN_START_TICK, -1);
+		builder.define(PORTAL_CLOSE_START_TICK, -1);
 	}
 
 	public void startGrabbing() {
@@ -76,6 +91,41 @@ public final class KirillSecondEntity extends KirillEntity {
 
 	public boolean isPortalHidden() {
 		return this.entityData.get(PORTAL_HIDDEN);
+	}
+
+	public void setPortalVisible(boolean visible) {
+		this.entityData.set(PORTAL_VISIBLE, visible);
+	}
+
+	public boolean isPortalVisible() {
+		return this.entityData.get(PORTAL_VISIBLE);
+	}
+
+	public void startPortalOpening() {
+		this.setPortalVisible(true);
+		this.entityData.set(PORTAL_OPEN_START_TICK, this.tickCount);
+		this.entityData.set(PORTAL_CLOSE_START_TICK, -1);
+	}
+
+	public void startPortalClosing() {
+		this.entityData.set(PORTAL_CLOSE_START_TICK, this.tickCount);
+	}
+
+	public int getPortalOpenStartTick() {
+		return this.entityData.get(PORTAL_OPEN_START_TICK);
+	}
+
+	public int getPortalCloseStartTick() {
+		return this.entityData.get(PORTAL_CLOSE_START_TICK);
+	}
+
+	public void setPortalPosition(Vec3 position) {
+		this.entityData.set(PORTAL_POSITION, new Vector3f((float) position.x, (float) position.y, (float) position.z));
+	}
+
+	public Vec3 getPortalPosition() {
+		Vector3fc position = this.entityData.get(PORTAL_POSITION);
+		return new Vec3(position.x(), position.y(), position.z());
 	}
 
 	@Override

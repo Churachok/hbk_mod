@@ -3,6 +3,7 @@ package dev.kirill.hbk.entity;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.item.MemberDestruction;
 import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -70,9 +71,14 @@ public class AttackingMemberBulletEntity extends ThrowableItemProjectile {
 	protected void onHit(HitResult result) {
 		super.onHit(result);
 		if (!this.level().isClientSide()) {
+			BlockPos spermPosition = this.level() instanceof ServerLevel level
+					? ProjectileSpermImpact.eligiblePosition(level, result) : null;
 			if (this.explosionPower > 0 && this.level() instanceof ServerLevel level
 					&& this.getOwner() instanceof Player player) {
 				MemberDestruction.explode(level, player, result.getLocation(), this.explosionPower);
+			}
+			if (this.level() instanceof ServerLevel level) {
+				ProjectileSpermImpact.replace(level, spermPosition);
 			}
 			this.level().broadcastEntityEvent(this, IMPACT_EVENT);
 			this.discard();

@@ -15,6 +15,7 @@ import dev.kirill.hbk.item.CondensedMilkItem;
 import dev.kirill.hbk.item.BandageItem;
 import dev.kirill.hbk.item.BuckwheatItem;
 import dev.kirill.hbk.item.FlyingCarpetItem;
+import dev.kirill.hbk.item.ImprovedBoatItem;
 import dev.kirill.hbk.item.GoldenCrownItem;
 import dev.kirill.hbk.item.GoshasRageBottleItem;
 import dev.kirill.hbk.item.RationItem;
@@ -24,6 +25,9 @@ import dev.kirill.hbk.item.ShovelSwordItem;
 import dev.kirill.hbk.item.SickleAndHammerItem;
 import dev.kirill.hbk.item.StewItem;
 import dev.kirill.hbk.item.ShpermaItem;
+import dev.kirill.hbk.item.OnigiriItem;
+import dev.kirill.hbk.item.HardKirillKettleItem;
+import dev.kirill.hbk.item.LebedevHeadItem;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
@@ -35,7 +39,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BoatItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.JukeboxSong;
@@ -123,6 +126,19 @@ public class ModItems {
 					.food(new FoodProperties.Builder().nutrition(10).saturationModifier(0.8f).alwaysEdible().build())
 					.usingConvertsTo(Items.IRON_NUGGET)
 	);
+
+	public static final Item ONIGIRI = register("onigiri", OnigiriItem::new,
+			new Item.Properties().food(new FoodProperties.Builder()
+					.nutrition(6).saturationModifier(0.6f).alwaysEdible().build()));
+	public static final Item KIRILL_KETTLE = register("kirill_kettle", Item::new,
+			new Item.Properties().stacksTo(16));
+	public static final Item HARD_KIRILL_KETTLE = register("hard_kirill_kettle", HardKirillKettleItem::new,
+			new Item.Properties().stacksTo(16)
+					.food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).alwaysEdible().build())
+					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+					.usingConvertsTo(KIRILL_KETTLE));
+	public static final Item LEBEDEV_HEAD = register("lebedev_head", LebedevHeadItem::new,
+			new Item.Properties().stacksTo(16));
 
 	public static final Item BANDAGE = register(
 			"bandage",
@@ -350,6 +366,9 @@ public class ModItems {
 	public static final Item LESHA_SPAWN_EGG = register(
 			"lesha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.LESHA));
 
+	public static final Item FELLAS_SPAWN_EGG = register(
+			"fellas_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.FELLAS));
+
 	public static final Item SASHA_SPAWN_EGG = register(
 			"sasha_spawn_egg", SpawnEggItem::new, new Item.Properties().spawnEgg(ModEntityTypes.SASHA));
 
@@ -381,7 +400,7 @@ public class ModItems {
 	}
 
 	private static Item improvedBoat(String name, net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.vehicle.boat.AbstractBoat> type) {
-		return register(name, properties -> new BoatItem(type, properties), new Item.Properties().stacksTo(1));
+		return register(name, properties -> new ImprovedBoatItem(type, properties), new Item.Properties().stacksTo(1));
 	}
 
 	private static Item armor(String name, ArmorType type) {
@@ -397,9 +416,9 @@ public class ModItems {
 				.durability(336)
 				.rarity(net.minecraft.world.item.Rarity.RARE)
 				.delayedComponent(DataComponents.BLOCKS_ATTACKS, provider -> new BlocksAttacks(
-						0.25f,
+						0.0f,
 						1.0f,
-						List.of(new BlocksAttacks.DamageReduction(90.0f, Optional.empty(), 0.0f, 1.0f)),
+						List.of(new BlocksAttacks.DamageReduction(360.0f, Optional.empty(), 0.0f, 1.0f)),
 						new BlocksAttacks.ItemDamageFunction(3.0f, 1.0f, 1.0f),
 						Optional.of(provider.getOrThrow(DamageTypeTags.BYPASSES_SHIELD)),
 						Optional.of(SoundEvents.SHIELD_BLOCK),
@@ -482,6 +501,7 @@ public class ModItems {
 			output.accept(GRISHA_SPAWN_EGG);
 			output.accept(LESHA_SPAWN_EGG);
 			output.accept(SASHA_SPAWN_EGG);
+			output.accept(FELLAS_SPAWN_EGG);
 			output.accept(VLAD_SPAWN_EGG);
 			output.accept(LEX_SPAWN_EGG);
 			output.accept(PINK_FURRY_WOLF_SPAWN_EGG);
@@ -494,6 +514,8 @@ public class ModItems {
 				Identifier.withDefaultNamespace("food_and_drinks")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(foodAndDrinks).register(output -> {
+			output.accept(ONIGIRI);
+			output.accept(HARD_KIRILL_KETTLE);
 			output.accept(BUCKWHEAT);
 			output.accept(CURRANT_TINCTURE);
 			output.accept(GOSHAS_RAGE_BOTTLE);
@@ -509,6 +531,8 @@ public class ModItems {
 				Identifier.withDefaultNamespace("tools_and_utilities")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
+			output.accept(KIRILL_KETTLE);
+			output.accept(LEBEDEV_HEAD);
 			output.accept(FLYING_CARPET);
 			output.accept(IMPROVED_OAK_BOAT);
 			output.accept(IMPROVED_SPRUCE_BOAT);

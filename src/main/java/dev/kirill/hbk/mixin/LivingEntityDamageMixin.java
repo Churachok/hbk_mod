@@ -31,6 +31,9 @@ public abstract class LivingEntityDamageMixin {
 	private float hbk$modifyPlayerDamage(float amount, ServerLevel level, DamageSource source) {
 		LivingEntity victim = (LivingEntity) (Object) this;
 		if (source.getEntity() instanceof Player attacker && attacker != victim) {
+			if (attacker.hasEffect(ModEffects.ONIGIRI)) {
+				amount *= 1.6f;
+			}
 			if (attacker.hasEffect(ModEffects.GOSHAS_RAGE)) {
 				amount *= 3.0f;
 			}

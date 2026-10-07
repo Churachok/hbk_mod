@@ -26,11 +26,14 @@ public class StalinEntity extends GiantBossEntity {
 	private static final int NKVD_SQUAD_SIZE = 5;
 	private static final int DEATH_NKVD_COUNT = 30;
 	private static final float DEATH_EXPLOSION_POWER = 35.0f;
+	private static final float ARRIVAL_EXPLOSION_POWER = 16.0f;
 	private static final int SILHOUETTE_RAGE_TICKS = 20 * 30;
 
 	private float nextNkvdHealthThreshold = (float) (MAX_HEALTH - HEALTH_STEP);
 	private int silhouetteSummonCooldown;
 	private int silhouetteRageTicks;
+	private boolean arrivalExplosionDone;
+	private boolean arrivalExplosionActive;
 
 	public StalinEntity(EntityType<? extends StalinEntity> type, Level level) {
 		super(type, level, BossEvent.BossBarColor.RED);
@@ -48,6 +51,16 @@ public class StalinEntity extends GiantBossEntity {
 	@Override
 	protected void customServerAiStep(ServerLevel level) {
 		super.customServerAiStep(level);
+		if (!this.arrivalExplosionDone) {
+			this.arrivalExplosionDone = true;
+			this.arrivalExplosionActive = true;
+			try {
+				level.explode(this, this.getX(), this.getY() + this.getBbHeight() * 0.5,
+						this.getZ(), ARRIVAL_EXPLOSION_POWER, false, Level.ExplosionInteraction.TNT);
+			} finally {
+				this.arrivalExplosionActive = false;
+			}
+		}
 		if (this.silhouetteSummonCooldown > 0) {
 			this.silhouetteSummonCooldown--;
 		}
@@ -84,6 +97,9 @@ public class StalinEntity extends GiantBossEntity {
 
 	@Override
 	public boolean hurtServer(ServerLevel level, DamageSource source, float amount) {
+		if (this.arrivalExplosionActive) {
+			return false;
+		}
 		float healthBefore = this.getHealth();
 		boolean hurt = super.hurtServer(level, source, amount);
 		if (hurt && this.isAlive() && healthBefore > this.getHealth()) {
@@ -132,6 +148,7 @@ public class StalinEntity extends GiantBossEntity {
 		output.putFloat("nkvd_health_threshold", this.nextNkvdHealthThreshold);
 		output.putInt("silhouette_summon_cooldown", this.silhouetteSummonCooldown);
 		output.putInt("silhouette_rage_ticks", this.silhouetteRageTicks);
+		output.putBoolean("arrival_explosion_done", this.arrivalExplosionDone);
 	}
 
 	@Override
@@ -140,5 +157,6 @@ public class StalinEntity extends GiantBossEntity {
 		this.nextNkvdHealthThreshold = input.getFloatOr("nkvd_health_threshold", (float) (MAX_HEALTH - HEALTH_STEP));
 		this.silhouetteSummonCooldown = input.getIntOr("silhouette_summon_cooldown", 0);
 		this.silhouetteRageTicks = input.getIntOr("silhouette_rage_ticks", 0);
+		this.arrivalExplosionDone = input.getBooleanOr("arrival_explosion_done", true);
 	}
 }

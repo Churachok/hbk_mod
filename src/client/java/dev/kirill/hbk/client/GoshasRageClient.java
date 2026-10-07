@@ -11,6 +11,7 @@ import net.minecraft.resources.Identifier;
 public final class GoshasRageClient {
 	public static final Identifier POST_EFFECT = HbkMod.id("goshas_rage");
 	public static final Identifier ENTITY_MASK_EFFECT = HbkMod.id("entity_mask");
+	public static final Identifier CURRANT_EFFECT = HbkMod.id("currant_inversion");
 	private static boolean ownsPostEffect;
 
 	private GoshasRageClient() {
@@ -26,11 +27,19 @@ public final class GoshasRageClient {
 	}
 
 	private static void tick(Minecraft client) {
-		if (isActive()) {
-			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(POST_EFFECT);
-			ownsPostEffect = true;
+		Identifier effect = null;
+		if (client.player != null && client.player.hasEffect(ModEffects.HAND_IMMORTALITY)) {
+			effect = CURRANT_EFFECT;
+		} else if (isActive()) {
+			effect = POST_EFFECT;
 		} else if (KirillGlassesClient.isActive()) {
-			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(KirillGlassesClient.POST_EFFECT);
+			effect = KirillGlassesClient.POST_EFFECT;
+		}
+		if (client.player != null && client.player.hasEffect(ModEffects.ONIGIRI)) {
+			effect = HbkMod.id(effect == null ? "onigiri" : effect.getPath() + "_onigiri");
+		}
+		if (effect != null) {
+			((GameRendererInvoker) client.gameRenderer).hbk$setPostEffect(effect);
 			ownsPostEffect = true;
 		} else if (ownsPostEffect) {
 			client.gameRenderer.checkEntityPostEffect(client.getCameraEntity());

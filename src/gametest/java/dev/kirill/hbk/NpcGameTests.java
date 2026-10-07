@@ -9,10 +9,27 @@ import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 public final class NpcGameTests {
+	@GameTest
+	public void bandageHealsOtherLivingCreatures(GameTestHelper test) {
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var cow = test.spawn(EntityTypes.COW, 2, 2, 2);
+		cow.setHealth(4.0f);
+		ItemStack bandage = new ItemStack(ModItems.BANDAGE, 2);
+		player.setItemInHand(InteractionHand.MAIN_HAND, bandage);
+		test.assertTrue(ModItems.BANDAGE.interactLivingEntity(bandage, player, cow, InteractionHand.MAIN_HAND)
+				.consumesAction(), "Bandage must work on another living creature");
+		test.assertTrue(cow.getHealth() == 6.0f && bandage.getCount() == 1,
+				"Bandage must heal one heart and consume one item");
+		cow.discard();
+		test.succeed();
+	}
+
 	@GameTest
 	public void hbkCreativeTabContainsEveryModItem(GameTestHelper test) {
 		var tab = net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB
@@ -622,9 +639,16 @@ public final class NpcGameTests {
 		var unknown = test.getEntities(ModEntityTypes.KIRILL_V2).getFirst();
 		test.assertFalse(unknown.shouldBeSaved(),
 				"A temporary encounter Unknown must never be persisted in the world save");
-		Vec3 portalPosition = unknown.position();
+		Vec3 portalPosition = anchor.add(0.0, 0.0, 4.0);
+		test.assertTrue(unknown.isPortalVisible()
+				&& unknown.getPortalPosition().distanceToSqr(portalPosition) < 1.0
+				&& unknown.getPortalOpenStartTick() >= 0,
+				"The image portal must open at the Unknown's spawn point");
+		Vec3 towardPlayer = anchor.subtract(portalPosition).horizontal().normalize();
+		test.assertTrue(unknown.position().subtract(portalPosition).dot(towardPlayer) < -0.5,
+				"The Unknown must begin behind the portal, not in front of it");
 		test.assertTrue(unknown.isInvisible(),
-				"The Unknown must remain hidden while the glitch portal opens");
+				"The Unknown must remain hidden while the image portal opens");
 		Vec3 directionToPlayer = player.getEyePosition().subtract(unknown.getEyePosition()).normalize();
 		test.assertTrue(unknown.getLookAngle().dot(directionToPlayer) > 0.999
 					&& Math.abs(net.minecraft.util.Mth.wrapDegrees(unknown.yBodyRot - unknown.getYRot())) < 0.01,
@@ -637,7 +661,7 @@ public final class NpcGameTests {
 		Vec3[] heldUnknownPosition = new Vec3[1];
 		test.runAfterDelay(3, () -> test.assertTrue(player.position().distanceToSqr(anchor) < 1.0E-6,
 				"The encounter must keep the player fixed at the starting position"));
-		test.runAfterDelay(40, () -> test.assertTrue(unknown.isInvisible(),
+		test.runAfterDelay(40, () -> test.assertTrue(unknown.isInvisible() && unknown.isPortalVisible(),
 				"The portal must be visible before the Unknown appears"));
 		test.runAfterDelay(90, () -> {
 			test.assertFalse(unknown.isInvisible(),
@@ -645,6 +669,8 @@ public final class NpcGameTests {
 			test.assertTrue(unknown.position().distanceToSqr(player.position())
 						< portalPosition.distanceToSqr(player.position()),
 					"The Unknown must step out of the portal toward the player");
+			test.assertFalse(unknown.isPortalVisible(),
+					"The portal must close after the Unknown steps out");
 		});
 		test.runAfterDelay(300, () -> test.assertFalse(unknown.isGrabbing(),
 				"The Unknown must pause after saying that everything falls into place"));
@@ -680,6 +706,10 @@ public final class NpcGameTests {
 			var departingUnknowns = test.getEntities(ModEntityTypes.KIRILL_V2);
 			test.assertTrue(departingUnknowns.size() == 1 && !departingUnknowns.getFirst().isGrabbing(),
 					"The Unknown must lower his hand and remain while the departure portal opens");
+			test.assertTrue(departingUnknowns.getFirst().isPortalVisible(),
+					"The image portal must reopen before the Unknown returns");
+			test.assertTrue(departingUnknowns.getFirst().getPortalOpenStartTick() > 0,
+					"The return portal must restart its growth animation");
 			test.assertFalse(player.isNoGravity(),
 					"The encounter must restore the player's gravity after death");
 			player.setHealth(player.getMaxHealth());
@@ -692,7 +722,12 @@ public final class NpcGameTests {
 						&& returningUnknowns.getFirst().position().distanceToSqr(portalPosition)
 						< heldUnknownPosition[0].distanceToSqr(portalPosition),
 					"The Unknown must walk back toward the same glitch portal after killing the player");
+			test.assertTrue(returningUnknowns.getFirst().getPortalPosition().distanceToSqr(portalPosition) < 1.0,
+					"The portal must stay at its original location while the Unknown moves");
 		});
+		test.runAfterDelay(535, () -> test.assertTrue(unknown.isPortalHidden()
+				&& unknown.getPortalCloseStartTick() >= 0,
+				"The portal must shrink only after the Unknown has passed back through it"));
 		test.runAfterDelay(580, () -> {
 			test.assertTrue(test.getEntities(ModEntityTypes.KIRILL_V2).isEmpty(),
 					"The Unknown must disappear inside the portal before it closes");

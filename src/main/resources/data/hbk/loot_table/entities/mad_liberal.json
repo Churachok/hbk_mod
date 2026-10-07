@@ -3,6 +3,10 @@
 	"pools": [
 		{
 			"rolls": 1,
+			"entries": [{"type": "minecraft:item", "name": "hbk:lebedev_head"}]
+		},
+		{
+			"rolls": 1,
 			"entries": [{"type": "minecraft:item", "name": "hbk:armored_member"}]
 		},
 		{

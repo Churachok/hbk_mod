@@ -40,7 +40,7 @@ public final class ImprovedBoatModel extends AbstractBoatModel {
 				PartPose.ZERO);
 		root.addOrReplaceChild("seat",
 				CubeListBuilder.create().texOffs(0, 82)
-						.addBox(4.0f, -7.0f, -8.0f, 6.0f, 2.0f, 16.0f),
+						.addBox(2.0f, -7.0f, -8.0f, 10.0f, 2.0f, 16.0f),
 				PartPose.ZERO);
 
 		root.addOrReplaceChild("blast_furnace",

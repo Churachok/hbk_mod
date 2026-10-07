@@ -18,7 +18,7 @@ public abstract class BookViewScreenMixin {
 
 	@Inject(method = "init", at = @At("TAIL"))
 	private void hbk$upgradeOldGuide(CallbackInfo ci) {
-		if (bookAccess.getPageCount() == 11 && hbk$isGuide()) {
+		if (bookAccess.getPageCount() != GraveyardRecipeBook.RECIPES.size() + 1 && hbk$isGuide()) {
 			((BookViewScreen) (Object) this).setBookAccess(
 					BookViewScreen.BookAccess.fromItem(GraveyardRecipeBook.create()));
 		}

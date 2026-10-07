@@ -90,6 +90,9 @@ public final class PinkFurryWolfEntity extends PathfinderMob {
 		return super.finalizeSpawn(level, difficulty, reason, data);
 	}
 
+	@Override
+	public boolean removeWhenFarAway(double distance) { return true; }
+
 	private DyeColor randomFurColor() {
 		return DyeColor.VALUES.get(this.random.nextInt(DyeColor.VALUES.size()));
 	}

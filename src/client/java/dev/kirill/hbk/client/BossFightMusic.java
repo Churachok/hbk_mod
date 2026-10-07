@@ -2,6 +2,8 @@ package dev.kirill.hbk.client;
 
 import dev.kirill.hbk.entity.KirillDoomEntity;
 import dev.kirill.hbk.entity.MadLiberalEntity;
+import dev.kirill.hbk.entity.StalinEntity;
+import dev.kirill.hbk.entity.CjEntity;
 import dev.kirill.hbk.registry.ModSounds;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.minecraft.client.Minecraft;
@@ -63,6 +65,12 @@ public final class BossFightMusic {
 	}
 
 	private static SoundEvent musicFor(net.minecraft.world.entity.Entity entity) {
+		if (entity instanceof StalinEntity) {
+			return ModSounds.STALIN_BOSS_MUSIC;
+		}
+		if (entity instanceof CjEntity) {
+			return ModSounds.CJ_BOSS_MUSIC;
+		}
 		if (entity instanceof KirillDoomEntity) {
 			return ModSounds.KIRILL_DOOM_MUSIC;
 		}

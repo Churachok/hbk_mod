@@ -3,6 +3,7 @@
 	"package": "dev.kirill.hbk.mixin",
 	"compatibilityLevel": "JAVA_25",
 	"mixins": [
+		"AbstractFurnaceBlockEntityMixin",
 		"AdvancementMixin",
 		"BlockStateBaseMixin",
 		"LivingEntityDamageMixin",
@@ -10,7 +11,8 @@
 		"PlayerPersistentDataMixin",
 		"ServerPlayerMechanicsDataMixin",
 		"WorkerMobMixin",
-		"AntonPredatorMixin"
+		"AntonPredatorMixin",
+		"ChestBlockEntityMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

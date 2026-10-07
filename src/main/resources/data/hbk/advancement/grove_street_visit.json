@@ -1,0 +1,20 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {"id": "hbk:cj_spawn_egg"},
+    "title": {"text": "Ah shit, here we go again"},
+    "description": {"translate": "advancement.hbk.grove_street_visit.description"},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "enter_grove_street": {
+      "trigger": "minecraft:location",
+      "conditions": {
+        "player": [{"condition": "minecraft:location_check", "predicate": {"structures": "hbk:grove_street"}}]
+      }
+    }
+  }
+}

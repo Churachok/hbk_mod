@@ -1,0 +1,14 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {"id": "minecraft:minecart"},
+    "title": {"translate": "advancement.hbk.bus_fare.title"},
+    "description": {"translate": "advancement.hbk.bus_fare.description"},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {"ride": {"trigger": "minecraft:impossible"}},
+  "requirements": [["ride"]]
+}

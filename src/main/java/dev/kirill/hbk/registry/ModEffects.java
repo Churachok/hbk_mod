@@ -15,6 +15,13 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public final class ModEffects {
+	public static final Holder.Reference<MobEffect> ONIGIRI = Registry.registerForHolder(
+			BuiltInRegistries.MOB_EFFECT, HbkMod.id("onigiri"),
+			new SimpleModEffect(MobEffectCategory.BENEFICIAL, 0xF5E8CD)
+					.addAttributeModifier(Attributes.MOVEMENT_SPEED, HbkMod.id("onigiri_speed"),
+							1.50, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+	);
+
 	public static final Holder.Reference<MobEffect> HAND_IMMORTALITY = Registry.registerForHolder(
 			BuiltInRegistries.MOB_EFFECT,
 			HbkMod.id("hand_immortality"),

@@ -152,12 +152,24 @@ public final class ModNetworking {
 		}
 	}
 
+	public record UnknownDeathPayload() implements CustomPacketPayload {
+		public static final UnknownDeathPayload INSTANCE = new UnknownDeathPayload();
+		public static final Type<UnknownDeathPayload> TYPE = new Type<>(HbkMod.id("unknown_death"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, UnknownDeathPayload> CODEC = StreamCodec.unit(INSTANCE);
+
+		@Override
+		public Type<? extends CustomPacketPayload> type() {
+			return TYPE;
+		}
+	}
+
 	public static void register() {
 		PayloadTypeRegistry.clientboundPlay().register(OpenStrangeChestPayload.TYPE, OpenStrangeChestPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownEncounterPayload.TYPE, UnknownEncounterPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownTypingPayload.TYPE, UnknownTypingPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownMusicPayload.TYPE, UnknownMusicPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownRemovePayload.TYPE, UnknownRemovePayload.CODEC);
+		PayloadTypeRegistry.clientboundPlay().register(UnknownDeathPayload.TYPE, UnknownDeathPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(AnswerStrangeChestPayload.TYPE, AnswerStrangeChestPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(CarpetInputPayload.TYPE, CarpetInputPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(FireAttackingMemberPayload.TYPE, FireAttackingMemberPayload.CODEC);

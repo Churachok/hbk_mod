@@ -6,6 +6,7 @@ import dev.kirill.hbk.registry.ModGameRules;
 import dev.kirill.hbk.world.GulagPlacer;
 import dev.kirill.hbk.world.UnknownEncounter;
 import dev.kirill.hbk.world.SquirrelEncounter;
+import dev.kirill.hbk.world.SovietBusEvent;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.commands.CommandSourceStack;
@@ -27,6 +28,11 @@ public final class ModCommands {
 
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
+			dispatcher.register(Commands.literal("bus")
+					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.executes(ctx -> startBus(ctx.getSource(), ctx.getSource().getPlayerOrException()))
+					.then(Commands.argument("player", EntityArgument.player())
+							.executes(ctx -> startBus(ctx.getSource(), EntityArgument.getPlayer(ctx, "player")))));
 			dispatcher.register(Commands.literal("gulag")
 						.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 						.executes(ctx -> locate(ctx.getSource()))
@@ -87,6 +93,16 @@ public final class ModCommands {
 		source.getLevel().getGameRules().set(ModGameRules.KONATA_SHPERM_LIMIT, limit, source.getServer());
 		source.sendSuccess(() -> Component.literal("Дневной лимит подарков Конаты изменён на " + limit), true);
 		return limit;
+	}
+
+	private static int startBus(CommandSourceStack source, ServerPlayer player) {
+		SovietBusEvent.StartResult result = SovietBusEvent.start(player);
+		if (result == SovietBusEvent.StartResult.STARTED) {
+			source.sendSuccess(() -> Component.translatable("command.hbk.bus.started", player.getDisplayName()), true);
+			return 1;
+		}
+		source.sendFailure(Component.translatable("command.hbk.bus." + result.name().toLowerCase(java.util.Locale.ROOT)));
+		return 0;
 	}
 
 	private static int startUnknown(CommandSourceStack source, ServerPlayer player) {

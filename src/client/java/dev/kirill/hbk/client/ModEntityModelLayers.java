@@ -6,6 +6,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.world.entity.EquipmentSlot;
 
 public class ModEntityModelLayers {
+	public static final ModelLayerLocation LEBEDEV_HEAD = new ModelLayerLocation(HbkMod.id("lebedev_head"), "main");
 	public static final ModelLayerLocation GIANT_BOSS = new ModelLayerLocation(HbkMod.id("giant_boss"), "main");
 	public static final ModelLayerLocation MAD_LIBERAL = new ModelLayerLocation(HbkMod.id("mad_liberal"), "main");
 	public static final ModelLayerLocation ANTON = new ModelLayerLocation(HbkMod.id("anton"), "main");
@@ -21,6 +22,10 @@ public class ModEntityModelLayers {
 	public static final ModelLayerLocation KIRILL_V2 = new ModelLayerLocation(HbkMod.id("kirill_v2"), "main");
 
 	public static void register() {
+		for (var material : SovietBusModel.Material.values()) {
+			ModelLayerRegistry.registerModelLayer(sovietBus(material), () -> SovietBusModel.createLayer(material));
+		}
+		ModelLayerRegistry.registerModelLayer(LEBEDEV_HEAD, LebedevHeadModel::createBodyLayer);
 		for (var material : KirillGlassesModel.Material.values()) {
 			ModelLayerRegistry.registerModelLayer(kirillGlasses(material), () -> KirillGlassesModel.createLayer(material));
 		}
@@ -42,6 +47,10 @@ public class ModEntityModelLayers {
 				ModelLayerRegistry.registerModelLayer(uraniumArmor(slot, material), () -> UraniumArmorModel.createLayer(slot, material));
 			}
 		}
+	}
+
+	public static ModelLayerLocation sovietBus(SovietBusModel.Material material) {
+		return new ModelLayerLocation(HbkMod.id("soviet_bus"), material.name().toLowerCase(java.util.Locale.ROOT));
 	}
 
 	public static ModelLayerLocation uraniumArmor(EquipmentSlot slot, UraniumArmorModel.Material material) {

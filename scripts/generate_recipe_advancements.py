@@ -11,6 +11,8 @@ ADVANCEMENTS = ROOT / "src/main/resources/data/hbk/advancement/recipes"
 
 
 def discovery_item(recipe):
+    if recipe["type"] == "minecraft:smelting":
+        return recipe["ingredient"]
     if recipe["type"] == "minecraft:smithing_transform":
         return recipe["base"]
     if recipe["type"] == "minecraft:crafting_shaped":
