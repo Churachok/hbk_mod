@@ -7,6 +7,7 @@ import dev.kirill.hbk.entity.CatgirlEntity;
 import dev.kirill.hbk.entity.KonataEntity;
 import dev.kirill.hbk.entity.ReferenceNpcEntity;
 import dev.kirill.hbk.entity.LexEntity;
+import dev.kirill.hbk.entity.SquirrelEntity;
 import dev.kirill.hbk.entity.SashaEntity;
 import dev.kirill.hbk.entity.AttackingMemberBulletEntity;
 import dev.kirill.hbk.entity.FoundingPenisProjectileEntity;
@@ -224,6 +225,10 @@ public class ModEntityTypes {
 			EntityType.Builder.<LexEntity>of(LexEntity::new, MobCategory.CREATURE)
 					.sized(0.6f, 0.7f).eyeHeight(0.35f).clientTrackingRange(8).updateInterval(3));
 
+	public static final EntityType<SquirrelEntity> SQUIRREL = register("squirrel",
+			EntityType.Builder.<SquirrelEntity>of(SquirrelEntity::new, MobCategory.MISC)
+					.sized(0.5f, 1.25f).eyeHeight(0.45f).clientTrackingRange(8).updateInterval(2));
+
 	public static final EntityType<PinkFurryWolfEntity> PINK_FURRY_WOLF = register("furry_wolf",
 			EntityType.Builder.<PinkFurryWolfEntity>of(PinkFurryWolfEntity::new, MobCategory.MONSTER)
 					.sized(0.7f, 1.95f).eyeHeight(1.72f).clientTrackingRange(8).updateInterval(3));
@@ -274,6 +279,7 @@ public class ModEntityTypes {
 	}
 
 	public static void registerAttributes() {
+		FabricDefaultAttributeRegistry.register(SQUIRREL, SquirrelEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(LEBEDEV_HEAD, LebedevHeadEntity.createSulfurCubeAttributes());
 		FabricDefaultAttributeRegistry.register(STALIN, StalinEntity.createAttributes());
 		FabricDefaultAttributeRegistry.register(CJ, CjEntity.createAttributes());

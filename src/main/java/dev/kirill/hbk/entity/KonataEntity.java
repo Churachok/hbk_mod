@@ -3,6 +3,7 @@ package dev.kirill.hbk.entity;
 import dev.kirill.hbk.player.KonataDailyClaim;
 import dev.kirill.hbk.registry.ModAttachments;
 import dev.kirill.hbk.registry.ModEntityTypes;
+import dev.kirill.hbk.registry.ModGameRules;
 import dev.kirill.hbk.registry.ModItems;
 import dev.kirill.hbk.registry.ModSounds;
 import net.minecraft.network.chat.Component;
@@ -30,7 +31,7 @@ import net.minecraft.world.level.Level;
 import java.util.UUID;
 
 public final class KonataEntity extends PathfinderMob {
-	private static final int DAILY_SHPERMA_LIMIT = 10;
+	private static final float THEME_DISC_CHANCE = 0.001f;
 	private static final int GOOD_GESTURE_DURATION_TICKS = 44;
 	private static final EntityDataAccessor<Integer> GOOD_GESTURE_START_TICK = SynchedEntityData.defineId(
 			KonataEntity.class, EntityDataSerializers.INT);
@@ -95,6 +96,12 @@ public final class KonataEntity extends PathfinderMob {
 		return Math.min(fadeIn, fadeOut);
 	}
 
+	public static ItemStack createGiftForRoll(float roll) {
+		return new ItemStack(roll < THEME_DISC_CHANCE
+				? ModItems.MUSIC_DISC_KONATA_THEME
+				: ModItems.SHPERMA);
+	}
+
 	private void startGoodGesture(Player player) {
 		this.entityData.set(GOOD_GESTURE_START_TICK, this.tickCount);
 		this.goodGesturePlayerUuid = player.getUUID();
@@ -133,20 +140,22 @@ public final class KonataEntity extends PathfinderMob {
 			return InteractionResult.PASS;
 		}
 		if (this.level() instanceof ServerLevel serverLevel) {
+			int dailyGiftLimit = serverLevel.getGameRules().get(ModGameRules.KONATA_SHPERM_LIMIT);
 			long currentDay = serverLevel.getOverworldClockTime() / 24_000L;
 			KonataDailyClaim savedClaim = player.getAttachedOrCreate(ModAttachments.KONATA_DAILY_CLAIM);
 			KonataDailyClaim todayClaim = savedClaim.day() == currentDay
 					? savedClaim : new KonataDailyClaim(currentDay, 0);
-			if (todayClaim.count() >= DAILY_SHPERMA_LIMIT) {
+			if (todayClaim.count() >= dailyGiftLimit) {
 				player.sendOverlayMessage(Component.translatable("message.hbk.konata_daily_limit"));
 				return InteractionResult.SUCCESS;
 			}
 
-			if (this.spawnAtLocation(serverLevel, new ItemStack(ModItems.SHPERMA), 0.25f) != null) {
+			ItemStack gift = createGiftForRoll(serverLevel.getRandom().nextFloat());
+			if (this.spawnAtLocation(serverLevel, gift, 0.25f) != null) {
 				int newCount = todayClaim.count() + 1;
 				player.setAttached(ModAttachments.KONATA_DAILY_CLAIM,
 						new KonataDailyClaim(currentDay, newCount));
-				if (newCount == DAILY_SHPERMA_LIMIT) {
+				if (newCount == dailyGiftLimit) {
 					this.startGoodGesture(player);
 					this.playSound(ModSounds.KONATA_GOOD, 1.0f, 1.0f);
 				} else {

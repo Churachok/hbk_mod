@@ -1,7 +1,9 @@
 package dev.kirill.hbk.item;
 
+import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.entity.AttackingMemberBulletEntity;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -76,6 +78,12 @@ public final class ShpermaItem extends Item {
 		}
 		consumeOne(stack, player);
 		player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+		if (player instanceof ServerPlayer serverPlayer) {
+			var advancement = serverLevel.getServer().getAdvancements().get(HbkMod.id("sweet_tooth"));
+			if (advancement != null) {
+				serverPlayer.getAdvancements().award(advancement, "eat");
+			}
+		}
 		serverLevel.playSound(null, player.getX(), player.getEyeY(), player.getZ(),
 				SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.5f, 1.25f);
 	}

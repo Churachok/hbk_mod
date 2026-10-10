@@ -18,6 +18,7 @@ import dev.kirill.hbk.item.FlyingCarpetItem;
 import dev.kirill.hbk.item.ImprovedBoatItem;
 import dev.kirill.hbk.item.GoldenCrownItem;
 import dev.kirill.hbk.item.GoshasRageBottleItem;
+import dev.kirill.hbk.item.BeerBottleItem;
 import dev.kirill.hbk.item.RationItem;
 import dev.kirill.hbk.item.ResetCompassItem;
 import dev.kirill.hbk.item.StalinPipeItem;
@@ -320,6 +321,10 @@ public class ModItems {
 					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
 					.usingConvertsTo(Items.GLASS_BOTTLE)
 	);
+	public static final Item BEER_BOTTLE = register("beer_bottle", BeerBottleItem::new,
+			new Item.Properties().stacksTo(16)
+					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+					.usingConvertsTo(Items.GLASS_BOTTLE));
 
 	public static final Item RATION = register("ration", RationItem::new, new Item.Properties().stacksTo(16));
 
@@ -537,6 +542,7 @@ public class ModItems {
 		);
 		CreativeModeTabEvents.modifyOutputEvent(foodAndDrinks).register(output -> {
 			output.accept(LIBERAL_BLOOD_BUCKET);
+			output.accept(BEER_BOTTLE);
 			output.accept(ONIGIRI);
 			output.accept(HARD_KIRILL_KETTLE);
 			output.accept(DENIS_DOSHIRAK);

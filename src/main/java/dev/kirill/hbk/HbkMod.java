@@ -13,12 +13,14 @@ import dev.kirill.hbk.registry.ModDataComponents;
 import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModFeatures;
+import dev.kirill.hbk.registry.ModGameRules;
 import dev.kirill.hbk.registry.ModItems;
 import dev.kirill.hbk.registry.ModLoot;
 import dev.kirill.hbk.registry.ModSounds;
 import dev.kirill.hbk.world.ModWorldEvents;
 import dev.kirill.hbk.world.ReferenceNpcSpawning;
 import dev.kirill.hbk.world.UnknownEncounter;
+import dev.kirill.hbk.world.SquirrelEncounter;
 import dev.kirill.hbk.world.SovietBusEvent;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.api.ModInitializer;
@@ -32,6 +34,7 @@ public class HbkMod implements ModInitializer {
 
 	@Override
 	public void onInitialize() {
+		ModGameRules.register();
 		ModAttachments.register();
 		ModDataComponents.register();
 		ModEffects.register();
@@ -52,6 +55,7 @@ public class HbkMod implements ModInitializer {
 		UraniumArmorEffects.register();
 		ModWorldEvents.register();
 		UnknownEncounter.register();
+		SquirrelEncounter.register();
 		SovietBusEvent.register();
 		ModCommands.register();
 		LOGGER.info("hbk is ready to walk.");

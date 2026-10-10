@@ -35,6 +35,8 @@ import java.util.function.Supplier;
 public final class ImprovedBoatEntity extends Boat implements Container, ExtendedMenuProvider<Integer> {
 	public static final double UNLIT_SPEED_MULTIPLIER = 0.5;
 	public static final double LIT_SPEED_MULTIPLIER = 3.3;
+	public static final double PASSENGER_RIDE_HEIGHT = 0.66;
+	public static final float PASSENGER_FORWARD_OFFSET = 0.44f;
 	private static final EntityDataAccessor<Boolean> DATA_LIT = SynchedEntityData.defineId(
 			ImprovedBoatEntity.class, EntityDataSerializers.BOOLEAN);
 	private static final int LEGACY_INPUT = 0;
@@ -196,9 +198,9 @@ public final class ImprovedBoatEntity extends Boat implements Container, Extende
 	@Override public boolean stillValid(Player player) { return this.isAlive() && player.distanceToSqr(this) < 64.0; }
 	@Override public void clearContent() { this.inventory.clearContent(); }
 	@Override protected int getMaxPassengers() { return 1; }
-	@Override protected float getSinglePassengerXOffset() { return 0.44f; }
+	@Override protected float getSinglePassengerXOffset() { return PASSENGER_FORWARD_OFFSET; }
 	// Minecraft renders a seated player's hips about 0.75 blocks above their
 	// entity origin and subtracts the 0.6 vehicle attachment from this height.
 	// Place the hips on the model's seat top at 0.8125 above the boat origin.
-	@Override protected double rideHeight(EntityDimensions dimensions) { return 0.66; }
+	@Override protected double rideHeight(EntityDimensions dimensions) { return PASSENGER_RIDE_HEIGHT; }
 }

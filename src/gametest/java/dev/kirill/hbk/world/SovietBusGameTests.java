@@ -258,8 +258,8 @@ public final class SovietBusGameTests {
 			if (destination.structure != null) structures.add(destination.structure);
 		}
 		test.assertTrue(structures.equals(Set.of("stalin_dacha", "gulag", "stalinka", "kirill_house", "kirill_house_hbk"))
-				&& SovietBusEvent.Destination.values().length == 6 && SovietBusEvent.CHANCE_PER_SECOND == 0.1,
-				"Bus must choose among exactly the six requested destinations and use ten percent per second");
+				&& SovietBusEvent.Destination.values().length == 6 && SovietBusEvent.CHANCE_PER_SECOND == 0.005,
+				"Bus must choose among exactly the six requested destinations and use half a percent per second");
 		for (int ring = 1; ring <= 5; ring++) {
 			Set<String> positions = new HashSet<>();
 			for (int index = 0; index < ring * 8; index++) {

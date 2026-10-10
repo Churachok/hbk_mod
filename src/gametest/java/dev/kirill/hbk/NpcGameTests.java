@@ -442,14 +442,44 @@ public final class NpcGameTests {
 				== net.minecraft.world.InteractionResult.SUCCESS, "Konata must accept a right-click");
 		var drops = test.getEntities(EntityTypes.ITEM);
 		test.assertTrue(drops.size() == itemsBefore + 1
-				&& drops.stream().anyMatch(entity -> entity.getItem().is(ModItems.SHPERMA)),
-				"Right-clicking Konata must drop one Shperma item");
+				&& drops.stream().anyMatch(entity -> entity.getItem().is(ModItems.SHPERMA)
+						|| entity.getItem().is(ModItems.MUSIC_DISC_KONATA_THEME)),
+				"Right-clicking Konata must drop exactly one of her two gifts");
+		test.succeed();
+	}
+
+	@GameTest
+	public void konataThemeDiscReplacesShpermaOnOneTenthOfOnePercentRolls(GameTestHelper test) {
+		test.assertTrue(dev.kirill.hbk.entity.KonataEntity.createGiftForRoll(0.0f)
+				.is(ModItems.MUSIC_DISC_KONATA_THEME),
+				"A zero roll must select Konata's theme disc");
+		test.assertTrue(dev.kirill.hbk.entity.KonataEntity.createGiftForRoll(0.000999f)
+				.is(ModItems.MUSIC_DISC_KONATA_THEME),
+				"Rolls below 0.001 must select Konata's theme disc");
+		test.assertTrue(dev.kirill.hbk.entity.KonataEntity.createGiftForRoll(0.001f)
+				.is(ModItems.SHPERMA),
+				"The 0.1% boundary and higher rolls must select Shperma");
 		test.succeed();
 	}
 
 	@GameTest
 	public void konataLimitsEachPlayerToTenItemsPerDay(GameTestHelper test) {
 		var level = test.getLevel();
+		test.assertTrue(level.getGameRules().get(dev.kirill.hbk.registry.ModGameRules.KONATA_SHPERM_LIMIT) == 10,
+				"Konata's configurable daily gift limit must default to ten");
+		test.assertTrue(net.minecraft.core.registries.BuiltInRegistries.GAME_RULE
+				.getValue(HbkMod.id("konata_shperm_limit"))
+				== dev.kirill.hbk.registry.ModGameRules.KONATA_SHPERM_LIMIT,
+				"Konata's daily gift limit must be a registered game rule");
+		var dispatcher = level.getServer().getCommands().getDispatcher();
+		var commandSource = level.getServer().createCommandSourceStack();
+		for (String command : java.util.List.of(
+				"konata shperm limit 12",
+				"gamerule hbk:konata_shperm_limit 12")) {
+			var parsed = dispatcher.parse(command, commandSource);
+			test.assertFalse(parsed.getReader().canRead() || !parsed.getExceptions().isEmpty(),
+					"Konata's limit command must parse completely: /" + command);
+		}
 		var konata = test.spawn(ModEntityTypes.KONATA, 2, 2, 2);
 		var firstPlayer = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
 		for (int i = 0; i < 9; i++) {
@@ -518,6 +548,45 @@ public final class NpcGameTests {
 		test.assertTrue(bullet.getOwner() == player && bullet.getDeltaMovement().lengthSqr() > 1.0,
 				"The charged projectile must belong to the player and travel at bullet speed");
 		test.assertTrue(stack.isEmpty(), "Firing must consume one item");
+		test.succeed();
+	}
+
+	@GameTest
+	public void konataGiftAchievementsUseDiscPickupAndShpermaEatingOnly(GameTestHelper test) {
+		var server = test.getLevel().getServer();
+		var musicLover = server.getAdvancements().get(HbkMod.id("music_lover"));
+		var sweetTooth = server.getAdvancements().get(HbkMod.id("sweet_tooth"));
+		test.assertTrue(musicLover != null && sweetTooth != null,
+				"Both Konata gift advancements must load");
+		var player = test.makeMockServerPlayerInLevel();
+		player.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+
+		var dirt = new net.minecraft.world.item.ItemStack(net.minecraft.world.item.Items.DIRT);
+		player.getInventory().setItem(0, dirt);
+		net.minecraft.advancements.triggers.CriteriaTriggers.INVENTORY_CHANGED
+				.trigger(player, player.getInventory(), dirt);
+		test.assertFalse(player.getAdvancements().getOrStartProgress(musicLover).isDone(),
+				"Unrelated items must not grant Music Lover");
+		var disc = new net.minecraft.world.item.ItemStack(ModItems.MUSIC_DISC_KONATA_THEME);
+		player.getInventory().setItem(0, disc);
+		net.minecraft.advancements.triggers.CriteriaTriggers.INVENTORY_CHANGED
+				.trigger(player, player.getInventory(), disc);
+		test.assertTrue(player.getAdvancements().getOrStartProgress(musicLover).isDone(),
+				"Obtaining Konata's theme disc must grant Music Lover");
+
+		var projectileStack = new net.minecraft.world.item.ItemStack(ModItems.SHPERMA);
+		int duration = ModItems.SHPERMA.getUseDuration(projectileStack, player);
+		ModItems.SHPERMA.releaseUsing(projectileStack, test.getLevel(), player,
+				duration - dev.kirill.hbk.item.ShpermaItem.CHARGE_TICKS);
+		test.assertFalse(player.getAdvancements().getOrStartProgress(sweetTooth).isDone(),
+				"Firing Shperma must not grant Sweet Tooth");
+		player.setHealth(16.0f);
+		var foodStack = new net.minecraft.world.item.ItemStack(ModItems.SHPERMA);
+		ModItems.SHPERMA.releaseUsing(foodStack, test.getLevel(), player,
+				ModItems.SHPERMA.getUseDuration(foodStack, player));
+		test.assertTrue(player.getAdvancements().getOrStartProgress(sweetTooth).isDone(),
+				"Actually eating Shperma must grant Sweet Tooth");
+		server.getPlayerList().remove(player);
 		test.succeed();
 	}
 

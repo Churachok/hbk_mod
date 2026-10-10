@@ -1,0 +1,20 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {"id": "hbk:music_disc_konata_theme"},
+    "title": {"translate": "advancement.hbk.music_lover.title"},
+    "description": {"translate": "advancement.hbk.music_lover.description"},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_disc": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [{"items": "hbk:music_disc_konata_theme"}]
+      }
+    }
+  }
+}

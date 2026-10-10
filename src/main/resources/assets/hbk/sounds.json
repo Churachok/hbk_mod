@@ -3,6 +3,15 @@
 		"subtitle": "subtitles.hbk.canned_laughter",
 		"sounds": [{"name": "hbk:canned_laughter", "attenuation_distance": 64}]
 	},
+	"entity.squirrel.ambient": {
+		"subtitle": "subtitles.hbk.squirrel.ambient",
+		"sounds": [
+			"hbk:entity/squirrel/chirp",
+			"hbk:entity/squirrel/chatter",
+			"hbk:entity/squirrel/squeak",
+			"hbk:entity/squirrel/trill"
+		]
+	},
 	"bus_horn": {
 		"subtitle": "subtitles.hbk.bus_horn",
 		"sounds": ["hbk:bus_horn"]
