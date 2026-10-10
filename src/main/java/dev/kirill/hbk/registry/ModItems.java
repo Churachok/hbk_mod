@@ -28,6 +28,11 @@ import dev.kirill.hbk.item.ShpermaItem;
 import dev.kirill.hbk.item.OnigiriItem;
 import dev.kirill.hbk.item.HardKirillKettleItem;
 import dev.kirill.hbk.item.LebedevHeadItem;
+import dev.kirill.hbk.item.HardDoshirakKettleItem;
+import dev.kirill.hbk.item.DenisDoshirakItem;
+import dev.kirill.hbk.item.FunnyButtonItem;
+import dev.kirill.hbk.item.GoshasDandruffItem;
+import dev.kirill.hbk.item.LiberalBloodBucketItem;
 import net.fabricmc.fabric.api.creativetab.v1.FabricCreativeModeTab;
 import net.fabricmc.fabric.api.creativetab.v1.CreativeModeTabEvents;
 import net.minecraft.core.Registry;
@@ -139,6 +144,23 @@ public class ModItems {
 					.usingConvertsTo(KIRILL_KETTLE));
 	public static final Item LEBEDEV_HEAD = register("lebedev_head", LebedevHeadItem::new,
 			new Item.Properties().stacksTo(16));
+	public static final Item LIBERAL_BLOOD_BUCKET = register("liberal_blood_bucket", LiberalBloodBucketItem::new,
+			new Item.Properties().stacksTo(1)
+					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+					.usingConvertsTo(Items.BUCKET));
+	public static final Item DENIS_DOSHIRAK = register("denis_doshirak", DenisDoshirakItem::new,
+			new Item.Properties().food(new FoodProperties.Builder().nutrition(2).saturationModifier(0.1f).build()));
+	public static final Item DOSHIRAK_KETTLE = register("doshirak_kettle", Item::new,
+			new Item.Properties().stacksTo(16));
+	public static final Item HARD_DOSHIRAK_KETTLE = register("hard_doshirak_kettle", HardDoshirakKettleItem::new,
+			new Item.Properties().stacksTo(16)
+					.food(new FoodProperties.Builder().nutrition(3).saturationModifier(0.3f).alwaysEdible().build())
+					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+					.usingConvertsTo(KIRILL_KETTLE));
+	public static final Item FUNNY_BUTTON = register("funny_button", FunnyButtonItem::new,
+			new Item.Properties().stacksTo(1));
+	public static final Item GOSHAS_DANDRUFF = register("goshas_dandruff", GoshasDandruffItem::new,
+			new Item.Properties().stacksTo(64));
 
 	public static final Item BANDAGE = register(
 			"bandage",
@@ -514,8 +536,11 @@ public class ModItems {
 				Identifier.withDefaultNamespace("food_and_drinks")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(foodAndDrinks).register(output -> {
+			output.accept(LIBERAL_BLOOD_BUCKET);
 			output.accept(ONIGIRI);
 			output.accept(HARD_KIRILL_KETTLE);
+			output.accept(DENIS_DOSHIRAK);
+			output.accept(HARD_DOSHIRAK_KETTLE);
 			output.accept(BUCKWHEAT);
 			output.accept(CURRANT_TINCTURE);
 			output.accept(GOSHAS_RAGE_BOTTLE);
@@ -532,6 +557,9 @@ public class ModItems {
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
 			output.accept(KIRILL_KETTLE);
+			output.accept(DOSHIRAK_KETTLE);
+			output.accept(FUNNY_BUTTON);
+			output.accept(GOSHAS_DANDRUFF);
 			output.accept(LEBEDEV_HEAD);
 			output.accept(FLYING_CARPET);
 			output.accept(IMPROVED_OAK_BOAT);

@@ -28,16 +28,22 @@ public abstract class LivingEntityDamageMixin {
 	}
 
 	@ModifyVariable(method = "hurtServer", at = @At("HEAD"), argsOnly = true, ordinal = 0)
-	private float hbk$modifyPlayerDamage(float amount, ServerLevel level, DamageSource source) {
+	private float hbk$modifyOutgoingDamage(float amount, ServerLevel level, DamageSource source) {
 		LivingEntity victim = (LivingEntity) (Object) this;
-		if (source.getEntity() instanceof Player attacker && attacker != victim) {
+		if (source.getEntity() instanceof LivingEntity attacker && attacker != victim) {
+			if (attacker.hasEffect(ModEffects.YOUNG_LIBERAL)) {
+				amount *= 0.6f;
+			}
 			if (attacker.hasEffect(ModEffects.ONIGIRI)) {
 				amount *= 1.6f;
 			}
-			if (attacker.hasEffect(ModEffects.GOSHAS_RAGE)) {
+			if (attacker.hasEffect(ModEffects.DOSHIRAK)) {
+				amount *= 1.5f;
+			}
+			if (attacker instanceof Player && attacker.hasEffect(ModEffects.GOSHAS_RAGE)) {
 				amount *= 3.0f;
 			}
-			if (attacker.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(ModItems.KIRILL_GLASSES)) {
+			if (attacker instanceof Player && attacker.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.HEAD).is(ModItems.KIRILL_GLASSES)) {
 				amount *= 1.5f;
 			}
 		}

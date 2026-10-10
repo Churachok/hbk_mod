@@ -27,6 +27,7 @@ import dev.kirill.hbk.entity.StalinEntity;
 import dev.kirill.hbk.entity.ColossalBombEntity;
 import dev.kirill.hbk.entity.LebedevHeadEntity;
 import dev.kirill.hbk.entity.SovietBusEntity;
+import dev.kirill.hbk.entity.GoshasDandruffEntity;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -39,6 +40,9 @@ import net.minecraft.world.entity.MobCategory;
 import java.util.function.Supplier;
 
 public class ModEntityTypes {
+	public static final EntityType<GoshasDandruffEntity> GOSHAS_DANDRUFF = register("goshas_dandruff",
+			EntityType.Builder.<GoshasDandruffEntity>of(GoshasDandruffEntity::new, MobCategory.MISC)
+					.sized(0.25f, 0.25f).clientTrackingRange(8).updateInterval(10));
 	public static final EntityType<SovietBusEntity> SOVIET_BUS = register("soviet_bus",
 			EntityType.Builder.<SovietBusEntity>of(SovietBusEntity::new, MobCategory.MISC)
 					.sized((float) SovietBusEntity.WIDTH, (float) SovietBusEntity.HEIGHT)

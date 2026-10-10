@@ -1,6 +1,9 @@
 package dev.kirill.hbk;
 
 import dev.kirill.hbk.item.OnigiriItem;
+import dev.kirill.hbk.item.FunnyButtonItem;
+import dev.kirill.hbk.entity.FunnySpinAccess;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
@@ -28,6 +31,208 @@ import net.minecraft.world.phys.Vec3;
 import java.util.List;
 
 public final class KitchenGameTests {
+	@GameTest
+	public void dryDoshirakRestoresTwoHungerButCostsHalfAHeart(GameTestHelper test) {
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		try {
+			player.getFoodData().setFoodLevel(10);
+			var noodles = new ItemStack(ModItems.DENIS_DOSHIRAK, 2);
+			noodles.finishUsingItem(test.getLevel(), player);
+			test.assertTrue(noodles.getCount() == 1 && player.getFoodData().getFoodLevel() == 12,
+					"Dry noodles must consume one portion and restore two hunger");
+			test.assertTrue(player.getHealth() == 19, "Dry noodles must cost half a heart");
+		} finally {
+			player.discard();
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void noodleRecipesAndEveryButtonWork(GameTestHelper test) {
+		var level = test.getLevel();
+		var manager = level.getServer().getRecipeManager();
+		var noodles = manager.byKey(ResourceKey.create(Registries.RECIPE, HbkMod.id("denis_doshirak"))).orElseThrow().value();
+		test.assertTrue(matches(noodles, CraftingInput.of(2, 1,
+				List.of(new ItemStack(Items.WHEAT), new ItemStack(Items.DRIED_KELP))), level), "Dry noodles must be obtainable");
+		var kettle = manager.byKey(ResourceKey.create(Registries.RECIPE, HbkMod.id("doshirak_kettle"))).orElseThrow().value();
+		test.assertTrue(matches(kettle, CraftingInput.of(2, 1,
+				List.of(new ItemStack(ModItems.KIRILL_KETTLE), new ItemStack(ModItems.DENIS_DOSHIRAK))), level),
+				"Noodles and the empty kettle must craft shapelessly");
+		var button = manager.byKey(ResourceKey.create(Registries.RECIPE, HbkMod.id("funny_button"))).orElseThrow().value();
+		var buttons = net.minecraft.tags.TagKey.create(Registries.ITEM, net.minecraft.resources.Identifier.withDefaultNamespace("buttons"));
+		for (var holder : net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagOrEmpty(buttons)) {
+			test.assertTrue(matches(button, CraftingInput.of(2, 1,
+					List.of(new ItemStack(holder), new ItemStack(Items.DIAMOND))), level), "Recipe must accept every button: " + holder);
+		}
+		test.assertFalse(matches(button, CraftingInput.of(2, 1,
+				List.of(new ItemStack(Items.LEVER), new ItemStack(Items.DIAMOND))), level), "A lever is not a button");
+		test.succeed();
+	}
+
+	@GameTest
+	public void noodleKettleCooksReturnsEmptyAndBuffsExactDamageAndSpeed(GameTestHelper test) {
+		var level = test.getLevel();
+		var pos = test.absolutePos(new BlockPos(2, 2, 2));
+		level.setBlockAndUpdate(pos, Blocks.FURNACE.defaultBlockState());
+		var furnace = (FurnaceBlockEntity) level.getBlockEntity(pos);
+		furnace.setItem(0, new ItemStack(ModItems.DOSHIRAK_KETTLE));
+		furnace.setItem(1, new ItemStack(Items.COAL));
+		for (int tick = 0; tick < 199; tick++) AbstractFurnaceBlockEntity.serverTick(level, pos, level.getBlockState(pos), furnace);
+		test.assertTrue(furnace.getItem(2).isEmpty(), "Noodle kettle must take 200 ticks to cook");
+		AbstractFurnaceBlockEntity.serverTick(level, pos, level.getBlockState(pos), furnace);
+		test.assertTrue(furnace.getItem(2).is(ModItems.HARD_DOSHIRAK_KETTLE), "Furnace must cook the noodle kettle");
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		try {
+			player.getFoodData().setFoodLevel(10);
+			double speed = player.getAttributeValue(Attributes.MOVEMENT_SPEED);
+			var empty = furnace.getItem(2).copy().finishUsingItem(level, player);
+			test.assertTrue(empty.is(ModItems.KIRILL_KETTLE), "Drinking must return the ordinary empty kettle");
+			test.assertTrue(player.getFoodData().getFoodLevel() == 13, "Drink must restore 3 hunger");
+			test.assertTrue(Math.abs(player.getAttributeValue(Attributes.MOVEMENT_SPEED) - speed * 1.4) < 0.00001,
+					"Original tea speed plus extra 20% must total 40%");
+			test.assertTrue(player.getEffect(MobEffects.REGENERATION).getDuration() == 600
+					&& player.getEffect(ModEffects.DOSHIRAK).getDuration() == 600, "Effects must last 30 seconds");
+			var cow = test.spawnWithNoFreeWill(EntityTypes.COW, 1, 2, 1);
+			cow.hurtServer(level, level.damageSources().playerAttack(player), 4);
+			test.assertTrue(Math.abs(cow.getHealth() - 4) < 0.001, "4 base damage must become 6 (+50%)");
+			var arrow = new Arrow(EntityTypes.ARROW, level);
+			arrow.setOwner(player);
+			var ranged = test.spawnWithNoFreeWill(EntityTypes.COW, 3, 2, 1);
+			ranged.hurtServer(level, level.damageSources().arrow(arrow, player), 4);
+			test.assertTrue(Math.abs(ranged.getHealth() - 4) < 0.001, "Noodles must also buff projectile damage by 50%");
+			new ItemStack(ModItems.HARD_DOSHIRAK_KETTLE).finishUsingItem(level, player);
+			test.assertTrue(Math.abs(player.getAttributeValue(Attributes.MOVEMENT_SPEED) - speed * 1.4) < 0.00001,
+					"Repeated drinks must refresh, not stack");
+		} finally {
+			player.discard();
+			level.removeBlock(pos, false);
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void feedingOnigiriInterceptsMobInteractionsAndBuffsMeleeAndProjectiles(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		try {
+			var cow = test.spawnWithNoFreeWill(EntityTypes.COW, 2, 2, 2);
+			var zombie = test.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 3, 2, 2);
+			player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.ONIGIRI, 3));
+			double speed = zombie.getAttributeValue(Attributes.MOVEMENT_SPEED);
+			test.assertTrue(UseEntityCallback.EVENT.invoker().interact(player, level, InteractionHand.MAIN_HAND, cow, null).consumesAction(),
+					"Feeding must intercept the mob's vanilla interaction");
+			UseEntityCallback.EVENT.invoker().interact(player, level, InteractionHand.MAIN_HAND, zombie, null);
+			test.assertTrue(cow.hasEffect(ModEffects.ONIGIRI) && zombie.hasEffect(ModEffects.ONIGIRI),
+					"Food must work on passive and hostile mobs");
+			test.assertTrue(player.getMainHandItem().getCount() == 1 && !player.hasEffect(ModEffects.ONIGIRI),
+					"Feeding two mobs must consume two portions without buffing the player");
+			test.assertTrue(Math.abs(zombie.getAttributeValue(Attributes.MOVEMENT_SPEED) - speed * 2.5) < 0.00001,
+					"Fed mobs must gain exactly 150% speed");
+			cow.hurtServer(level, level.damageSources().mobAttack(zombie), 4);
+			test.assertTrue(Math.abs(cow.getHealth() - 3.6f) < 0.001, "A fed mob must deal 60% extra melee damage");
+			var ranged = test.spawnWithNoFreeWill(EntityTypes.COW, 1, 2, 1);
+			var arrow = new Arrow(EntityTypes.ARROW, level);
+			arrow.setOwner(zombie);
+			ranged.hurtServer(level, level.damageSources().arrow(arrow, zombie), 4);
+			test.assertTrue(Math.abs(ranged.getHealth() - 3.6f) < 0.001, "A fed mob must deal 60% extra ranged damage");
+			zombie.removeEffect(ModEffects.ONIGIRI);
+			test.assertTrue(Math.abs(zombie.getAttributeValue(Attributes.MOVEMENT_SPEED) - speed) < 0.00001, "Speed must restore on expiration");
+		} finally {
+			player.discard();
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void everyGoshaDropsOneToFourDandruffEvenWithoutPlayerKill(GameTestHelper test) {
+		for (int trial = 0; trial < 32; trial++) {
+			var gosha = test.spawn(ModEntityTypes.GOSHA, 2, 2, 2);
+			gosha.hurtServer(test.getLevel(), test.getLevel().damageSources().generic(), 1000);
+			int count = 0;
+			for (var item : test.getEntities(EntityTypes.ITEM)) {
+				if (item.getItem().is(ModItems.GOSHAS_DANDRUFF)) count += item.getItem().getCount();
+				item.discard();
+			}
+			test.assertTrue(count >= 1 && count <= 4, "Every Gosha must drop 1-4 dandruff, got " + count);
+			gosha.discard();
+		}
+		test.succeed();
+	}
+
+	@GameTest(maxTicks = 40)
+	public void throwingDandruffConsumesOneAndDealsFiveDamage(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var origin = test.absolutePos(new BlockPos(1, 2, 2));
+		player.setPos(origin.getX() + 0.5, origin.getY(), origin.getZ() + 0.5);
+		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.GOSHAS_DANDRUFF, 2));
+		ModItems.GOSHAS_DANDRUFF.use(level, player, InteractionHand.MAIN_HAND);
+		test.assertTrue(player.getMainHandItem().getCount() == 1, "Throwing must consume exactly one flake");
+		var projectile = test.getEntities(ModEntityTypes.GOSHAS_DANDRUFF).getFirst();
+		var cow = test.spawnWithNoFreeWill(EntityTypes.COW, 4, 2, 2);
+		cow.setNoGravity(true);
+		var direction = cow.position().add(0, cow.getBbHeight() * 0.5, 0).subtract(projectile.position());
+		projectile.shoot(direction.x, direction.y, direction.z, 1.5f, 0);
+		test.runAfterDelay(6, () -> {
+			test.assertTrue(Math.abs(cow.getHealth() - 5) < 0.001, "A thrown flake must hit for 5 damage");
+			test.assertTrue(projectile.isRemoved(), "Projectile must disappear after impact");
+			player.discard();
+			test.succeed();
+		});
+	}
+
+	@GameTest(maxTicks = 130)
+	public void funnyButtonSpinsMobsWithinSphereThenExplodesOnlyHostiles(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var center = Vec3.atCenterOf(test.absolutePos(new BlockPos(2, 2, 2))).add(0, 200, 0);
+		player.setPos(center);
+		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.FUNNY_BUTTON));
+		var peaceful = test.spawnWithNoFreeWill(EntityTypes.COW, 2, 2, 2);
+		var hostile = test.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 2, 2, 2);
+		var far = test.spawnWithNoFreeWill(EntityTypes.COW, 2, 2, 2);
+		peaceful.setPos(center.add(-6, 0, 0));
+		hostile.setPos(center.add(3, 0, 0));
+		far.setPos(center.add(40, 0, 40)); // Inside the query box, outside the radius-50 sphere.
+		for (var mob : List.of(peaceful, hostile, far)) mob.setNoGravity(true);
+		test.assertFalse(FunnyButtonItem.isHostile(test.spawnWithNoFreeWill(ModEntityTypes.ANTON, 1, 2, 1)),
+				"Peaceful Anton must not count as hostile merely because of his spawn category");
+		ModItems.FUNNY_BUTTON.use(level, player, InteractionHand.MAIN_HAND);
+		test.assertTrue(peaceful.hasEffect(ModEffects.FUNNY_SPIN) && hostile.hasEffect(ModEffects.FUNNY_SPIN), "All nearby mobs must spin");
+		test.assertFalse(far.hasEffect(ModEffects.FUNNY_SPIN), "Mobs outside the sphere must not spin");
+		test.assertTrue(player.getCooldowns().isOnCooldown(player.getMainHandItem()), "Button must have a cooldown");
+		test.runAfterDelay(3, () -> {
+			test.assertTrue(((FunnySpinAccess) peaceful).hbk$isFunnySpinning(), "Spin must be synchronized for client observers");
+			test.assertTrue(hostile.isAlive(), "Explosion must wait until animation finishes");
+		});
+		test.runAfterDelay(110, () -> {
+			test.assertFalse(hostile.isAlive(), "Hostile mob must explode after five seconds");
+			test.assertTrue(peaceful.isAlive() && far.isAlive(), "Peaceful and out-of-range mobs must survive");
+			test.assertFalse(((FunnySpinAccess) peaceful).hbk$isFunnySpinning(), "Peaceful mob must stop spinning afterward");
+			for (var mob : List.of(peaceful, hostile, far)) mob.discard();
+			player.discard();
+			test.succeed();
+		});
+	}
+
+	@GameTest(maxTicks = 40)
+	public void newCraftingAndSmeltingRecipesUnlockInVanillaBook(GameTestHelper test) {
+		var player = test.makeMockServerPlayerInLevel();
+		player.getInventory().add(new ItemStack(Items.WHEAT));
+		player.getInventory().add(new ItemStack(Items.OAK_BUTTON));
+		player.getInventory().add(new ItemStack(ModItems.KIRILL_KETTLE));
+		player.getInventory().add(new ItemStack(ModItems.DOSHIRAK_KETTLE));
+		player.getInventory().tick();
+		test.runAfterDelay(2, () -> {
+			for (String id : List.of("denis_doshirak", "doshirak_kettle", "hard_doshirak_kettle", "funny_button")) {
+				test.assertTrue(player.getRecipeBook().contains(ResourceKey.create(Registries.RECIPE, HbkMod.id(id))),
+						"Collecting an ingredient must unlock new recipe: " + id);
+			}
+			player.getInventory().clearContent();
+			test.succeed();
+		});
+	}
+
 	@GameTest
 	public void onigiriAcceptsEveryFishAndKettleCraftsFromFurnaceAndBottle(GameTestHelper test) {
 		var level = test.getLevel();

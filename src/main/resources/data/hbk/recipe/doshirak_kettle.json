@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": ["hbk:denis_doshirak", "hbk:kirill_kettle"],
+  "result": {"id": "hbk:doshirak_kettle", "count": 1}
+}

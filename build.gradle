@@ -30,6 +30,10 @@ fabricApi {
 	}
 }
 
+tasks.named('runClientGameTest', JavaExec) {
+	systemProperty 'hbk.client.gametest', providers.gradleProperty('hbkClientTest').getOrElse('all')
+}
+
 processResources {
 	def version = project.version
 	inputs.property "version", version

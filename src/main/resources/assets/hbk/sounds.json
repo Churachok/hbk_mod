@@ -1,4 +1,8 @@
 {
+	"canned_laughter": {
+		"subtitle": "subtitles.hbk.canned_laughter",
+		"sounds": [{"name": "hbk:canned_laughter", "attenuation_distance": 64}]
+	},
 	"bus_horn": {
 		"subtitle": "subtitles.hbk.bus_horn",
 		"sounds": ["hbk:bus_horn"]

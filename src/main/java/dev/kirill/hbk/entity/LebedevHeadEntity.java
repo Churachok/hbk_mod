@@ -16,6 +16,8 @@ import net.minecraft.world.entity.monster.cubemob.SulfurCube;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 
@@ -110,6 +112,15 @@ public final class LebedevHeadEntity extends SulfurCube {
 	protected InteractionResult mobInteract(Player player, InteractionHand hand) {
 		if (player.isSpectator()) {
 			return InteractionResult.PASS;
+		}
+		ItemStack held = player.getItemInHand(hand);
+		if (held.is(Items.BUCKET)) {
+			if (this.level() instanceof ServerLevel) {
+				player.setItemInHand(hand, ItemUtils.createFilledResult(held, player,
+						new ItemStack(ModItems.LIBERAL_BLOOD_BUCKET)));
+				this.playSound(SoundEvents.BUCKET_FILL, 1.0f, 1.0f);
+			}
+			return InteractionResult.SUCCESS;
 		}
 		if (this.level() instanceof ServerLevel level) {
 			ItemStack head = new ItemStack(ModItems.LEBEDEV_HEAD);

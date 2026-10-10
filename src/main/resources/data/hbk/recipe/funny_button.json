@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": ["minecraft:diamond", "#minecraft:buttons"],
+  "result": {"id": "hbk:funny_button", "count": 1}
+}

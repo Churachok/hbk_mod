@@ -18,7 +18,7 @@ public abstract class BookViewScreenMixin {
 
 	@Inject(method = "init", at = @At("TAIL"))
 	private void hbk$upgradeOldGuide(CallbackInfo ci) {
-		if (bookAccess.getPageCount() != GraveyardRecipeBook.RECIPES.size() + 1 && hbk$isGuide()) {
+		if (bookAccess.getPageCount() != GraveyardRecipeBook.PAGE_COUNT && hbk$isGuide()) {
 			((BookViewScreen) (Object) this).setBookAccess(
 					BookViewScreen.BookAccess.fromItem(GraveyardRecipeBook.create()));
 		}
@@ -27,7 +27,7 @@ public abstract class BookViewScreenMixin {
 	@Inject(method = "extractRenderState", at = @At("TAIL"))
 	private void hbk$drawRecipeDiagram(GuiGraphicsExtractor graphics, int mouseX, int mouseY,
 			float partialTick, CallbackInfo ci) {
-		if (bookAccess.getPageCount() != GraveyardRecipeBook.RECIPES.size() + 1
+		if (bookAccess.getPageCount() != GraveyardRecipeBook.PAGE_COUNT
 				|| !hbk$isGuide()) {
 			return;
 		}

@@ -28,7 +28,9 @@ public final class GoshasRageClient {
 
 	private static void tick(Minecraft client) {
 		Identifier effect = null;
-		if (client.player != null && client.player.hasEffect(ModEffects.HAND_IMMORTALITY)) {
+		if (YoungLiberalClient.isActive()) {
+			effect = YoungLiberalClient.POST_EFFECT;
+		} else if (client.player != null && client.player.hasEffect(ModEffects.HAND_IMMORTALITY)) {
 			effect = CURRANT_EFFECT;
 		} else if (isActive()) {
 			effect = POST_EFFECT;

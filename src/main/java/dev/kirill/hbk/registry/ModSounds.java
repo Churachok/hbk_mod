@@ -6,6 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.sounds.SoundEvent;
 
 public final class ModSounds {
+	public static final SoundEvent CANNED_LAUGHTER = register("canned_laughter");
 	public static final SoundEvent BUS_HORN = register("bus_horn");
 	public static final SoundEvent GOOSE_HONK = register("goose_honk");
 	public static final SoundEvent MUSIC_DISC_HBKAU = register("music_disc.hbkau");

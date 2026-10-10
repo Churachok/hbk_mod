@@ -3,11 +3,13 @@ package dev.kirill.hbk.mechanic;
 import dev.kirill.hbk.entity.FlyingBlockEntity;
 import dev.kirill.hbk.item.ShovelSwordItem;
 import dev.kirill.hbk.item.SickleAndHammerItem;
+import dev.kirill.hbk.item.OnigiriItem;
 import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModItems;
 import net.fabricmc.fabric.api.event.player.AttackEntityCallback;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -28,6 +30,10 @@ public final class ModMechanics {
 	}
 
 	public static void register() {
+		// Run before the mob's own interaction (breeding, trading, sitting, etc.).
+		UseEntityCallback.EVENT.register((player, level, hand, entity, hit) ->
+				player.getItemInHand(hand).is(ModItems.ONIGIRI) && entity instanceof LivingEntity living
+						? OnigiriItem.feed(player.getItemInHand(hand), player, living) : InteractionResult.PASS);
 		registerHandImmortalityBreaking();
 		registerBalalaikaPickaxe();
 		registerCrumblingPlacement();
