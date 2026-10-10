@@ -23,7 +23,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public final class SovietBusEvent {
-	public static final double CHANCE_PER_SECOND = 0.1;
+	public static final double CHANCE_PER_SECOND = 0.005;
 	public static final double BOARDING_SMOKE_RADIUS = 10;
 	public static final int MIN_BOARDING_FOG_TICKS = 10;
 	private static final Map<UUID, BusDestinationSearch> TRIPS = new HashMap<>();

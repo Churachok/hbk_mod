@@ -5,10 +5,14 @@
 	"name": "HBK NPC behavior tests",
 	"environment": "*",
 	"entrypoints": {
-		"fabric-client-gametest": ["dev.kirill.hbk.world.BusClientGameTest"],
+		"fabric-client-gametest": [
+			"dev.kirill.hbk.client.SquirrelClientGameTest",
+			"dev.kirill.hbk.world.BusClientGameTest"
+		],
 		"fabric-gametest": [
 			"dev.kirill.hbk.world.SovietBusGameTests",
 			"dev.kirill.hbk.KitchenGameTests",
+			"dev.kirill.hbk.BeerGameTests",
 			"dev.kirill.hbk.NpcGameTests",
 			"dev.kirill.hbk.MemberGameTests",
 			"dev.kirill.hbk.BossGameTests",

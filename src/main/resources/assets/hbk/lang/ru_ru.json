@@ -1,5 +1,11 @@
 {
 	"entity.hbk.squirrel": "Белка",
+	"item.hbk.beer_bottle": "Бутылка пива",
+	"effect.hbk.beer": "Хмель",
+	"item.hbk.beer_bottle.buffs": "Регенерация I, Сила I (2:00)",
+	"item.hbk.beer_bottle.hunger": "Голод I (2:00)",
+	"item.hbk.beer_bottle.nausea": "Тошнота на 8 сек. каждые 20 сек.",
+	"subtitles.hbk.squirrel.ambient": "Белка попискивает",
 	"message.hbk.squirrel_started": "Белка появилась для %s.",
 	"message.hbk.squirrel_blocked": "Рядом с игроком нет свободной земли для белки.",
 	"message.hbk.squirrel_already_active": "У этого игрока уже есть белка.",

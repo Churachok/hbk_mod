@@ -1,4 +1,13 @@
 {
+	"entity.squirrel.ambient": {
+		"subtitle": "subtitles.hbk.squirrel.ambient",
+		"sounds": [
+			"hbk:entity/squirrel/chirp",
+			"hbk:entity/squirrel/chatter",
+			"hbk:entity/squirrel/squeak",
+			"hbk:entity/squirrel/trill"
+		]
+	},
 	"bus_horn": {
 		"subtitle": "subtitles.hbk.bus_horn",
 		"sounds": ["hbk:bus_horn"]

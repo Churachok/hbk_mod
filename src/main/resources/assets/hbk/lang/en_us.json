@@ -1,5 +1,11 @@
 {
 	"entity.hbk.squirrel": "Squirrel",
+	"item.hbk.beer_bottle": "Beer Bottle",
+	"effect.hbk.beer": "Tipsy",
+	"item.hbk.beer_bottle.buffs": "Regeneration I, Strength I (2:00)",
+	"item.hbk.beer_bottle.hunger": "Hunger I (2:00)",
+	"item.hbk.beer_bottle.nausea": "8 seconds of nausea every 20 seconds",
+	"subtitles.hbk.squirrel.ambient": "Squirrel chirps",
 	"message.hbk.squirrel_started": "A squirrel appeared for %s.",
 	"message.hbk.squirrel_blocked": "There is no clear ground near this player for a squirrel.",
 	"message.hbk.squirrel_already_active": "This player already has a squirrel.",

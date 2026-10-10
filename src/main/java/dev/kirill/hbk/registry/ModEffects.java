@@ -6,6 +6,7 @@ import dev.kirill.hbk.effect.SoulfulnessEffect;
 import dev.kirill.hbk.effect.DiabetesEffect;
 import dev.kirill.hbk.effect.GoshasRageEffect;
 import dev.kirill.hbk.effect.HeartyLunchEffect;
+import dev.kirill.hbk.effect.BeerEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -15,6 +16,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public final class ModEffects {
+	public static final Holder.Reference<MobEffect> BEER = Registry.registerForHolder(
+			BuiltInRegistries.MOB_EFFECT, HbkMod.id("beer"), new BeerEffect(0xD9A438)
+	);
+
 	public static final Holder.Reference<MobEffect> ONIGIRI = Registry.registerForHolder(
 			BuiltInRegistries.MOB_EFFECT, HbkMod.id("onigiri"),
 			new SimpleModEffect(MobEffectCategory.BENEFICIAL, 0xF5E8CD)

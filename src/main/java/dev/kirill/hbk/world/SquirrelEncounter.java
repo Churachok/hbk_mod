@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public final class SquirrelEncounter {
-	private static final double CHANCE_PER_SECOND = 0.002;
+	private static final double CHANCE_PER_SECOND = 0.003;
 	private static final Map<UUID, SquirrelEntity> ACTIVE = new HashMap<>();
 
 	private SquirrelEncounter() {

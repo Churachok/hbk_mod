@@ -1,18 +1,22 @@
 package dev.kirill.hbk.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Axis;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.util.Mth;
 
 /** Simple cuboids matching the final squirrel concept in the Models chat. */
-public final class SquirrelModel extends EntityModel<LivingEntityRenderState> {
+public final class SquirrelModel extends EntityModel<SquirrelRenderState> {
+	private final ModelPart body;
 	private final ModelPart head;
 	private final ModelPart tail;
+	private final ModelPart tailMiddle;
+	private final ModelPart tailTip;
 	private final ModelPart frontLeft;
 	private final ModelPart frontRight;
 	private final ModelPart hindLeft;
@@ -20,8 +24,11 @@ public final class SquirrelModel extends EntityModel<LivingEntityRenderState> {
 
 	public SquirrelModel(ModelPart root) {
 		super(root);
+		this.body = root.getChild("body");
 		this.head = root.getChild("head");
 		this.tail = root.getChild("tail");
+		this.tailMiddle = this.tail.getChild("middle");
+		this.tailTip = this.tailMiddle.getChild("tip");
 		this.frontLeft = root.getChild("front_left");
 		this.frontRight = root.getChild("front_right");
 		this.hindLeft = root.getChild("hind_left");
@@ -56,13 +63,41 @@ public final class SquirrelModel extends EntityModel<LivingEntityRenderState> {
 	}
 
 	@Override
-	public void setupAnim(LivingEntityRenderState state) {
+	public void setupAnim(SquirrelRenderState state) {
 		super.setupAnim(state);
+		float upright = state.uprightAmount;
+		this.body.xRot = -1.25f * upright;
+		this.body.y = Mth.lerp(upright, 18.5f, 17.0f);
+		this.body.z = Mth.lerp(upright, 1.0f, 2.6f);
+		this.head.y = Mth.lerp(upright, 16.5f, 10.5f);
+		this.head.z = Mth.lerp(upright, -5.0f, 0.2f);
 		this.head.yRot = state.yRot * Mth.DEG_TO_RAD;
 		this.head.xRot = state.xRot * Mth.DEG_TO_RAD;
-		float stride = Mth.cos(state.walkAnimationPos * 0.9f) * state.walkAnimationSpeed * 0.8f;
-		this.frontLeft.xRot = this.hindRight.xRot = stride;
-		this.frontRight.xRot = this.hindLeft.xRot = -stride;
-		this.tail.zRot = Mth.sin(state.ageInTicks * 0.08f) * 0.06f;
+		float stride = Mth.cos(state.walkAnimationPos * 0.9f) * state.walkAnimationSpeed * 0.8f * (1 - upright);
+		this.hindRight.xRot = stride;
+		this.hindLeft.xRot = -stride;
+		this.frontLeft.xRot = stride - upright;
+		this.frontRight.xRot = -stride - upright;
+		this.frontLeft.y = this.frontRight.y = Mth.lerp(upright, 20, 14.3f);
+		this.frontLeft.z = this.frontRight.z = Mth.lerp(upright, -2, -0.5f);
+		this.frontLeft.zRot = -0.12f * upright;
+		this.frontRight.zRot = 0.12f * upright;
+		this.frontRight.xRot = Mth.lerp(state.giveProgress, this.frontRight.xRot, -Mth.HALF_PI);
+		this.frontRight.zRot *= 1 - state.giveProgress;
+		this.tail.yRot = Mth.sin(state.ageInTicks * 0.12f) * 0.10f;
+		this.tail.zRot = Mth.sin(state.ageInTicks * 0.08f) * 0.08f;
+		this.tailMiddle.zRot = Mth.sin(state.ageInTicks * 0.08f - 0.5f) * 0.05f;
+		this.tailTip.zRot = Mth.sin(state.ageInTicks * 0.08f - 1.0f) * 0.05f;
+	}
+
+	public void translateToGiftPaw(PoseStack poseStack) {
+		this.frontRight.translateAndRotate(poseStack);
+		poseStack.translate(0, 3.7f / 16, 0);
+		// Keep the bottle upright while the paw extends horizontally toward the player.
+		poseStack.mulPose(Axis.XP.rotation(-this.frontRight.xRot));
+		poseStack.translate(0, -0.15f, 0);
+		poseStack.mulPose(Axis.ZP.rotationDegrees(180));
+		poseStack.mulPose(Axis.YP.rotationDegrees(180));
+		poseStack.scale(0.6f, 0.6f, 0.6f);
 	}
 }
