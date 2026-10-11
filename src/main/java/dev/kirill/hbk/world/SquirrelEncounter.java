@@ -29,7 +29,8 @@ public final class SquirrelEncounter {
 	}
 
 	private static void tick(MinecraftServer server) {
-		ACTIVE.entrySet().removeIf(entry -> !entry.getValue().isAlive() || entry.getValue().isRemoved());
+		ACTIVE.entrySet().removeIf(entry -> !entry.getValue().isAlive() || entry.getValue().isRemoved()
+				|| !entry.getValue().maintainOwnerProximity());
 		for (ServerPlayer player : server.getPlayerList().getPlayers()) {
 			if (player.tickCount % 20 == 0 && player.isAlive() && !player.isSpectator()
 					&& player.onGround() && !player.isPassenger() && !UnknownEncounter.isActive(player)

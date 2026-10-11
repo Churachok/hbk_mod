@@ -12,6 +12,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -24,7 +25,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.ItemStack;
@@ -38,16 +38,17 @@ public final class SquirrelEntity extends PathfinderMob {
 	public static final int LIFETIME_TICKS = 20 * 60;
 	public static final int GIFT_HANDOVER_TICKS = 24;
 	public static final int GOODBYE_DURATION_TICKS = 48;
-	public static final int MAX_GOODBYE_APPROACH_TICKS = 20 * 15;
 	private static final EntityDataAccessor<Integer> GIVING_TICKS = SynchedEntityData.defineId(
 			SquirrelEntity.class, EntityDataSerializers.INT);
-	private static final double FOLLOW_START_DISTANCE = 7.0;
-	private static final double FOLLOW_STOP_DISTANCE = 6.0;
+	private static final double FOLLOW_START_DISTANCE = 2.5;
+	private static final double FOLLOW_STOP_DISTANCE = 2.0;
+	private static final double TELEPORT_DISTANCE = 25.0;
 	private UUID ownerUuid;
 	private int soundCooldown = 40;
 	private float uprightAmount;
 	private float previousUprightAmount;
 	private boolean giftGiven;
+	private long nextTeleportAttempt;
 
 	public SquirrelEntity(EntityType<? extends SquirrelEntity> type, Level level) {
 		super(type, level);
@@ -105,37 +106,48 @@ public final class SquirrelEntity extends PathfinderMob {
 		this.goalSelector.addGoal(0, new FloatGoal(this));
 		this.goalSelector.addGoal(1, new GoodbyeGoal());
 		this.goalSelector.addGoal(2, new FollowEncounterOwnerGoal());
-		this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 0.6) {
-			@Override
-			public boolean canUse() {
-				ServerPlayer owner = getEncounterOwner();
-				return owner != null && distanceToSqr(owner) < FOLLOW_START_DISTANCE * FOLLOW_START_DISTANCE
-						&& super.canUse();
-			}
+		this.goalSelector.addGoal(3, new RandomLookAroundGoal(this));
+	}
 
-			@Override
-			protected Vec3 getPosition() {
-				ServerPlayer owner = getEncounterOwner();
-				Vec3 destination = super.getPosition();
-				return owner != null && destination != null
-						&& destination.distanceToSqr(owner.position()) <= FOLLOW_START_DISTANCE * FOLLOW_START_DISTANCE
-						? destination : null;
+	/** Also called by the encounter ticker when the old chunk no longer ticks the animal. */
+	public boolean maintainOwnerProximity() {
+		if (!(this.level() instanceof ServerLevel level) || this.isRemoved()) return false;
+		ServerPlayer owner = this.getEncounterOwner();
+		if (owner == null || !owner.isAlive() || owner.isSpectator() || owner.level() != level) {
+			this.discard();
+			return false;
+		}
+		if (!this.giftGiven && this.distanceToSqr(owner) > TELEPORT_DISTANCE * TELEPORT_DISTANCE
+				&& level.getGameTime() >= this.nextTeleportAttempt) {
+			Vec3 destination = null;
+			for (double radius : new double[]{2, 3, 4}) {
+				destination = this.findNearbyGround(owner, radius,
+						new float[]{180, 135, -135, 90, -90, 45, -45, 0});
+				if (destination != null) break;
 			}
-		});
-		this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+			// A flying player may have no nearby ground: use clear air rather than lose the encounter.
+			if (destination == null && this.isClearPosition(owner.position())) destination = owner.position();
+			if (destination != null) {
+				this.getNavigation().stop();
+				this.entityData.set(GIVING_TICKS, -1);
+				this.setItemSlot(EquipmentSlot.MAINHAND, ItemStack.EMPTY);
+				this.teleportTo(destination.x, destination.y, destination.z);
+				this.setDeltaMovement(Vec3.ZERO);
+				this.resetFallDistance();
+				this.faceOwner(owner);
+			} else {
+				this.nextTeleportAttempt = level.getGameTime() + 20;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public void tick() {
-		if (this.level() instanceof ServerLevel level) {
+		if (this.level() instanceof ServerLevel) {
+			if (!this.maintainOwnerProximity()) return;
 			ServerPlayer owner = this.getEncounterOwner();
-			if (owner == null || !owner.isAlive() || owner.isSpectator() || owner.level() != level
-					|| this.distanceToSqr(owner) > 32.0 * 32.0
-					|| this.tickCount >= LIFETIME_TICKS + MAX_GOODBYE_APPROACH_TICKS + GOODBYE_DURATION_TICKS) {
-				this.discard();
-				return;
-			}
-			if (--this.soundCooldown <= 0) {
+			if (!this.isGivingBeer() && --this.soundCooldown <= 0) {
 				this.playOwnerAmbientSound(owner);
 				this.soundCooldown = 80 + this.random.nextInt(81);
 			}
@@ -153,9 +165,13 @@ public final class SquirrelEntity extends PathfinderMob {
 	}
 
 	private void playOwnerAmbientSound(ServerPlayer owner) {
+		this.playOwnerSound(owner, ModSounds.SQUIRREL_AMBIENT, 0.7f, 0.94f + this.random.nextFloat() * 0.12f);
+	}
+
+	private void playOwnerSound(ServerPlayer owner, SoundEvent sound, float volume, float pitch) {
 		owner.connection.send(new ClientboundSoundPacket(
-				BuiltInRegistries.SOUND_EVENT.wrapAsHolder(ModSounds.SQUIRREL_AMBIENT), SoundSource.NEUTRAL,
-				this.getX(), this.getY(), this.getZ(), 0.7f, 0.94f + this.random.nextFloat() * 0.12f,
+				BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound), SoundSource.NEUTRAL,
+				this.getX(), this.getY(), this.getZ(), volume, pitch,
 				this.random.nextLong()));
 	}
 
@@ -191,13 +207,13 @@ public final class SquirrelEntity extends PathfinderMob {
 				if (!giftGiven && elapsed >= GIFT_HANDOVER_TICKS) {
 					giveBeer(owner);
 				}
-				if (elapsed >= GOODBYE_DURATION_TICKS) discard();
+				if (giftGiven && elapsed >= GOODBYE_DURATION_TICKS) discard();
 				return;
 			}
 			if (--this.pathCooldown <= 0) {
 				this.destination = findGoodbyePosition(owner);
 				this.pathCooldown = 10;
-				if (this.destination == null) getNavigation().stop();
+				if (this.destination == null) getNavigation().moveTo(owner, 1.3);
 				else getNavigation().moveTo(this.destination.x, this.destination.y, this.destination.z, 1.2);
 			}
 			getLookControl().setLookAt(owner, 30, 20);
@@ -221,10 +237,14 @@ public final class SquirrelEntity extends PathfinderMob {
 	}
 
 	private Vec3 findGoodbyePosition(ServerPlayer owner) {
-		for (float offset : new float[]{0, 25, -25, 50, -50}) {
+		return this.findNearbyGround(owner, 1.6, new float[]{0, 25, -25, 50, -50});
+	}
+
+	private Vec3 findNearbyGround(ServerPlayer owner, double radius, float[] offsets) {
+		for (float offset : offsets) {
 			float yaw = (owner.getYRot() + offset) * Mth.DEG_TO_RAD;
-			double x = owner.getX() - Mth.sin(yaw) * 1.6;
-			double z = owner.getZ() + Mth.cos(yaw) * 1.6;
+			double x = owner.getX() - Mth.sin(yaw) * radius;
+			double z = owner.getZ() + Mth.cos(yaw) * radius;
 			BlockPos column = BlockPos.containing(x, owner.getY() + 1, z);
 			if (!this.level().hasChunkAt(column)) continue;
 			for (int down = 0; down <= 3; down++) {
@@ -233,13 +253,22 @@ public final class SquirrelEntity extends PathfinderMob {
 				if (!ground.isFaceSturdy(this.level(), feet.below(), Direction.UP)
 						|| ground.is(Blocks.MAGMA_BLOCK) || ground.is(Blocks.CAMPFIRE)
 						|| ground.is(Blocks.SOUL_CAMPFIRE) || ground.is(Blocks.CACTUS)
-						|| !this.level().getFluidState(feet).isEmpty()) continue;
+						|| !this.level().getFluidState(feet).isEmpty()
+						|| this.level().getBlockState(feet).is(Blocks.FIRE)
+						|| this.level().getBlockState(feet).is(Blocks.SOUL_FIRE)
+						|| this.level().getBlockState(feet).is(Blocks.SWEET_BERRY_BUSH)) continue;
 				Vec3 point = new Vec3(x, feet.getY(), z);
-				var box = this.getBoundingBox().move(point.subtract(this.position()));
-				if (this.level().getWorldBorder().isWithinBounds(box) && this.level().noCollision(this, box)) return point;
+				if (this.isClearPosition(point)) return point;
 			}
 		}
 		return null;
+	}
+
+	private boolean isClearPosition(Vec3 point) {
+		BlockPos feet = BlockPos.containing(point);
+		var box = this.getBoundingBox().move(point.subtract(this.position()));
+		return this.level().hasChunkAt(feet) && this.level().getFluidState(feet).isEmpty()
+				&& this.level().getWorldBorder().isWithinBounds(box) && this.level().noCollision(this, box);
 	}
 
 	private void faceOwner(ServerPlayer owner) {
@@ -266,6 +295,7 @@ public final class SquirrelEntity extends PathfinderMob {
 				dropped.setNoPickUpDelay();
 			}
 		}
+		this.playOwnerSound(owner, ModSounds.SQUIRREL_GIFT, 1.0f, 1.0f);
 	}
 
 	private final class FollowEncounterOwnerGoal extends Goal {
@@ -299,8 +329,8 @@ public final class SquirrelEntity extends PathfinderMob {
 			if (owner == null) return;
 			getLookControl().setLookAt(owner, 30, 30);
 			if (--this.pathCooldown <= 0) {
-				getNavigation().moveTo(owner, 1.2);
-				this.pathCooldown = 10;
+				getNavigation().moveTo(owner, 1.3);
+				this.pathCooldown = 5;
 			}
 		}
 	}

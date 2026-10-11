@@ -49,15 +49,16 @@ public final class SquirrelModel extends EntityModel<SquirrelRenderState> {
 		head.addOrReplaceChild("right_ear", CubeListBuilder.create().texOffs(16, 24)
 				.addBox(-1, -3, -0.5f, 2, 3, 1), PartPose.offset(-1.5f, -2.5f, 0));
 		for (var name : new String[]{"front_left", "front_right", "hind_left", "hind_right"}) {
+			// Offset the side faces from the body's x=+/-3 planes to prevent z-fighting.
 			root.addOrReplaceChild(name, CubeListBuilder.create().texOffs(0, 24)
 					.addBox(-1, 0, -1, 2, 4, 2), PartPose.offset(
-						name.endsWith("left") ? 2 : -2, 20, name.startsWith("front") ? -2 : 4));
+						name.endsWith("left") ? 2.2f : -2.2f, 20, name.startsWith("front") ? -2 : 4));
 		}
 		var tail = root.addOrReplaceChild("tail", CubeListBuilder.create().texOffs(0, 40)
 				.addBox(-3, -5, 0, 6, 5, 4), PartPose.offsetAndRotation(0, 20, 5, -0.35f, 0, 0));
 		var middle = tail.addOrReplaceChild("middle", CubeListBuilder.create().texOffs(0, 40)
 				.addBox(-3, -5, 0, 6, 5, 4), PartPose.offsetAndRotation(0, -5, 0, 0.25f, 0, 0));
-		middle.addOrReplaceChild("tip", CubeListBuilder.create().texOffs(0, 40)
+		middle.addOrReplaceChild("tip", CubeListBuilder.create().texOffs(32, 40)
 				.addBox(-3, -5, 0, 6, 5, 4), PartPose.offsetAndRotation(0, -5, 0, 0.45f, 0, 0));
 		return LayerDefinition.create(mesh, 64, 64);
 	}

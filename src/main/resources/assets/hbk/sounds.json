@@ -1,4 +1,8 @@
 {
+	"entity.squirrel.gift": {
+		"subtitle": "subtitles.hbk.squirrel.gift",
+		"sounds": ["hbk:entity/squirrel/gift"]
+	},
 	"entity.squirrel.ambient": {
 		"subtitle": "subtitles.hbk.squirrel.ambient",
 		"sounds": [
