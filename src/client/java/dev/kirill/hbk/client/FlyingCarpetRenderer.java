@@ -35,7 +35,8 @@ public final class FlyingCarpetRenderer extends EntityRenderer<FlyingCarpetEntit
 	@Override
 	public void submit(FlyingCarpetRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState) {
 		poseStack.pushPose();
-		poseStack.translate(0.0f, 0.18f, 0.0f);
+		// The flipped model's upper face is 1.5 pixels above its local origin.
+		poseStack.translate(0.0f, FlyingCarpetEntity.SURFACE_HEIGHT - 1.5f / 16.0f, 0.0f);
 		poseStack.mulPose(Axis.YP.rotationDegrees(180.0f - state.yRot));
 		poseStack.scale(-1.0f, -1.0f, 1.0f);
 		collector.submitModel(this.model, state, poseStack, TEXTURE, state.lightCoords, OverlayTexture.NO_OVERLAY, state.outlineColor, null);

@@ -27,6 +27,7 @@ public final class FunnyButtonItem extends Item {
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		if (player.isSpectator()) return InteractionResult.FAIL;
 		ItemStack stack = player.getItemInHand(hand);
+		if (!stack.is(this)) return InteractionResult.FAIL;
 		if (player.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
 		if (level instanceof ServerLevel serverLevel) {
 			serverLevel.playSound(null, player.blockPosition(), ModSounds.CANNED_LAUGHTER,
@@ -38,12 +39,13 @@ public final class FunnyButtonItem extends Item {
 						FunnySpinEffect.DURATION_TICKS, hostile ? 1 : 0, false, false, false), player);
 			}
 			player.getCooldowns().addCooldown(stack, FunnySpinEffect.DURATION_TICKS);
+			stack.shrink(1);
 		}
 		return InteractionResult.SUCCESS;
 	}
 
 	public static boolean isHostile(Mob mob) {
-		return mob instanceof Enemy || mob.getTarget() != null
-				|| mob instanceof ReferenceNpcEntity npc && npc.isNpc("gosha");
+		return !FunnySpinEffect.isProtectedBoss(mob) && (mob instanceof Enemy || mob.getTarget() != null
+				|| mob instanceof ReferenceNpcEntity npc && npc.isNpc("gosha"));
 	}
 }

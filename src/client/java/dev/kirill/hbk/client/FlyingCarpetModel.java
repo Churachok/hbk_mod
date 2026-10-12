@@ -24,7 +24,7 @@ public final class FlyingCarpetModel extends EntityModel<FlyingCarpetRenderState
 						.texOffs(112, 4).addBox(-18.0f, -1.0f, 8.0f, 2.0f, 1.0f, 2.0f)
 						.texOffs(120, 0).addBox(16.0f, -1.0f, -10.0f, 2.0f, 1.0f, 2.0f)
 						.texOffs(120, 4).addBox(16.0f, -1.0f, 8.0f, 2.0f, 1.0f, 2.0f),
-				PartPose.offset(0.0f, 24.0f, 0.0f)
+				PartPose.ZERO
 		);
 		return LayerDefinition.create(mesh, 128, 32);
 	}

@@ -27,6 +27,11 @@ import java.util.Set;
 import java.util.UUID;
 
 public final class FlyingCarpetEntity extends Entity {
+	public static final float SURFACE_HEIGHT = 0.18f;
+	// Vanilla player rendering translates by 1.501 and scales by 0.9375.
+	// Horizontal legs pivot at y=12; their lower face is y=14 after rotation.
+	// Half a model pixel of clearance also accommodates the skin's pants layer.
+	private static final double SEATED_ORIGIN_HEIGHT = (1.501 - 14.5 / 16.0) * 0.9375;
 	private static final Set<UUID> PROTECTED_FALLS = new HashSet<>();
 	private boolean returnsItem = true;
 	private int emptyTicks;
@@ -46,7 +51,7 @@ public final class FlyingCarpetEntity extends Entity {
 	public FlyingCarpetEntity(ServerLevel level, Player owner, boolean returnsItem) {
 		this(ModEntityTypes.FLYING_CARPET, level);
 		this.returnsItem = returnsItem;
-		this.snapTo(owner.getX(), owner.getY() - 0.2, owner.getZ(), owner.getYRot(), 0.0f);
+		this.snapTo(owner.getX(), owner.getY(), owner.getZ(), owner.getYRot(), 0.0f);
 	}
 
 	@Override
@@ -148,7 +153,10 @@ public final class FlyingCarpetEntity extends Entity {
 
 	@Override
 	public Vec3 getPassengerRidingPosition(Entity passenger) {
-		return this.position().add(0.0, 0.28, 0.0);
+		// Align the horizontal legs with the surface, rather than the hip pivot.
+		double seatedHeight = SEATED_ORIGIN_HEIGHT * (passenger instanceof LivingEntity living ? living.getScale() : 1.0);
+		return this.position().add(0.0,
+				SURFACE_HEIGHT + passenger.getVehicleAttachmentPoint(this).y - seatedHeight, 0.0);
 	}
 
 	@Override
