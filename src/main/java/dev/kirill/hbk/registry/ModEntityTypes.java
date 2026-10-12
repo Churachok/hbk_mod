@@ -167,7 +167,7 @@ public class ModEntityTypes {
 	public static final EntityType<FlyingCarpetEntity> FLYING_CARPET = register(
 			"flying_carpet",
 			EntityType.Builder.<FlyingCarpetEntity>of(FlyingCarpetEntity::new, MobCategory.MISC)
-					.sized(2.0f, 0.18f)
+					.sized(2.0f, FlyingCarpetEntity.SURFACE_HEIGHT)
 					.clientTrackingRange(12)
 					.updateInterval(1)
 	);

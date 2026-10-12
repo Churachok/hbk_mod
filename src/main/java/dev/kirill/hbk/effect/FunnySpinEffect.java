@@ -1,11 +1,15 @@
 package dev.kirill.hbk.effect;
 
 import dev.kirill.hbk.registry.ModEffects;
+import dev.kirill.hbk.registry.ModEntityTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.level.EntityBasedExplosionDamageCalculator;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 
 /** Amplifier 1 remembers that the mob was hostile when the button was pressed. */
@@ -14,6 +18,12 @@ public final class FunnySpinEffect extends MobEffect {
 
 	public FunnySpinEffect() {
 		super(MobEffectCategory.HARMFUL, 0xF8CF22);
+	}
+
+	public static boolean isProtectedBoss(Entity entity) {
+		var type = entity.getType();
+		return type == ModEntityTypes.KIRILL_DOOM || type == ModEntityTypes.MAD_LIBERAL
+				|| type == ModEntityTypes.STALIN || type == ModEntityTypes.CJ;
 	}
 
 	@Override
@@ -29,8 +39,21 @@ public final class FunnySpinEffect extends MobEffect {
 		mob.setYBodyRot(angle);
 		mob.setYHeadRot(angle);
 		var effect = mob.getEffect(ModEffects.FUNNY_SPIN);
-		if (amplifier > 0 && effect != null && effect.getDuration() == 1) {
-			level.explode(mob, mob.getX(), mob.getY(0.5), mob.getZ(), 2.0f, Level.ExplosionInteraction.NONE);
+		if (amplifier > 0 && !isProtectedBoss(mob) && effect != null && effect.getDuration() == 1) {
+			// Nearby victims must not bypass boss protection through explosion damage or knockback.
+			var calculator = new EntityBasedExplosionDamageCalculator(mob) {
+				@Override
+				public boolean shouldDamageEntity(Explosion explosion, Entity victim) {
+					return !isProtectedBoss(victim) && super.shouldDamageEntity(explosion, victim);
+				}
+
+				@Override
+				public float getKnockbackMultiplier(Entity victim) {
+					return isProtectedBoss(victim) ? 0.0f : super.getKnockbackMultiplier(victim);
+				}
+			};
+			level.explode(mob, null, calculator, mob.getX(), mob.getY(0.5), mob.getZ(),
+					2.0f, false, Level.ExplosionInteraction.NONE);
 			mob.kill(level);
 		}
 		return true;

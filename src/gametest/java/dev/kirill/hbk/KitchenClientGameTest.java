@@ -46,6 +46,7 @@ public final class KitchenClientGameTest implements FabricClientGameTest {
 			});
 			context.waitFor(client -> client.level.getEntity(ids[0]) instanceof FunnySpinAccess cow && cow.hbk$isFunnySpinning()
 					&& client.level.getEntity(ids[1]) instanceof FunnySpinAccess zombie && zombie.hbk$isFunnySpinning(), 80);
+			context.waitFor(client -> client.player.getMainHandItem().isEmpty(), 40);
 			context.runOnClient(client -> {
 				var state = client.getEntityRenderDispatcher().extractEntity(client.level.getEntity(ids[0]), 0.5f);
 				if (!((FunnySpinRenderState) state).hbk$isFunnySpinning()) {
@@ -79,6 +80,9 @@ public final class KitchenClientGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.RECIPES.indexOf("hard_doshirak_kettle") + 1));
 			context.waitTicks(3);
 			context.takeScreenshot("hbk-noodle-kettle-recipe");
+			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.RECIPES.size() + 2));
+			context.waitTicks(3);
+			context.takeScreenshot("hbk-funny-button-guide");
 			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.RECIPES.size() + 3));
 			context.waitTicks(3);
 			context.takeScreenshot("hbk-dandruff-guide");

@@ -5,7 +5,7 @@ import dev.kirill.hbk.client.SquirrelClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 
-/** Select a scenario with ./gradlew runClientGameTest -PhbkClientTest=kitchen|blood|bus|squirrel|all. */
+/** Select a scenario with ./gradlew runClientGameTest -PhbkClientTest=kitchen|blood|bus|squirrel|carpet|all. */
 public final class HbkClientGameTests implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
@@ -14,13 +14,15 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 			case "bus" -> new BusClientGameTest().runTest(context);
 			case "blood" -> new LiberalBloodClientGameTest().runTest(context);
 			case "squirrel" -> new SquirrelClientGameTest().runTest(context);
+			case "carpet" -> new FlyingCarpetClientGameTest().runTest(context);
 			case "all" -> {
 				new KitchenClientGameTest().runTest(context);
 				new LiberalBloodClientGameTest().runTest(context);
 				new SquirrelClientGameTest().runTest(context);
 				new BusClientGameTest().runTest(context);
+				new FlyingCarpetClientGameTest().runTest(context);
 			}
-			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel or all");
+			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel, carpet or all");
 		}
 	}
 }

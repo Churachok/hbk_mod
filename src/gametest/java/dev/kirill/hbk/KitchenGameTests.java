@@ -200,7 +200,8 @@ public final class KitchenGameTests {
 		ModItems.FUNNY_BUTTON.use(level, player, InteractionHand.MAIN_HAND);
 		test.assertTrue(peaceful.hasEffect(ModEffects.FUNNY_SPIN) && hostile.hasEffect(ModEffects.FUNNY_SPIN), "All nearby mobs must spin");
 		test.assertFalse(far.hasEffect(ModEffects.FUNNY_SPIN), "Mobs outside the sphere must not spin");
-		test.assertTrue(player.getCooldowns().isOnCooldown(player.getMainHandItem()), "Button must have a cooldown");
+		test.assertTrue(player.getMainHandItem().isEmpty(), "Using the button must consume it immediately");
+		test.assertTrue(player.getCooldowns().isOnCooldown(new ItemStack(ModItems.FUNNY_BUTTON)), "Button must have a cooldown");
 		test.runAfterDelay(3, () -> {
 			test.assertTrue(((FunnySpinAccess) peaceful).hbk$isFunnySpinning(), "Spin must be synchronized for client observers");
 			test.assertTrue(hostile.isAlive(), "Explosion must wait until animation finishes");
@@ -213,6 +214,74 @@ public final class KitchenGameTests {
 			player.discard();
 			test.succeed();
 		});
+	}
+
+	@GameTest(maxTicks = 130)
+	public void funnyButtonSpinsButNeverKillsTheFourBossesEvenNextToExplodingMobs(GameTestHelper test) {
+		var level = test.getLevel();
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
+		var center = Vec3.atCenterOf(test.absolutePos(new BlockPos(2, 2, 2))).add(0, 200, 0);
+		player.setPos(center);
+		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.FUNNY_BUTTON));
+		var bosses = List.of(test.spawnWithNoFreeWill(ModEntityTypes.KIRILL_DOOM, 2, 2, 2),
+				test.spawnWithNoFreeWill(ModEntityTypes.MAD_LIBERAL, 2, 2, 2),
+				test.spawnWithNoFreeWill(ModEntityTypes.STALIN, 2, 2, 2),
+				test.spawnWithNoFreeWill(ModEntityTypes.CJ, 2, 2, 2));
+		var hostiles = new java.util.ArrayList<net.minecraft.world.entity.Mob>();
+		for (int i = 0; i < bosses.size(); i++) {
+			var boss = bosses.get(i);
+			boss.setNoAi(true); // Disable boss attacks and Stalin's arrival blast; test only button damage.
+			boss.setPos(center.add(-15 + i * 10, 0, 0));
+			boss.setNoGravity(true);
+			boss.setHealth(1);
+			boss.setTarget(player);
+			var zombie = test.spawnWithNoFreeWill(EntityTypes.ZOMBIE, 2, 2, 2);
+			zombie.setPos(boss.position().add(2, 0, 0));
+			zombie.setNoGravity(true);
+			hostiles.add(zombie);
+		}
+		ModItems.FUNNY_BUTTON.use(level, player, InteractionHand.MAIN_HAND);
+		for (var boss : bosses) {
+			test.assertTrue(boss.hasEffect(ModEffects.FUNNY_SPIN), "Protected bosses must still spin");
+			test.assertTrue(boss.getEffect(ModEffects.FUNNY_SPIN).getAmplifier() == 0,
+					"Even bosses targeting a player must not receive the lethal spin");
+		}
+		test.runAfterDelay(3, () -> {
+			for (var boss : bosses) test.assertTrue(((FunnySpinAccess) boss).hbk$isFunnySpinning(),
+					"Boss spin must still reach observers");
+		});
+		test.runAfterDelay(110, () -> {
+			for (var boss : bosses) {
+				test.assertTrue(boss.isAlive(), "A boss at one HP must survive nearby button explosions");
+				test.assertFalse(((FunnySpinAccess) boss).hbk$isFunnySpinning(), "Bosses must stop spinning");
+				boss.discard();
+			}
+			for (var hostile : hostiles) {
+				test.assertFalse(hostile.isAlive(), "Boss protection must not protect ordinary hostile mobs");
+				hostile.discard();
+			}
+			player.discard();
+			test.succeed();
+		});
+	}
+
+	@GameTest
+	public void funnyButtonIsSingleUseInOffhandAndCreativeButCooldownDoesNotConsumeIt(GameTestHelper test) {
+		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.CREATIVE);
+		try {
+			player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(ModItems.FUNNY_BUTTON));
+			ModItems.FUNNY_BUTTON.use(test.getLevel(), player, InteractionHand.OFF_HAND);
+			test.assertTrue(player.getOffhandItem().isEmpty(), "Button must disappear even in creative and offhand");
+			test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, InteractionHand.OFF_HAND)
+					== net.minecraft.world.InteractionResult.FAIL, "An empty hand must not activate another effect");
+			player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(ModItems.FUNNY_BUTTON));
+			test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, InteractionHand.OFF_HAND)
+					== net.minecraft.world.InteractionResult.FAIL, "Cooldown must still reject activation");
+			test.assertTrue(player.getOffhandItem().getCount() == 1, "Rejected activation must not consume a button");
+		} finally {
+			player.discard();
+		}
+		test.succeed();
 	}
 
 	@GameTest(maxTicks = 40)

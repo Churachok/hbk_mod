@@ -3,6 +3,8 @@ package dev.kirill.hbk.client.mixin;
 import dev.kirill.hbk.client.GoshasRageClient;
 import dev.kirill.hbk.client.KirillGlassesClient;
 import dev.kirill.hbk.client.FunnySpinRenderState;
+import dev.kirill.hbk.client.FlyingCarpetPassengerRenderState;
+import dev.kirill.hbk.entity.FlyingCarpetEntity;
 import dev.kirill.hbk.entity.FunnySpinAccess;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -19,6 +21,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class EntityRendererMixin<T extends Entity, S extends EntityRenderState> {
 	@Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/client/renderer/entity/state/EntityRenderState;F)V", at = @At("TAIL"))
 	private void hbk$markRageOutline(T entity, S state, float tickProgress, CallbackInfo ci) {
+		((FlyingCarpetPassengerRenderState) state).hbk$setOnFlyingCarpet(
+				entity.getVehicle() instanceof FlyingCarpetEntity);
 		((FunnySpinRenderState) state).hbk$setFunnySpinning(
 				entity instanceof FunnySpinAccess spin && spin.hbk$isFunnySpinning());
 		if (GoshasRageClient.isActive() && entity instanceof LivingEntity) {
