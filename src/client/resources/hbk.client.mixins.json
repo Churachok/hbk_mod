@@ -5,6 +5,7 @@
 	"client": [
 		"AdvancementToastMixin",
 		"AvatarRendererMixin",
+		"BeerNauseaMixin",
 		"BookViewScreenMixin",
 		"ChatComponentAccessor",
 		"DeathScreenMixin",

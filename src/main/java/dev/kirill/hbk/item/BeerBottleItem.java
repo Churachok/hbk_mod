@@ -5,7 +5,6 @@ import dev.kirill.hbk.registry.ModEffects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -25,9 +24,6 @@ public final class BeerBottleItem extends Item {
 		ItemStack result = super.finishUsingItem(stack, level, user);
 		if (!level.isClientSide()) {
 			user.addEffect(new MobEffectInstance(ModEffects.BEER, BeerEffect.DURATION_TICKS));
-			user.addEffect(new MobEffectInstance(MobEffects.HUNGER, BeerEffect.DURATION_TICKS, 0));
-			user.addEffect(new MobEffectInstance(MobEffects.REGENERATION, BeerEffect.DURATION_TICKS, 0));
-			user.addEffect(new MobEffectInstance(MobEffects.STRENGTH, BeerEffect.DURATION_TICKS, 0));
 		}
 		return result;
 	}

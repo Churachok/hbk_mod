@@ -3,16 +3,27 @@ package dev.kirill.hbk;
 import dev.kirill.hbk.entity.SquirrelEntity;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
+import dev.kirill.hbk.registry.ModSounds;
 import dev.kirill.hbk.world.SquirrelEncounter;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.CommonListenerCookie;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class SquirrelGameTests {
 	@GameTest
@@ -81,7 +92,7 @@ public final class SquirrelGameTests {
 	}
 
 	@GameTest
-	public void squirrelFollowsItsOwnerButKeepsSixBlocksOfSpace(GameTestHelper test) {
+	public void squirrelKeepsFollowingItsOwnerInsteadOfWandering(GameTestHelper test) {
 		var level = test.getLevel();
 		BlockPos origin = test.absolutePos(new BlockPos(350, 280, 600));
 		for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-12, -1, -5), origin.offset(14, -1, 5))) {
@@ -99,12 +110,12 @@ public final class SquirrelGameTests {
 			level.addFreshEntity(squirrel);
 			for (int tick = 0; tick < 100; tick++) squirrel.tick();
 			test.assertTrue(squirrel.getEncounterOwner() == owner
-					&& squirrel.distanceToSqr(owner) < 49 && squirrel.distanceToSqr(owner) > 20,
-					"The squirrel must approach its owner, not a closer bystander, and stop around six blocks away");
+					&& squirrel.distanceToSqr(owner) < 9 && squirrel.distanceToSqr(owner) > 1,
+					"The squirrel must approach its owner, not a closer bystander, and stay about two blocks away");
 			owner.snapTo(owner.position().add(-6, 0, 0));
 			for (int tick = 0; tick < 100; tick++) squirrel.tick();
-			test.assertTrue(squirrel.distanceToSqr(owner) < 49,
-					"Following must restart when the owner moves beyond seven blocks");
+			test.assertTrue(squirrel.distanceToSqr(owner) < 9,
+					"Following must restart whenever the owner moves away");
 		} finally {
 			squirrel.discard();
 			level.getServer().getPlayerList().remove(owner);
@@ -146,7 +157,7 @@ public final class SquirrelGameTests {
 	}
 
 	@GameTest
-	public void squirrelsExpireAndCleanUpAfterOwnerDeath(GameTestHelper test) {
+	public void squirrelWaitsUntilBeerIsGivenButCleansUpAfterOwnerDeath(GameTestHelper test) {
 		var player = test.makeMockServerPlayerInLevel();
 		var squirrel = ModEntityTypes.SQUIRREL.create(test.getLevel(), EntitySpawnReason.EVENT);
 		test.assertTrue(squirrel != null, "Squirrel entity must be constructible");
@@ -156,10 +167,11 @@ public final class SquirrelGameTests {
 		squirrel.tick();
 		test.assertTrue(!squirrel.isRemoved() && squirrel.isSayingGoodbye(),
 				"After a minute the squirrel must begin its farewell, not disappear immediately");
-		squirrel.tickCount = SquirrelEntity.LIFETIME_TICKS + SquirrelEntity.MAX_GOODBYE_APPROACH_TICKS
-				+ SquirrelEntity.GOODBYE_DURATION_TICKS;
+		squirrel.tickCount = SquirrelEntity.LIFETIME_TICKS + 12000;
 		squirrel.tick();
-		test.assertTrue(squirrel.isRemoved(), "A blocked farewell must not leave a permanent squirrel");
+		test.assertTrue(!squirrel.isRemoved() && countBeer(player) == 0,
+				"Even a delayed or blocked farewell must not expire before giving beer");
+		squirrel.discard();
 
 		var afterDeath = ModEntityTypes.SQUIRREL.create(test.getLevel(), EntitySpawnReason.EVENT);
 		afterDeath.setEncounterOwner(player);
@@ -167,6 +179,42 @@ public final class SquirrelGameTests {
 		player.setHealth(0);
 		afterDeath.tick();
 		test.assertTrue(afterDeath.isRemoved(), "A dead owner's squirrel must be removed before respawn");
+		test.succeed();
+	}
+
+	@GameTest
+	public void squirrelTeleportsAfterTwentyFiveBlocksWithoutGivingBeerRemotely(GameTestHelper test) {
+		var level = test.getLevel();
+		BlockPos floor = test.absolutePos(new BlockPos(500, 280, 600));
+		for (BlockPos pos : BlockPos.betweenClosed(floor.offset(-5, -1, -5), floor.offset(5, -1, 5))) {
+			level.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+		}
+		var owner = test.makeMockServerPlayerInLevel();
+		var bystander = test.makeMockServerPlayerInLevel();
+		var squirrel = ModEntityTypes.SQUIRREL.create(level, EntitySpawnReason.EVENT);
+		try {
+			owner.snapTo(Vec3.atBottomCenterOf(floor));
+			owner.setYRot(0);
+			squirrel.setEncounterOwner(owner);
+			squirrel.snapTo(owner.position().add(25, 0, 0));
+			test.assertTrue(squirrel.maintainOwnerProximity() && squirrel.distanceToSqr(owner) == 625,
+					"Exactly twenty-five blocks must not trigger a teleport");
+			squirrel.snapTo(owner.position().add(26, 0, 0));
+			test.assertTrue(squirrel.maintainOwnerProximity() && squirrel.distanceToSqr(owner) <= 16
+					&& squirrel.getZ() < owner.getZ() && level.noCollision(squirrel),
+					"Beyond twenty-five blocks the squirrel must teleport to clear ground behind its owner");
+			test.assertTrue(!squirrel.isRemoved() && countBeer(owner) == 0
+					&& squirrel.broadcastToPlayer(owner) && !squirrel.broadcastToPlayer(bystander),
+					"Teleporting must neither end the encounter, give beer remotely, nor reveal it to others");
+			owner.snapTo(owner.position().add(0, 0, 40));
+			level.getChunkAt(owner.blockPosition());
+			test.assertTrue(squirrel.maintainOwnerProximity() && squirrel.distanceToSqr(owner) <= 16,
+					"The encounter must also follow a flying owner when nearby ground is unavailable");
+		} finally {
+			squirrel.discard();
+			level.getServer().getPlayerList().remove(owner);
+			level.getServer().getPlayerList().remove(bystander);
+		}
 		test.succeed();
 	}
 
@@ -266,6 +314,64 @@ public final class SquirrelGameTests {
 			level.getServer().getPlayerList().remove(bystander);
 		}
 		test.succeed();
+	}
+
+	@GameTest
+	public void beerHandoverSoundPlaysOnceOnlyForItsOwner(GameTestHelper test) {
+		var level = test.getLevel();
+		BlockPos floor = test.absolutePos(new BlockPos(460, 280, 600));
+		for (BlockPos pos : BlockPos.betweenClosed(floor.offset(-3, -1, -3), floor.offset(3, -1, 5))) {
+			level.setBlockAndUpdate(pos, Blocks.STONE.defaultBlockState());
+		}
+		var owner = test.makeMockServerPlayerInLevel();
+		var bystander = test.makeMockServerPlayerInLevel();
+		var originalOwnerConnection = owner.connection;
+		var originalBystanderConnection = bystander.connection;
+		var ownerSounds = captureSounds(owner);
+		var bystanderSounds = captureSounds(bystander);
+		var squirrel = ModEntityTypes.SQUIRREL.create(level, EntitySpawnReason.EVENT);
+		try {
+			owner.snapTo(Vec3.atBottomCenterOf(floor));
+			owner.setYRot(0);
+			bystander.snapTo(owner.position().add(1, 0, 0));
+			squirrel.setEncounterOwner(owner);
+			squirrel.snapTo(owner.position().add(0, 0, 1.6));
+			squirrel.setOnGround(true);
+			squirrel.tickCount = SquirrelEntity.LIFETIME_TICKS;
+			level.addFreshEntity(squirrel);
+			for (int tick = 0; tick < 20 && !squirrel.isGivingBeer(); tick++) tickSquirrel(squirrel);
+			test.assertTrue(squirrel.isGivingBeer(), "Sound test must enter the handover gesture");
+			for (int tick = 0; tick < SquirrelEntity.GIFT_HANDOVER_TICKS - 1; tick++) tickSquirrel(squirrel);
+			test.assertTrue(ownerSounds.isEmpty() && countBeer(owner) == 0,
+					"The gift sound must not play before the bottle is transferred");
+			tickSquirrel(squirrel);
+			test.assertTrue(ownerSounds.size() == 1 && countBeer(owner) == 1
+					&& ownerSounds.getFirst().getSound().value() == ModSounds.SQUIRREL_GIFT
+					&& ownerSounds.getFirst().getVolume() == 1 && ownerSounds.getFirst().getPitch() == 1,
+					"The exact handover tick must send the original-pitch gift sound once to the owner");
+			for (int tick = 0; tick < SquirrelEntity.GOODBYE_DURATION_TICKS + 20; tick++) tickSquirrel(squirrel);
+			test.assertTrue(ownerSounds.size() == 1 && bystanderSounds.isEmpty() && squirrel.isRemoved(),
+					"No repeated or ambient sounds may overlap the gift, and nearby players must hear nothing");
+		} finally {
+			squirrel.discard();
+			owner.connection = originalOwnerConnection;
+			bystander.connection = originalBystanderConnection;
+			level.getServer().getPlayerList().remove(owner);
+			level.getServer().getPlayerList().remove(bystander);
+		}
+		test.succeed();
+	}
+
+	private static List<ClientboundSoundPacket> captureSounds(ServerPlayer player) {
+		var sounds = new ArrayList<ClientboundSoundPacket>();
+		player.connection = new ServerGamePacketListenerImpl(player.level().getServer(),
+				new Connection(PacketFlow.SERVERBOUND), player, CommonListenerCookie.createInitial(player.getGameProfile(), false)) {
+			@Override
+			public void send(Packet<?> packet) {
+				if (packet instanceof ClientboundSoundPacket sound) sounds.add(sound);
+			}
+		};
+		return sounds;
 	}
 
 	private static void tickSquirrel(SquirrelEntity squirrel) {

@@ -3,6 +3,10 @@
 		"subtitle": "subtitles.hbk.canned_laughter",
 		"sounds": [{"name": "hbk:canned_laughter", "attenuation_distance": 64}]
 	},
+	"entity.squirrel.gift": {
+		"subtitle": "subtitles.hbk.squirrel.gift",
+		"sounds": ["hbk:entity/squirrel/gift"]
+	},
 	"entity.squirrel.ambient": {
 		"subtitle": "subtitles.hbk.squirrel.ambient",
 		"sounds": [

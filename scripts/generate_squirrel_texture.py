@@ -34,12 +34,23 @@ def main() -> None:
     fill(0, 28, 8, 2, dark)
     fill(17, 26, 2, 2, cream)
     fill(16, 24, 6, 1, dark)
-    # Cream cuboid muzzle with a dark two-pixel nose and mouth.
+    # Muzzle front is x=26..29, y=26..27: keep the nose centered, not on a side face.
     fill(24, 24, 12, 4, cream)
-    fill(29, 26, 2, 1, dark)
-    fill(30, 27, 1, 1, dark)
-    # Cream rear face of the three broad tail segments.
-    fill(14, 44, 6, 5, cream)
+    fill(27, 26, 2, 1, dark)
+    # The rear UV face of every 6x5x4 tail segment is x=14..19, y=44..48.
+    # Keep the cream underside, but give it fur detail instead of a blank flat patch.
+    tail_cream = [cream, (230, 185, 126, 255), (249, 222, 176, 255)]
+    for y in range(44, 49):
+        for x in range(14, 20):
+            pixels[y][x] = (fur[(x + y) % len(fur)] if x in (14, 19)
+                            else tail_cream[(x + y // 2) % len(tail_cream)])
+
+    # A separate cuboid UV net gives all six faces of the terminal segment pale fur.
+    tip_fur = [(250, 237, 211, 255), (242, 224, 191, 255),
+               (255, 244, 220, 255), (247, 231, 202, 255)]
+    for y in range(40, 49):
+        for x in range(32, 52):
+            pixels[y][x] = tip_fur[(x + y // 2) % len(tip_fur)]
 
     def chunk(kind: bytes, data: bytes) -> bytes:
         return struct.pack(">I", len(data)) + kind + data + struct.pack(">I", zlib.crc32(kind + data))
