@@ -1,0 +1,6 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": ["minecraft:wheat", "minecraft:dried_kelp"],
+  "result": {"id": "hbk:denis_doshirak", "count": 1}
+}

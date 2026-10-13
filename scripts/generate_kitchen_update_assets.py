@@ -4,6 +4,7 @@
 Requires Pillow. Run from any directory; no external references are used.
 """
 
+import argparse
 import json
 from pathlib import Path
 
@@ -34,10 +35,13 @@ def onigiri():
     return image
 
 
-def kettle(hot=False):
+def kettle(hot=False, noodles=False):
     image = Image.new("RGBA", (32, 32))
     d = ImageDraw.Draw(image)
     dark, rim, steel, shine = "#28353f", "#566873", "#9bafb9", "#deebdf"
+    if noodles:
+        # Only the enamel palette changes; all geometry and tea/steam stay identical.
+        rim, steel, shine = "#863a40", "#ca5459", "#f5c5bf"
     # Enamel handle, spout, wide body, lid and little red knob.
     d.arc((6, 4, 25, 25), 190, 350, fill=dark, width=3)
     d.arc((8, 6, 23, 24), 195, 345, fill=rim, width=1)
@@ -96,6 +100,15 @@ def vision():
 
 
 def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--noodle-kettles-only", action="store_true",
+                        help="Only rebuild the two red variants, leaving existing assets untouched")
+    args = parser.parse_args()
+    save(kettle(noodles=True), "item", "doshirak_kettle")
+    save(kettle(hot=True, noodles=True), "item", "hard_doshirak_kettle")
+    if args.noodle_kettles_only:
+        print("Generated red kettles with the original 32x32 silhouettes")
+        return
     rice = onigiri()
     save(rice, "item", "onigiri")
     icon = Image.new("RGBA", (18, 18))

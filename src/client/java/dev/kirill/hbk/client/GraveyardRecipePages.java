@@ -39,30 +39,30 @@ public final class GraveyardRecipePages {
 		int top = 2;
 		List<net.minecraft.util.FormattedCharSequence> title = font.split(diagram.result.getHoverName(), 114);
 		for (int line = 0; line < Math.min(2, title.size()); line++) {
-			graphics.text(font, title.get(line), left, top + 45 + line * 10, 0x38271C, false);
+			graphics.text(font, title.get(line), left, top + 45 + line * 10, 0xFF38271C, false);
 		}
 		if (diagram.smelting) {
 			drawSlot(graphics, font, diagram.inputs.getFirst(), left + 18, top + 89, mouseX, mouseY);
-			graphics.text(font, "→", left + 49, top + 94, 0x38271C, false);
+			graphics.text(font, "→", left + 49, top + 94, 0xFF38271C, false);
 			drawSlot(graphics, font, diagram.result, left + 79, top + 89, mouseX, mouseY);
 			graphics.text(font, Component.translatable("book.hbk.recipes.smelting.time"),
-					left, top + 125, 0x5B4737, false);
+					left, top + 125, 0xFF5B4737, false);
 		} else if (diagram.smithing) {
 			for (int slot = 0; slot < 3; slot++) {
 				drawSlot(graphics, font, diagram.inputs.get(slot), left + slot * 24, top + 89, mouseX, mouseY);
 			}
-			graphics.text(font, "→", left + 72, top + 94, 0x38271C, false);
+			graphics.text(font, "→", left + 72, top + 94, 0xFF38271C, false);
 			drawSlot(graphics, font, diagram.result, left + 92, top + 89, mouseX, mouseY);
 		} else {
 			for (int slot = 0; slot < 9; slot++) {
 				drawSlot(graphics, font, diagram.inputs.get(slot),
 						left + slot % 3 * 18, top + 76 + slot / 3 * 18, mouseX, mouseY);
 			}
-			graphics.text(font, "→", left + 58, top + 97, 0x38271C, false);
+			graphics.text(font, "→", left + 58, top + 97, 0xFF38271C, false);
 			drawSlot(graphics, font, diagram.result, left + 79, top + 94, mouseX, mouseY);
 			graphics.text(font, Component.translatable(diagram.shapeless
 					? "book.hbk.recipes.shapeless" : "book.hbk.recipes.shaped"),
-					left, top + 139, 0x5B4737, false);
+					left, top + 139, 0xFF5B4737, false);
 		}
 	}
 
@@ -128,6 +128,9 @@ public final class GraveyardRecipePages {
 	}
 
 	private static ItemStack stack(String id, int count) {
+		if (id.equals("#minecraft:buttons")) {
+			return new ItemStack(net.minecraft.world.item.Items.STONE_BUTTON, count);
+		}
 		if (id.equals("#minecraft:fishes")) {
 			return new ItemStack(net.minecraft.world.item.Items.COD, count);
 		}

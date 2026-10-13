@@ -6,6 +6,7 @@ import dev.kirill.hbk.effect.SoulfulnessEffect;
 import dev.kirill.hbk.effect.DiabetesEffect;
 import dev.kirill.hbk.effect.GoshasRageEffect;
 import dev.kirill.hbk.effect.HeartyLunchEffect;
+import dev.kirill.hbk.effect.FunnySpinEffect;
 import dev.kirill.hbk.effect.BeerEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -16,6 +17,18 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 
 public final class ModEffects {
+	public static final Holder.Reference<MobEffect> YOUNG_LIBERAL = Registry.registerForHolder(
+			BuiltInRegistries.MOB_EFFECT, HbkMod.id("young_liberal"),
+			new SimpleModEffect(MobEffectCategory.BENEFICIAL, 0x3088F0)
+					.addAttributeModifier(Attributes.MOVEMENT_SPEED, HbkMod.id("young_liberal_speed"),
+							0.60, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+					.addAttributeModifier(Attributes.JUMP_STRENGTH, HbkMod.id("young_liberal_jump"),
+							0.60, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+	public static final Holder.Reference<MobEffect> DOSHIRAK = Registry.registerForHolder(
+			BuiltInRegistries.MOB_EFFECT, HbkMod.id("doshirak"),
+			new SimpleModEffect(MobEffectCategory.BENEFICIAL, 0xD92929));
+	public static final Holder.Reference<MobEffect> FUNNY_SPIN = Registry.registerForHolder(
+			BuiltInRegistries.MOB_EFFECT, HbkMod.id("funny_spin"), new FunnySpinEffect());
 	public static final Holder.Reference<MobEffect> BEER = Registry.registerForHolder(
 			BuiltInRegistries.MOB_EFFECT, HbkMod.id("beer"), new BeerEffect(0xD9A438)
 	);

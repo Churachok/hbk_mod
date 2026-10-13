@@ -15,6 +15,7 @@ public final class GraveyardRecipeBook {
 	public static final List<String> RECIPES = List.of(
 			"buckwheat", "stew", "condensed_milk", "currant_tincture",
 			"onigiri", "kirill_kettle", "hard_kirill_kettle",
+			"denis_doshirak", "doshirak_kettle", "hard_doshirak_kettle", "funny_button",
 			"balalaika_pickaxe", "shovel_sword", "sickle_and_hammer", "western_chestplate",
 			"flying_carpet", "improved_oak_boat", "improved_spruce_boat", "improved_birch_boat",
 			"improved_jungle_boat", "improved_acacia_boat", "improved_cherry_boat",
@@ -24,6 +25,9 @@ public final class GraveyardRecipeBook {
 			"redstone_pickaxe_smithing", "uranium_helmet_smithing",
 			"uranium_chestplate_smithing", "uranium_leggings_smithing",
 			"uranium_boots_smithing");
+	public static final List<String> INFO_PAGES = List.of("doshirak", "funny_button", "dandruff", "feeding_onigiri", "lebedev_head", "bus",
+			"liberal_blood", "young_liberal");
+	public static final int PAGE_COUNT = 1 + RECIPES.size() + INFO_PAGES.size();
 
 	private GraveyardRecipeBook() {
 	}
@@ -33,8 +37,11 @@ public final class GraveyardRecipeBook {
 		pages.add(Filterable.passThrough(Component.translatable("book.hbk.recipes.page.1")));
 		for (String recipe : RECIPES) {
 			pages.add(Filterable.passThrough(Component.translatable(recipe.endsWith("_smithing")
-					? "book.hbk.recipes.smithing" : recipe.equals("hard_kirill_kettle")
+					? "book.hbk.recipes.smithing" : recipe.equals("hard_kirill_kettle") || recipe.equals("hard_doshirak_kettle")
 					? "book.hbk.recipes.smelting" : "book.hbk.recipes.crafting")));
+		}
+		for (String page : INFO_PAGES) {
+			pages.add(Filterable.passThrough(Component.translatable("book.hbk.recipes.info." + page)));
 		}
 		ItemStack book = new ItemStack(Items.WRITTEN_BOOK);
 		book.set(DataComponents.WRITTEN_BOOK_CONTENT,

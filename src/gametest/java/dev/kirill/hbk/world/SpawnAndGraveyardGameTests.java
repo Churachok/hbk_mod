@@ -156,7 +156,7 @@ public final class SpawnAndGraveyardGameTests {
 				if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest
 						&& chest.getItem(13).is(Items.WRITTEN_BOOK)) {
 					WrittenBookContent content = chest.getItem(13).get(DataComponents.WRITTEN_BOOK_CONTENT);
-					test.assertTrue(content != null && content.pages().size() == GraveyardRecipeBook.RECIPES.size() + 1,
+					test.assertTrue(content != null && content.pages().size() == GraveyardRecipeBook.PAGE_COUNT,
 							"Graveyard book must contain an introduction and one page per recipe");
 					found++;
 				}
@@ -169,6 +169,12 @@ public final class SpawnAndGraveyardGameTests {
 	@GameTest
 	public void everyGuideRecipeHasVanillaRecipeBookUnlock(GameTestHelper test) {
 		var server = test.getLevel().getServer();
+		for (var entry : server.getRecipeManager().getRecipes()) {
+			if (entry.id().identifier().getNamespace().equals(HbkMod.MOD_ID)) {
+				test.assertTrue(GraveyardRecipeBook.RECIPES.contains(entry.id().identifier().getPath()),
+						"Every shipped HBK recipe must appear in the guide: " + entry.id());
+			}
+		}
 		for (String name : GraveyardRecipeBook.RECIPES) {
 			var recipe = ResourceKey.create(Registries.RECIPE, HbkMod.id(name));
 			test.assertTrue(server.getRecipeManager().byKey(recipe).isPresent(),
