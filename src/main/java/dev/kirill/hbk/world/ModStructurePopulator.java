@@ -20,11 +20,17 @@ import net.minecraft.world.level.block.entity.BarrelBlockEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 
@@ -76,13 +82,17 @@ public final class ModStructurePopulator {
 			if (!level.hasChunksAt(box.minX(), box.minZ(), box.maxX(), box.maxZ())) {
 				continue;
 			}
+			// The terrain-adaptation box is inflated by 12 blocks; use the actual house piece.
+			PoolElementStructurePiece konataPiece = id.equals(KONATA_HOUSE)
+					? start.getPieces().stream().filter(PoolElementStructurePiece.class::isInstance)
+							.map(PoolElementStructurePiece.class::cast).findFirst().orElse(null) : null;
 
 			if (!data.isStructurePopulated(populationKey)) {
 				boolean populated = true;
 				if (id.equals(KIRILL_HOUSE)) {
 					spawnNurse(level, box);
 				} else if (id.equals(KONATA_HOUSE)) {
-					populated = spawnKonata(level, box);
+					populated = spawnKonata(level, konataPiece == null ? box : konataPiece.getBoundingBox());
 				} else if (id.equals(STALINKA)) {
 					if (level.getRandom().nextFloat() < VILLAGER_CHANCE) {
 						spawnVillagers(level, box);
@@ -95,6 +105,10 @@ public final class ModStructurePopulator {
 				if (populated) {
 					data.markStructurePopulated(populationKey);
 				}
+			}
+			if (konataPiece != null && konataPiece.getBoundingBox().getYSpan() == 18) {
+				populateKonataBasement(level, konataPiece.getPosition(), konataPiece.getRotation(),
+						data, "konata_basement@" + populationKey);
 			}
 			if (id.equals(GULAG)) {
 				String suppliesKey = "gulag_supplies@" + start.getChunkPos().pack();
@@ -291,8 +305,11 @@ public final class ModStructurePopulator {
 		}
 	}
 
-	private static boolean spawnKonata(ServerLevel level, BoundingBox box) {
-		BlockPos pos = findStandingPosition(level, box, 200);
+	static boolean spawnKonata(ServerLevel level, BoundingBox box) {
+		// The seven-block-tall house remains above the basement, including old house templates.
+		BoundingBox upstairs = new BoundingBox(box.minX(), box.maxY() - 6, box.minZ(),
+				box.maxX(), box.maxY(), box.maxZ());
+		BlockPos pos = findStandingPosition(level, upstairs, 200);
 		var konata = pos == null ? null : ModEntityTypes.KONATA.spawn(level, pos, EntitySpawnReason.STRUCTURE);
 		if (konata == null) {
 			HbkMod.LOGGER.warn("Could not spawn Konata in her house at {}", box);
@@ -300,6 +317,47 @@ public final class ModStructurePopulator {
 		}
 		konata.setPersistenceRequired();
 		return true;
+	}
+
+	/** Adds the already-seated white sheep once, independently of Konata's population flag. */
+	static void populateKonataBasement(ServerLevel level, BlockPos origin, Rotation rotation,
+			ModWorldData data, String key) {
+		if (data.isStructurePopulated(key)) return;
+		BlockPos pistonPos = StructureTemplate.transform(new BlockPos(6, 2, 5), Mirror.NONE,
+				rotation, BlockPos.ZERO).offset(origin);
+		if (!level.hasChunkAt(pistonPos) || !level.getBlockState(pistonPos).is(Blocks.STICKY_PISTON)) return;
+		Vec3 position = StructureTemplate.transform(new Vec3(3.5, 1.5, 5.5), Mirror.NONE,
+				rotation, BlockPos.ZERO).add(Vec3.atLowerCornerOf(origin));
+		var boat = EntityTypes.CHERRY_BOAT.create(level, EntitySpawnReason.STRUCTURE);
+		var sheep = EntityTypes.SHEEP.create(level, EntitySpawnReason.STRUCTURE);
+		if (boat == null || sheep == null) return;
+		float yaw = 90.0f + switch (rotation) {
+			case NONE -> 0.0f;
+			case CLOCKWISE_90 -> 90.0f;
+			case CLOCKWISE_180 -> 180.0f;
+			case COUNTERCLOCKWISE_90 -> 270.0f;
+		};
+		boat.snapTo(position.x, position.y, position.z, yaw, 0.0f);
+		sheep.snapTo(position.x, position.y + 0.5, position.z, yaw, 0.0f);
+		sheep.finalizeSpawn(level, level.getCurrentDifficultyAt(BlockPos.containing(position)),
+				EntitySpawnReason.STRUCTURE, null);
+		// finalizeSpawn chooses a random coat, so explicitly set white afterwards.
+		sheep.setColor(DyeColor.WHITE);
+		sheep.setAge(0);
+		sheep.setSheared(false);
+		sheep.setPersistenceRequired();
+		sheep.setYHeadRot(yaw);
+		sheep.setYBodyRot(yaw);
+		if (level.noCollision(boat) && sheep.startRiding(boat, true, false)) {
+			boat.positionRider(sheep);
+			if (level.tryAddFreshEntityWithPassengers(boat)) {
+				data.markStructurePopulated(key);
+				return;
+			}
+		}
+		sheep.stopRiding();
+		sheep.discard();
+		boat.discard();
 	}
 
 	private static boolean spawnKirillNear(ServerLevel level, BoundingBox box) {

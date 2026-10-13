@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "hbk:beer_cauldron",
     "hbk:radioactive_stone",
     "hbk:cracked_radioactive_stone",
     "hbk:uranium_ore",

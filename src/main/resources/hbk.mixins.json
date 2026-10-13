@@ -6,6 +6,7 @@
 		"AbstractFurnaceBlockEntityMixin",
 		"AdvancementMixin",
 		"BlockStateBaseMixin",
+		"CauldronDispatcherAccessor",
 		"LivingEntityDamageMixin",
 		"OverworldBiomeBuilderMixin",
 		"PlayerPersistentDataMixin",

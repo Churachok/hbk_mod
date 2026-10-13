@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the small Konata house structure without external dependencies."""
+"""Generate the unchanged small Konata house above its hidden cherry basement."""
 
 import gzip
 import struct
@@ -45,7 +45,9 @@ def palette_entry(name: str, properties: dict[str, str] | None = None) -> bytes:
 
 
 def main() -> None:
-    size = (9, 7, 9)
+    house_size = (9, 7, 9)
+    house_offset_y = 11
+    size = (9, 18, 9)
     palette = [
         ("minecraft:air", None),
         ("minecraft:stone_bricks", None),
@@ -60,8 +62,14 @@ def main() -> None:
         ("minecraft:pink_bed", {"facing": "east", "occupied": "false", "part": "head"}),
         ("minecraft:cherry_door", {"facing": "south", "half": "lower", "hinge": "left", "open": "false", "powered": "false"}),
         ("minecraft:cherry_door", {"facing": "south", "half": "upper", "hinge": "left", "open": "false", "powered": "false"}),
+        ("minecraft:cherry_trapdoor", {"facing": "south", "half": "top", "open": "false", "powered": "false", "waterlogged": "false"}),
+        ("minecraft:ladder", {"facing": "south", "waterlogged": "false"}),
+        ("minecraft:sticky_piston", {"facing": "west", "extended": "false"}),
+        ("minecraft:end_rod", {"facing": "west"}),
+        ("minecraft:lever", {"face": "wall", "facing": "east", "powered": "false"}),
+        ("minecraft:cherry_slab", {"type": "bottom", "waterlogged": "false"}),
     ]
-    blocks = {(x, y, z): 0 for x in range(size[0]) for y in range(size[1]) for z in range(size[2])}
+    blocks = {(x, y, z): 0 for x in range(house_size[0]) for y in range(house_size[1]) for z in range(house_size[2])}
 
     # Stone foundation and warm cherry floor.
     for x in range(1, 8):
@@ -105,6 +113,39 @@ def main() -> None:
     blocks[6, 1, 6] = 7
     blocks[3, 1, 5] = 9
     blocks[4, 1, 5] = 10
+
+    # Preserve every original above-ground cell, including explicit exterior air.
+    # The only floor replacement is the hidden trapdoor below the existing carpet.
+    blocks = {(x, y + house_offset_y, z): state for (x, y, z), state in blocks.items()}
+    blocks[2, house_offset_y, 2] = 13
+
+    # The 7x7 room is explicitly carved out; unspecified cells above/outside its
+    # shell are deliberately absent so generation does not erase surrounding soil.
+    for x in range(9):
+        for z in range(9):
+            blocks[x, 0, z] = 2
+            blocks[x, 5, z] = 2
+            for y in range(1, 5):
+                blocks[x, y, z] = 2 if x in (0, 8) or z in (0, 8) else 0
+    blocks[2, 5, 5] = 8
+    blocks[6, 5, 2] = 8
+
+    # Only this narrow 3x3-lined shaft crosses the undisturbed middle soil layer.
+    for y in range(6, 11):
+        for x in range(1, 4):
+            for z in range(1, 4):
+                blocks[x, y, z] = 0 if (x, z) == (2, 2) else 2
+    for y in range(1, 11):
+        blocks[2, y, 1] = 2
+        blocks[2, y, 2] = 14
+
+    # Two bottom slabs support the boat half a block above the room floor. The
+    # west-facing sticky piston/rod and rear wall lever are raised one full block.
+    blocks[3, 1, 5] = 18
+    blocks[4, 1, 5] = 18
+    blocks[6, 2, 5] = 15
+    blocks[5, 2, 5] = 16
+    blocks[7, 2, 5] = 17
 
     block_entries = []
     for (x, y, z), state in sorted(blocks.items(), key=lambda item: (item[0][1], item[0][2], item[0][0])):

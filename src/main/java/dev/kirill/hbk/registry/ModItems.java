@@ -19,6 +19,7 @@ import dev.kirill.hbk.item.ImprovedBoatItem;
 import dev.kirill.hbk.item.GoldenCrownItem;
 import dev.kirill.hbk.item.GoshasRageBottleItem;
 import dev.kirill.hbk.item.BeerBottleItem;
+import dev.kirill.hbk.item.BottleWeaponItem;
 import dev.kirill.hbk.item.RationItem;
 import dev.kirill.hbk.item.ResetCompassItem;
 import dev.kirill.hbk.item.StalinPipeItem;
@@ -302,7 +303,15 @@ public class ModItems {
 	public static final Item BEER_BOTTLE = register("beer_bottle", BeerBottleItem::new,
 			new Item.Properties().stacksTo(16)
 					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
-					.usingConvertsTo(Items.GLASS_BOTTLE));
+					.component(ModDataComponents.BEER_SIPS, BeerBottleItem.MAX_SIPS));
+	public static final Item EMPTY_BEER_BOTTLE = register("empty_beer_bottle",
+			properties -> new BottleWeaponItem(properties, false),
+			new Item.Properties().stacksTo(1).attributes(BottleWeaponItem.attackAttributes(8))
+					.component(DataComponents.WEAPON, new net.minecraft.world.item.component.Weapon(0)));
+	public static final Item BROKEN_BEER_BOTTLE = register("broken_beer_bottle",
+			properties -> new BottleWeaponItem(properties, true),
+			new Item.Properties().stacksTo(1).attributes(BottleWeaponItem.attackAttributes(15))
+					.component(DataComponents.WEAPON, new net.minecraft.world.item.component.Weapon(0)));
 
 	public static final Item RATION = register("ration", RationItem::new, new Item.Properties().stacksTo(16));
 
@@ -537,6 +546,8 @@ public class ModItems {
 				Identifier.withDefaultNamespace("tools_and_utilities")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
+			output.accept(EMPTY_BEER_BOTTLE);
+			output.accept(BROKEN_BEER_BOTTLE);
 			output.accept(KIRILL_KETTLE);
 			output.accept(LEBEDEV_HEAD);
 			output.accept(FLYING_CARPET);

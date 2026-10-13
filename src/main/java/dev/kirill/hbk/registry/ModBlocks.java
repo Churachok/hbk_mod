@@ -6,6 +6,7 @@ import dev.kirill.hbk.block.ToxicWaterBlock;
 import dev.kirill.hbk.block.WastelandPlantBlock;
 import dev.kirill.hbk.block.BloodySpermBlock;
 import dev.kirill.hbk.block.SpermBlock;
+import dev.kirill.hbk.block.BeerCauldronBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -59,6 +60,8 @@ public final class ModBlocks {
 			.strength(2.5f)
 			.sound(SoundType.WOOD)
 			.noOcclusion()));
+	public static final Block BEER_CAULDRON = register("beer_cauldron", properties -> new BeerCauldronBlock(properties
+			.mapColor(MapColor.STONE).strength(2.0f).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()));
 
 	private ModBlocks() {
 	}
@@ -79,6 +82,7 @@ public final class ModBlocks {
 	}
 
 	public static void register() {
+		BeerCauldronBlock.registerInteractions();
 		HbkMod.LOGGER.info("Registered blocks for {}", HbkMod.MOD_ID);
 	}
 }

@@ -2,7 +2,7 @@
   "sources": [
     {
       "type": "minecraft:single",
-      "resource": "minecraft:mob_effect/nausea",
+      "resource": "hbk:mob_effect/beer",
       "sprite": "hbk:mob_effect/beer"
     }
   ]

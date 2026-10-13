@@ -231,7 +231,7 @@ public final class NpcGameTests {
 		test.assertTrue(konataPlacement.spacing() > kirillPlacement.spacing(),
 				"Konata's house must generate less often than Kirill's house");
 		var template = level.getStructureManager().get(structureId).orElseThrow();
-		test.assertTrue(template.getSize().getX() == 9 && template.getSize().getY() == 7
+		test.assertTrue(template.getSize().getX() == 9 && template.getSize().getY() == 18
 				&& template.getSize().getZ() == 9, "Konata's house must stay compact");
 		test.succeed();
 	}

@@ -8,6 +8,15 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.ByteBufCodecs;
 
 public final class ModDataComponents {
+	public static final DataComponentType<Integer> BEER_SIPS = Registry.register(
+			BuiltInRegistries.DATA_COMPONENT_TYPE,
+			HbkMod.id("beer_sips"),
+			DataComponentType.<Integer>builder()
+					.persistent(Codec.intRange(1, 3))
+					.networkSynchronized(ByteBufCodecs.VAR_INT.cast())
+					.build()
+	);
+
 	public static final DataComponentType<Boolean> ATTACK_MODE = Registry.register(
 			BuiltInRegistries.DATA_COMPONENT_TYPE,
 			HbkMod.id("attack_mode"),
