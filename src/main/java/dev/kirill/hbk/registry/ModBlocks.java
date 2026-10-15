@@ -6,6 +6,8 @@ import dev.kirill.hbk.block.ToxicWaterBlock;
 import dev.kirill.hbk.block.WastelandPlantBlock;
 import dev.kirill.hbk.block.BloodySpermBlock;
 import dev.kirill.hbk.block.SpermBlock;
+import dev.kirill.hbk.block.RoflBlock;
+import dev.kirill.hbk.block.RoflMushroomBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -20,6 +22,10 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.util.ColorRGBA;
 
 public final class ModBlocks {
+	public static final Block ROFL_BLOCK = register("rofl_block", properties -> new RoflBlock(properties
+			.mapColor(MapColor.COLOR_YELLOW).strength(0.3f).sound(SoundType.SLIME_BLOCK)));
+	public static final Block ROFL_MUSHROOM = register("rofl_mushroom", properties -> new RoflMushroomBlock(properties
+			.mapColor(MapColor.COLOR_YELLOW).noCollision().noOcclusion().instabreak().sound(SoundType.GRASS)));
 	public static final Block INFECTED_DIRT = simple("infected_dirt", MapColor.DIRT, 0.6f, SoundType.GRAVEL);
 	public static final Block RADIOACTIVE_STONE = simple("radioactive_stone", MapColor.STONE, 1.7f, SoundType.STONE);
 	public static final Block ASH_SOIL = simple("ash_soil", MapColor.COLOR_GRAY, 0.5f, SoundType.SOUL_SOIL);

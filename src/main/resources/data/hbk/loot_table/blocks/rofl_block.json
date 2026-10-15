@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:block",
+  "pools": [{
+    "rolls": 1,
+    "conditions": [{"condition": "minecraft:survives_explosion"}],
+    "entries": [{"type": "minecraft:item", "name": "hbk:rofl_block"}]
+  }],
+  "random_sequence": "hbk:blocks/rofl_block"
+}

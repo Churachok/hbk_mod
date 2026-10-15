@@ -6,6 +6,9 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
 public final class ModAttachments {
+	public static final AttachmentType<Boolean> ROFL_SAFE_FALL = AttachmentRegistry.<Boolean>builder()
+			.persistent(com.mojang.serialization.Codec.BOOL)
+			.buildAndRegister(HbkMod.id("rofl_safe_fall"));
 	public static final AttachmentType<KonataDailyClaim> KONATA_DAILY_CLAIM =
 			AttachmentRegistry.<KonataDailyClaim>builder()
 					.persistent(KonataDailyClaim.CODEC)
