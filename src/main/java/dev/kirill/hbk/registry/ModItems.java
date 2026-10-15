@@ -106,6 +106,8 @@ public class ModItems {
 	public static final Item INFECTED_BUSH = block("infected_bush", ModBlocks.INFECTED_BUSH);
 	public static final Item MOLDY_MOSS = block("moldy_moss", ModBlocks.MOLDY_MOSS);
 	public static final Item GLOWING_MUSHROOM = block("glowing_mushroom", ModBlocks.GLOWING_MUSHROOM);
+	public static final Item ROFL_MUSHROOM = block("rofl_mushroom", ModBlocks.ROFL_MUSHROOM);
+	public static final Item ROFL_BLOCK = block("rofl_block", ModBlocks.ROFL_BLOCK);
 	public static final Item DRY_LOG = block("dry_log", ModBlocks.DRY_LOG);
 	public static final Item BRIGHT_GRASS = block("bright_grass", ModBlocks.BRIGHT_GRASS);
 	public static final Item ROTTEN_EARTH = block("rotten_earth", ModBlocks.ROTTEN_EARTH);
@@ -503,6 +505,8 @@ public class ModItems {
 			output.accept(INFECTED_BUSH);
 			output.accept(MOLDY_MOSS);
 			output.accept(GLOWING_MUSHROOM);
+			output.accept(ROFL_MUSHROOM);
+			output.accept(ROFL_BLOCK);
 			output.accept(DRY_LOG);
 			output.accept(BRIGHT_GRASS);
 			output.accept(ROTTEN_EARTH);

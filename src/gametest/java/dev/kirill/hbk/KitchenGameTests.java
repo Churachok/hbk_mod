@@ -61,11 +61,15 @@ public final class KitchenGameTests {
 		var button = manager.byKey(ResourceKey.create(Registries.RECIPE, HbkMod.id("funny_button"))).orElseThrow().value();
 		var buttons = net.minecraft.tags.TagKey.create(Registries.ITEM, net.minecraft.resources.Identifier.withDefaultNamespace("buttons"));
 		for (var holder : net.minecraft.core.registries.BuiltInRegistries.ITEM.getTagOrEmpty(buttons)) {
-			test.assertTrue(matches(button, CraftingInput.of(2, 1,
-					List.of(new ItemStack(holder), new ItemStack(Items.DIAMOND))), level), "Recipe must accept every button: " + holder);
+			test.assertTrue(matches(button, CraftingInput.of(3, 1,
+					List.of(new ItemStack(holder), new ItemStack(Items.DIAMOND), new ItemStack(ModItems.ROFL_BLOCK))), level),
+					"Recipe must accept every button with a rofl block: " + holder);
 		}
+		test.assertFalse(matches(button, CraftingInput.of(3, 1,
+				List.of(new ItemStack(Items.LEVER), new ItemStack(Items.DIAMOND), new ItemStack(ModItems.ROFL_BLOCK))), level),
+				"A lever is not a button");
 		test.assertFalse(matches(button, CraftingInput.of(2, 1,
-				List.of(new ItemStack(Items.LEVER), new ItemStack(Items.DIAMOND))), level), "A lever is not a button");
+				List.of(new ItemStack(Items.OAK_BUTTON), new ItemStack(Items.DIAMOND))), level), "A rofl block is required");
 		test.succeed();
 	}
 
@@ -216,11 +220,17 @@ public final class KitchenGameTests {
 		});
 	}
 
-	@GameTest(maxTicks = 130)
+	@GameTest(maxTicks = 200)
 	public void funnyButtonSpinsButNeverKillsTheFourBossesEvenNextToExplodingMobs(GameTestHelper test) {
 		var level = test.getLevel();
 		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.SURVIVAL);
 		var center = Vec3.atCenterOf(test.absolutePos(new BlockPos(2, 2, 2))).add(0, 200, 0);
+		// Bosses spread beyond the template's chunks; those chunks must tick for effect synchronization.
+		var forcedChunks = new java.util.HashSet<net.minecraft.world.level.ChunkPos>();
+		for (int offset : new int[]{-15, -13, -5, -3, 5, 7, 15, 17}) {
+			var chunk = net.minecraft.world.level.ChunkPos.containing(BlockPos.containing(center.add(offset, 0, 0)));
+			if (level.setChunkForced(chunk.x(), chunk.z(), true)) forcedChunks.add(chunk);
+		}
 		player.setPos(center);
 		player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.FUNNY_BUTTON));
 		var bosses = List.of(test.spawnWithNoFreeWill(ModEntityTypes.KIRILL_DOOM, 2, 2, 2),
@@ -240,28 +250,41 @@ public final class KitchenGameTests {
 			zombie.setNoGravity(true);
 			hostiles.add(zombie);
 		}
-		ModItems.FUNNY_BUTTON.use(level, player, InteractionHand.MAIN_HAND);
-		for (var boss : bosses) {
-			test.assertTrue(boss.hasEffect(ModEffects.FUNNY_SPIN), "Protected bosses must still spin");
-			test.assertTrue(boss.getEffect(ModEffects.FUNNY_SPIN).getAmplifier() == 0,
-					"Even bosses targeting a player must not receive the lethal spin");
-		}
-		test.runAfterDelay(3, () -> {
-			for (var boss : bosses) test.assertTrue(((FunnySpinAccess) boss).hbk$isFunnySpinning(),
-					"Boss spin must still reach observers");
-		});
-		test.runAfterDelay(110, () -> {
+		// Begin only when all neighboring chunks actually tick, independent of template placement.
+		test.startSequence().thenWaitUntil(() -> {
+			for (var mob : bosses) test.assertTrue(mob.tickCount > 0, "Boss chunk must tick before activating the button");
+			for (var mob : hostiles) test.assertTrue(mob.tickCount > 0, "Hostile chunk must tick before activating the button");
+		}).thenExecute(() -> {
+			ModItems.FUNNY_BUTTON.use(level, player, InteractionHand.MAIN_HAND);
 			for (var boss : bosses) {
-				test.assertTrue(boss.isAlive(), "A boss at one HP must survive nearby button explosions");
-				test.assertFalse(((FunnySpinAccess) boss).hbk$isFunnySpinning(), "Bosses must stop spinning");
-				boss.discard();
+				test.assertTrue(boss.hasEffect(ModEffects.FUNNY_SPIN), "Protected bosses must still spin");
+				test.assertTrue(boss.getEffect(ModEffects.FUNNY_SPIN).getAmplifier() == 0,
+						"Even bosses targeting a player must not receive the lethal spin");
 			}
-			for (var hostile : hostiles) {
-				test.assertFalse(hostile.isAlive(), "Boss protection must not protect ordinary hostile mobs");
-				hostile.discard();
-			}
-			player.discard();
-			test.succeed();
+			test.runAfterDelay(3, () -> {
+				try {
+					for (var boss : bosses) test.assertTrue(((FunnySpinAccess) boss).hbk$isFunnySpinning(),
+							"Boss spin must still reach observers: " + boss.getType() + ", alive=" + boss.isAlive()
+							+ ", ticks=" + boss.tickCount + ", effect=" + boss.getEffect(ModEffects.FUNNY_SPIN));
+				} catch (RuntimeException failure) {
+					for (var chunk : forcedChunks) level.setChunkForced(chunk.x(), chunk.z(), false);
+					throw failure;
+				}
+			});
+			test.runAfterDelay(110, () -> {
+				for (var boss : bosses) {
+					test.assertTrue(boss.isAlive(), "A boss at one HP must survive nearby button explosions");
+					test.assertFalse(((FunnySpinAccess) boss).hbk$isFunnySpinning(), "Bosses must stop spinning");
+					boss.discard();
+				}
+				for (var hostile : hostiles) {
+					test.assertFalse(hostile.isAlive(), "Boss protection must not protect ordinary hostile mobs");
+					hostile.discard();
+				}
+				player.discard();
+				for (var chunk : forcedChunks) level.setChunkForced(chunk.x(), chunk.z(), false);
+				test.succeed();
+			});
 		});
 	}
 
