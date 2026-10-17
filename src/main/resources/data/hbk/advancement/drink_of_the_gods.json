@@ -1,0 +1,33 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {
+      "id": "hbk:jagermeister_bottle"
+    },
+    "title": {
+      "translate": "advancement.hbk.drink_of_the_gods.title"
+    },
+    "description": {
+      "translate": "advancement.hbk.drink_of_the_gods.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "obtain_full_bottle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:jagermeister_bottle",
+            "components": {
+              "hbk:jagermeister_sips": 7
+            }
+          }
+        ]
+      }
+    }
+  }
+}

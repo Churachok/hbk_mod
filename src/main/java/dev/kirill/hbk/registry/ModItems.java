@@ -19,6 +19,8 @@ import dev.kirill.hbk.item.ImprovedBoatItem;
 import dev.kirill.hbk.item.GoldenCrownItem;
 import dev.kirill.hbk.item.GoshasRageBottleItem;
 import dev.kirill.hbk.item.BeerBottleItem;
+import dev.kirill.hbk.item.JagermeisterBottleItem;
+import dev.kirill.hbk.item.EmptyJagermeisterBottleItem;
 import dev.kirill.hbk.item.BottleWeaponItem;
 import dev.kirill.hbk.item.RationItem;
 import dev.kirill.hbk.item.ResetCompassItem;
@@ -322,6 +324,13 @@ public class ModItems {
 					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
 					.usingConvertsTo(Items.GLASS_BOTTLE)
 	);
+	public static final Item EMPTY_JAGERMEISTER_BOTTLE = register("empty_jagermeister_bottle", EmptyJagermeisterBottleItem::new,
+			new Item.Properties().stacksTo(16));
+	public static final Item JAGERMEISTER_BOTTLE = register("jagermeister_bottle", JagermeisterBottleItem::new,
+			new Item.Properties().stacksTo(16)
+					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+					.component(ModDataComponents.JAGERMEISTER_SIPS, JagermeisterBottleItem.MAX_SIPS));
+
 	public static final Item BEER_BOTTLE = register("beer_bottle", BeerBottleItem::new,
 			new Item.Properties().stacksTo(16)
 					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
@@ -552,6 +561,7 @@ public class ModItems {
 		CreativeModeTabEvents.modifyOutputEvent(foodAndDrinks).register(output -> {
 			output.accept(LIBERAL_BLOOD_BUCKET);
 			output.accept(BEER_BOTTLE);
+			output.accept(JAGERMEISTER_BOTTLE);
 			output.accept(ONIGIRI);
 			output.accept(HARD_KIRILL_KETTLE);
 			output.accept(DENIS_DOSHIRAK);
@@ -572,6 +582,7 @@ public class ModItems {
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
 			output.accept(EMPTY_BEER_BOTTLE);
+			output.accept(EMPTY_JAGERMEISTER_BOTTLE);
 			output.accept(BROKEN_BEER_BOTTLE);
 			output.accept(KIRILL_KETTLE);
 			output.accept(DOSHIRAK_KETTLE);

@@ -164,6 +164,7 @@ public final class ModNetworking {
 	}
 
 	public static void register() {
+		JagermeisterRescuePayload.register();
 		PayloadTypeRegistry.clientboundPlay().register(OpenStrangeChestPayload.TYPE, OpenStrangeChestPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownEncounterPayload.TYPE, UnknownEncounterPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownTypingPayload.TYPE, UnknownTypingPayload.CODEC);

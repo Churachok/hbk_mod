@@ -11,6 +11,8 @@
 			"dev.kirill.hbk.KitchenGameTests",
 			"dev.kirill.hbk.LiberalBloodGameTests",
 			"dev.kirill.hbk.BeerGameTests",
+			"dev.kirill.hbk.JagermeisterGameTests",
+			"dev.kirill.hbk.HuntersInstinctGameTests",
 			"dev.kirill.hbk.NpcGameTests",
 			"dev.kirill.hbk.MemberGameTests",
 			"dev.kirill.hbk.BossGameTests",

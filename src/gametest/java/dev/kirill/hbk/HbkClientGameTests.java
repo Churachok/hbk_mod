@@ -2,13 +2,15 @@ package dev.kirill.hbk;
 
 import dev.kirill.hbk.client.BeerBottleClientGameTest;
 import dev.kirill.hbk.client.BeerCauldronClientGameTest;
+import dev.kirill.hbk.client.JagermeisterClientGameTest;
+import dev.kirill.hbk.client.HuntersInstinctClientGameTest;
 import dev.kirill.hbk.client.SquirrelClientGameTest;
 import dev.kirill.hbk.world.BusClientGameTest;
 import dev.kirill.hbk.world.KonataHouseClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 
-/** Select a scenario with ./gradlew runClientGameTest -PhbkClientTest=kitchen|blood|bus|squirrel|carpet|beer|konata|all. */
+/** Select a scenario with -PhbkClientTest; jagermeister_jei additionally requires -PhbkJei=true. */
 public final class HbkClientGameTests implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
@@ -20,16 +22,21 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 			case "carpet" -> new FlyingCarpetClientGameTest().runTest(context);
 			case "beer" -> runBeerTests(context);
 			case "konata" -> new KonataHouseClientGameTest().runTest(context);
+			case "jagermeister" -> new JagermeisterClientGameTest().runTest(context);
+			case "hunters_instinct" -> new HuntersInstinctClientGameTest().runTest(context);
+			case "jagermeister_jei" -> new JeiJagermeisterClientGameTest().runTest(context);
 			case "all" -> {
 				new KitchenClientGameTest().runTest(context);
 				new LiberalBloodClientGameTest().runTest(context);
 				new SquirrelClientGameTest().runTest(context);
 				runBeerTests(context);
+				new JagermeisterClientGameTest().runTest(context);
+				new HuntersInstinctClientGameTest().runTest(context);
 				new KonataHouseClientGameTest().runTest(context);
 				new BusClientGameTest().runTest(context);
 				new FlyingCarpetClientGameTest().runTest(context);
 			}
-			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel, carpet, beer, konata or all");
+			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, jagermeister_jei or all");
 		}
 	}
 

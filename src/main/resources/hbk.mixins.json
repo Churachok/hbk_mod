@@ -8,6 +8,7 @@
 		"BlockStateBaseMixin",
 		"CauldronDispatcherAccessor",
 		"LivingEntityDamageMixin",
+		"HuntersInstinctMixin",
 		"LivingEntitySpinMixin",
 		"OverworldBiomeBuilderMixin",
 		"PlayerPersistentDataMixin",

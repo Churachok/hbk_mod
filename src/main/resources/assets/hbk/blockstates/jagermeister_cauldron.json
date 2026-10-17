@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "level=1,ready=false": {"model": "hbk:block/jagermeister_cauldron_level1"},
+    "level=1,ready=true": {"model": "hbk:block/jagermeister_cauldron_level1"},
+    "level=2,ready=false": {"model": "hbk:block/jagermeister_cauldron_level2"},
+    "level=2,ready=true": {"model": "hbk:block/jagermeister_cauldron_level2"},
+    "level=3,ready=false": {"model": "hbk:block/jagermeister_cauldron_full"},
+    "level=3,ready=true": {"model": "hbk:block/jagermeister_cauldron_full"}
+  }
+}
