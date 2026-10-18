@@ -4,6 +4,7 @@ import dev.kirill.hbk.client.BeerBottleClientGameTest;
 import dev.kirill.hbk.client.BeerCauldronClientGameTest;
 import dev.kirill.hbk.client.JagermeisterClientGameTest;
 import dev.kirill.hbk.client.HuntersInstinctClientGameTest;
+import dev.kirill.hbk.client.FurrySyringeClientGameTest;
 import dev.kirill.hbk.client.SquirrelClientGameTest;
 import dev.kirill.hbk.world.BusClientGameTest;
 import dev.kirill.hbk.world.KonataHouseClientGameTest;
@@ -24,6 +25,7 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 			case "konata" -> new KonataHouseClientGameTest().runTest(context);
 			case "jagermeister" -> new JagermeisterClientGameTest().runTest(context);
 			case "hunters_instinct" -> new HuntersInstinctClientGameTest().runTest(context);
+			case "furry" -> new FurrySyringeClientGameTest().runTest(context);
 			case "jagermeister_jei" -> new JeiJagermeisterClientGameTest().runTest(context);
 			case "all" -> {
 				new KitchenClientGameTest().runTest(context);
@@ -32,11 +34,12 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 				runBeerTests(context);
 				new JagermeisterClientGameTest().runTest(context);
 				new HuntersInstinctClientGameTest().runTest(context);
+				new FurrySyringeClientGameTest().runTest(context);
 				new KonataHouseClientGameTest().runTest(context);
 				new BusClientGameTest().runTest(context);
 				new FlyingCarpetClientGameTest().runTest(context);
 			}
-			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, jagermeister_jei or all");
+			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, furry, jagermeister_jei or all");
 		}
 	}
 

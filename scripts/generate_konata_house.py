@@ -69,7 +69,9 @@ def main() -> None:
         ("minecraft:lever", {"face": "wall", "facing": "east", "powered": "false"}),
         ("minecraft:cherry_slab", {"type": "bottom", "waterlogged": "false"}),
     ]
-    blocks = {(x, y, z): 0 for x in range(house_size[0]) for y in range(house_size[1]) for z in range(house_size[2])}
+    # Clear the house/headroom, not the natural ground around its foundation.
+    # Explicit air at floor height would cut a one-block trench into the grass.
+    blocks = {(x, y, z): 0 for x in range(house_size[0]) for y in range(1, house_size[1]) for z in range(house_size[2])}
 
     # Stone foundation and warm cherry floor.
     for x in range(1, 8):
@@ -114,7 +116,8 @@ def main() -> None:
     blocks[3, 1, 5] = 9
     blocks[4, 1, 5] = 10
 
-    # Preserve every original above-ground cell, including explicit exterior air.
+    # Preserve the modeled house and explicit air above its floor, while absent
+    # exterior floor cells leave the surrounding grass/soil untouched.
     # The only floor replacement is the hidden trapdoor below the existing carpet.
     blocks = {(x, y + house_offset_y, z): state for (x, y, z), state in blocks.items()}
     blocks[2, house_offset_y, 2] = 13

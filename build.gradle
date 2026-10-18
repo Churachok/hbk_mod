@@ -48,6 +48,56 @@ fabricApi {
 	}
 }
 
+// Loom adds this string dependency automatically. Keep compilation/checks in build,
+// but start the Minecraft test server only when runGameTest is requested explicitly.
+tasks.named('check') {
+	setDependsOn(dependsOn.findAll { it != 'runGameTest' })
+	dependsOn tasks.named('gametestClasses')
+}
+
+def gameTestProfiles = [
+	all: null,
+	kitchen: 'kitchen_game_tests_*',
+	blood: 'liberal_blood_game_tests_*',
+	beer: 'beer_game_tests_*',
+	jagermeister: 'jagermeister_game_tests_*',
+	hunters_instinct: 'hunters_instinct_game_tests_*',
+	npc: 'npc_game_tests_*',
+	furry: 'furry_syringe_game_tests_*',
+	members: 'member_game_tests_*',
+	boss: 'boss_game_tests_*',
+	boat: 'improved_boat_game_tests_*',
+	bus: 'soviet_bus_game_tests_*',
+	squirrel: 'squirrel_game_tests_*',
+	sasha: 'sasha_shield_game_tests_*',
+	spawns: 'spawn_and_graveyard_game_tests_*',
+	stalin: 'stalin_dacha_game_tests_*',
+	konata: 'konata_house_game_tests_*',
+	grove_street: 'grove_street_game_tests_*',
+	ruins: 'radioactive_ruin_game_tests_*',
+	worldgen: 'grove_street_game_tests_overworld_sites_remain_frequent_after_terrain_filtering'
+]
+def gameTestProfile = providers.gradleProperty('hbkGameTest').getOrElse('all')
+if (!gameTestProfiles.containsKey(gameTestProfile)) {
+	throw new GradleException("Unknown hbkGameTest '${gameTestProfile}'. Choose: ${gameTestProfiles.keySet().join(', ')}")
+}
+def gameTestFilter = providers.gradleProperty('hbkGameTestFilter').orNull
+if (gameTestFilter != null && providers.gradleProperty('hbkGameTest').isPresent()) {
+	throw new GradleException('Choose either hbkGameTest or hbkGameTestFilter, not both')
+}
+if (gameTestFilter != null && !(gameTestFilter ==~ /[a-z0-9_.:\/?*-]+/)) {
+	throw new GradleException('hbkGameTestFilter must be a non-empty Minecraft identifier/glob (* and ? are supported)')
+}
+if (gameTestFilter == null && gameTestProfiles[gameTestProfile] != null) {
+	gameTestFilter = "hbk_npc_tests:${gameTestProfiles[gameTestProfile]}"
+}
+tasks.named('runGameTest', JavaExec) {
+	if (gameTestFilter != null) systemProperty 'fabric-api.gametest.filter', gameTestFilter
+	doFirst {
+		logger.lifecycle("HBK GameTests: ${gameTestFilter ?: 'all (including heavy world generation)'}")
+	}
+}
+
 tasks.named('runClientGameTest', JavaExec) {
 	systemProperty 'hbk.client.gametest', providers.gradleProperty('hbkClientTest').getOrElse('all')
 }

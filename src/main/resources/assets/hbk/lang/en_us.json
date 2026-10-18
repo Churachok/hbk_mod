@@ -1,4 +1,6 @@
 {
+	"item.hbk.furry_syringe": "Furry Syringe",
+	"item.hbk.furry_syringe.tooltip": "Use: a random furry color for 5 minutes or until death",
 	"entity.hbk.squirrel": "Squirrel",
 	"item.hbk.beer_bottle": "Beer Bottle",
 	"item.hbk.jagermeister_bottle": "Jägermeister",

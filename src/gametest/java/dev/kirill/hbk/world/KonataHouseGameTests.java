@@ -23,6 +23,9 @@ import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.NoiseColumn;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
@@ -30,7 +33,15 @@ import net.minecraft.world.level.block.state.properties.AttachFace;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
+import net.minecraft.world.level.levelgen.FlatLevelSource;
+import net.minecraft.world.level.levelgen.Heightmap;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.flat.FlatLayerInfo;
+import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
@@ -42,10 +53,208 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.IntBinaryOperator;
 
 public final class KonataHouseGameTests {
+	private static final ChunkPos TERRAIN_CHUNK = new ChunkPos(7, -5);
+	private static final int FLAT_SURFACE = 128;
+
+	@GameTest
+	public void exteriorGroundSurvivesHousePlacementWithoutATrench(GameTestHelper test) {
+		var level = test.getLevel();
+		var structure = terrainStructure(test);
+		var rotations = EnumSet.noneOf(Rotation.class);
+		var fixtureChunk = ChunkPos.containing(origin(test, 6, Rotation.NONE));
+		for (long seed = 0; seed < 64 && rotations.size() < Rotation.values().length; seed++) {
+			var flat = terrainContext(test, seed, (x, z) -> FLAT_SURFACE, (x, z) -> FLAT_SURFACE);
+			var context = new Structure.GenerationContext(flat.registryAccess(), flat.chunkGenerator(), flat.biomeSource(),
+					flat.randomState(), flat.structureTemplateManager(), seed, fixtureChunk, flat.heightAccessor(), flat.validBiome());
+			var stub = structure.findValidGenerationPoint(context).orElseThrow();
+			var piece = onlyTerrainPiece(test, stub);
+			var rotation = piece.getRotation();
+			if (!rotations.add(rotation)) continue;
+			var origin = piece.getPosition();
+			var box = piece.getBoundingBox();
+			var fixture = new BoundingBox(box.minX() - 1, box.minY(), box.minZ() - 1,
+					box.maxX() + 1, box.maxY(), box.maxZ() + 1);
+			int groundY = FLAT_SURFACE - 1;
+			try {
+				for (var pos : BlockPos.betweenClosed(fixture.minX(), fixture.minY(), fixture.minZ(),
+						fixture.maxX(), fixture.maxY(), fixture.maxZ())) {
+					level.setBlock(pos, pos.getY() < groundY ? Blocks.STONE.defaultBlockState()
+							: pos.getY() == groundY ? Blocks.GRASS_BLOCK.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+				}
+				level.setBlock(at(origin, rotation, 0, 11, 0), Blocks.MOSS_BLOCK.defaultBlockState(), 2);
+				level.setBlock(at(origin, rotation, 0, 12, 0), Blocks.STONE.defaultBlockState(), 2);
+				level.setBlock(at(origin, rotation, 4, 13, 3), Blocks.STONE.defaultBlockState(), 2);
+				piece.postProcess(level, level.structureManager(), context.chunkGenerator(), RandomSource.create(seed),
+						fixture, fixtureChunk, stub.position());
+				for (int x = 0; x <= 8; x++) {
+					for (int z = 0; z <= 8; z++) {
+						if (x != 0 && x != 8 && z != 0 && z != 8) continue;
+						if (z == 0 && x >= 3 && x <= 5) continue; // The porch deliberately replaces the surface.
+						test.assertTrue(level.getBlockState(at(origin, rotation, x, 11, z))
+								.is(x == 0 && z == 0 ? Blocks.MOSS_BLOCK : Blocks.GRASS_BLOCK),
+								"Every unused exterior floor cell must retain existing terrain instead of carving a one-block trench");
+					}
+				}
+				for (int x = 3; x <= 5; x++) {
+					var porch = at(origin, rotation, x, 11, 0);
+					test.assertTrue(porch.getY() == groundY && level.getBlockState(porch).is(Blocks.CHERRY_PLANKS),
+							"The cherry porch must still replace its intended cells flush with the surrounding grass");
+				}
+				test.assertTrue(level.getBlockState(at(origin, rotation, 0, 12, 0)).isAir()
+						&& level.getBlockState(at(origin, rotation, 4, 13, 3)).isAir()
+						&& level.getBlockState(at(origin, rotation, 4, 2, 3)).isAir()
+						&& level.getBlockState(at(origin, rotation, 4, 0, 3)).is(Blocks.CHERRY_PLANKS),
+						"Preserving exterior ground must not disable above-ground clearance, interior air or basement carving");
+			} finally {
+				clear(level, fixture);
+			}
+		}
+		test.assertTrue(rotations.size() == Rotation.values().length, "The no-trench regression must place all four generated rotations");
+		test.succeed();
+	}
+
+	@GameTest
+	public void generatedHouseFloorAndEntranceMatchDryGroundInEverySavedRotation(GameTestHelper test) {
+		var structure = terrainStructure(test);
+		var rotations = EnumSet.noneOf(Rotation.class);
+		var template = test.getLevel().getStructureManager().get(HbkMod.id("konata_house")).orElseThrow();
+		var serialization = StructurePieceSerializationContext.fromLevel(test.getLevel());
+		for (long seed = 0; seed < 64 && rotations.size() < Rotation.values().length; seed++) {
+			var stub = structure.findValidGenerationPoint(terrainContext(test, seed, (x, z) -> FLAT_SURFACE,
+					(x, z) -> FLAT_SURFACE)).orElseThrow();
+			var piece = onlyTerrainPiece(test, stub);
+			rotations.add(piece.getRotation());
+			var box = piece.getBoundingBox();
+			int floorY = piece.getPosition().getY() + 11;
+			test.assertTrue(floorY == FLAT_SURFACE - 1 && piece.getGroundLevelDelta() == 12
+					&& stub.position().getY() == floorY + 1
+					&& box.minX() == TERRAIN_CHUNK.getMinBlockX() + 4 && box.minZ() == TERRAIN_CHUNK.getMinBlockZ() + 4
+					&& box.getXSpan() == 9 && box.getYSpan() == 18 && box.getZSpan() == 9,
+					"Natural generation must place the upstairs floor at the terrain block, not bury it, while retaining the complete basement bounds");
+			var settings = new StructurePlaceSettings().setRotation(piece.getRotation());
+			var doors = template.filterBlocks(piece.getPosition(), settings, Blocks.CHERRY_DOOR);
+			test.assertTrue(doors.size() == 2
+					&& doors.stream().anyMatch(info -> info.pos().equals(at(piece.getPosition(), piece.getRotation(), 4, 12, 1))
+							&& info.pos().getY() == floorY + 1)
+					&& doors.stream().anyMatch(info -> info.pos().getY() == floorY + 2)
+					&& template.filterBlocks(piece.getPosition(), settings, Blocks.CHERRY_PLANKS).stream()
+							.anyMatch(info -> info.pos().equals(at(piece.getPosition(), piece.getRotation(), 4, 11, 0))
+									&& info.pos().getY() == FLAT_SURFACE - 1),
+					"The real NBT door and porch must meet the outside walking surface in every generated rotation");
+			var restored = new PoolElementStructurePiece(serialization, piece.createTag(serialization));
+			test.assertTrue(restored.getPosition().equals(piece.getPosition()) && restored.getRotation() == piece.getRotation()
+					&& restored.getBoundingBox().equals(box) && restored.getGroundLevelDelta() == 12
+					&& restored.getElement().getType() == StructurePoolElementType.SINGLE,
+					"Native structure serialization must preserve the rotated origin, full basement and upstairs beard height");
+		}
+		test.assertTrue(rotations.size() == Rotation.values().length, "The controlled world-generation seeds must cover all four real rotations");
+		test.succeed();
+	}
+
+	@GameTest
+	public void naturalGenerationRejectsWaterAcrossTheSiteAtACornerAndBesideTheEntrance(GameTestHelper test) {
+		var structure = terrainStructure(test);
+		int cornerX = TERRAIN_CHUNK.getMinBlockX() + 4;
+		int cornerZ = TERRAIN_CHUNK.getMinBlockZ() + 4;
+		int entranceX = TERRAIN_CHUNK.getMinBlockX() + 8;
+		int entranceZ = TERRAIN_CHUNK.getMinBlockZ() + 3;
+		List<IntBinaryOperator> wetGrounds = List.of((x, z) -> FLAT_SURFACE - 3,
+				(x, z) -> x == cornerX && z == cornerZ ? FLAT_SURFACE - 1 : FLAT_SURFACE,
+				(x, z) -> x == entranceX && z == entranceZ ? FLAT_SURFACE - 1 : FLAT_SURFACE);
+		for (var oceanFloor : wetGrounds) {
+			for (long seed = 0; seed < 4; seed++) {
+				test.assertTrue(structure.findValidGenerationPoint(terrainContext(test, seed,
+						(x, z) -> FLAT_SURFACE, oceanFloor)).isEmpty(),
+						"Water anywhere under the house or its approach ring must reject the site, even when the sampled centre is dry");
+			}
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void gentleTerrainUsesItsHighestGroundButLargerReliefCannotBuryTheHouse(GameTestHelper test) {
+		var structure = terrainStructure(test);
+		int middleX = TERRAIN_CHUNK.getMinBlockX() + 8;
+		IntBinaryOperator gentle = (x, z) -> FLAT_SURFACE + (x >= middleX ? 1 : 0);
+		IntBinaryOperator steep = (x, z) -> FLAT_SURFACE + (x >= middleX ? 2 : 0);
+		for (long seed = 0; seed < 8; seed++) {
+			var stub = structure.findValidGenerationPoint(terrainContext(test, seed, gentle, gentle)).orElseThrow();
+			var piece = onlyTerrainPiece(test, stub);
+			int floorY = piece.getPosition().getY() + 11;
+			test.assertTrue(floorY == FLAT_SURFACE && stub.position().getY() == FLAT_SURFACE + 1,
+					"One-block relief must remain eligible and align the floor with the highest ground instead of burying the entrance");
+			var box = piece.getBoundingBox();
+			for (int x = box.minX() - 1; x <= box.maxX() + 1; x++) {
+				for (int z = box.minZ() - 1; z <= box.maxZ() + 1; z++) {
+					test.assertTrue(floorY >= gentle.applyAsInt(x, z) - 1,
+							"No surrounding terrain or approach column may reach above the generated upstairs floor");
+				}
+			}
+			test.assertTrue(structure.findValidGenerationPoint(terrainContext(test, seed, steep, steep)).isEmpty(),
+					"Relief greater than one block must reject the site rather than bury part of the nine-by-nine house");
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void naturalGenerationKeepsTheEntireBasementAndRoofInsideDimensionBounds(GameTestHelper test) {
+		var structure = terrainStructure(test);
+		for (int height : new int[] {test.getLevel().getMinY() + 10, test.getLevel().getMaxY() - 4}) {
+			test.assertTrue(structure.findValidGenerationPoint(terrainContext(test, 4,
+					(x, z) -> height, (x, z) -> height)).isEmpty(),
+					"Reject a site if its unchanged eighteen-block template would clip the basement or roof outside the dimension");
+		}
+		test.succeed();
+	}
+
+	private static Structure terrainStructure(GameTestHelper test) {
+		return test.getLevel().registryAccess().lookupOrThrow(Registries.STRUCTURE)
+				.getOrThrow(ResourceKey.create(Registries.STRUCTURE, HbkMod.id("konata_house"))).value();
+	}
+
+	private static Structure.GenerationContext terrainContext(GameTestHelper test, long seed,
+			IntBinaryOperator surface, IntBinaryOperator oceanFloor) {
+		var level = test.getLevel();
+		var settings = new FlatLevelGeneratorSettings(Optional.empty(),
+				level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS), List.of());
+		settings.getLayersInfo().add(new FlatLayerInfo(FLAT_SURFACE - level.getMinY(), Blocks.STONE));
+		settings.updateLayers();
+		var generator = new FlatLevelSource(settings) {
+			@Override
+			public int getBaseHeight(int x, int z, Heightmap.Types type, LevelHeightAccessor height, RandomState random) {
+				return type == Heightmap.Types.OCEAN_FLOOR_WG || type == Heightmap.Types.OCEAN_FLOOR
+						? oceanFloor.applyAsInt(x, z) : surface.applyAsInt(x, z);
+			}
+
+			@Override
+			public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor height, RandomState random) {
+				var blocks = new net.minecraft.world.level.block.state.BlockState[Math.max(0, surface.applyAsInt(x, z) - height.getMinY())];
+				for (int y = 0; y < blocks.length; y++) {
+					blocks[y] = height.getMinY() + y < oceanFloor.applyAsInt(x, z)
+							? Blocks.STONE.defaultBlockState() : Blocks.WATER.defaultBlockState();
+				}
+				return new NoiseColumn(height.getMinY(), blocks);
+			}
+		};
+		return new Structure.GenerationContext(level.registryAccess(), generator, generator.getBiomeSource(),
+				level.getChunkSource().randomState(), level.getStructureManager(), seed, TERRAIN_CHUNK, level,
+				terrainStructure(test).biomes()::contains);
+	}
+
+	private static PoolElementStructurePiece onlyTerrainPiece(GameTestHelper test, Structure.GenerationStub stub) {
+		var pieces = stub.getPiecesBuilder().build().pieces();
+		test.assertTrue(pieces.size() == 1 && pieces.getFirst() instanceof PoolElementStructurePiece,
+				"Natural Konata generation must retain one native pool piece for existing population and saved worlds");
+		return (PoolElementStructurePiece) pieces.getFirst();
+	}
+
 	@GameTest
 	public void rotatedHouseCarvesTheRoomButPreservesSoilAroundItsHiddenShaft(GameTestHelper test) {
 		var level = test.getLevel();

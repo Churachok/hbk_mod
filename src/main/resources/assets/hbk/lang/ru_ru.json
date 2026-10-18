@@ -1,4 +1,6 @@
 {
+	"item.hbk.furry_syringe": "Шприц фурри",
+	"item.hbk.furry_syringe.tooltip": "ПКМ: случайный цвет фурри на 5 минут или до смерти",
 	"entity.hbk.squirrel": "Белка",
 	"item.hbk.beer_bottle": "Бутылка пива",
 	"item.hbk.jagermeister_bottle": "Jägermeister",

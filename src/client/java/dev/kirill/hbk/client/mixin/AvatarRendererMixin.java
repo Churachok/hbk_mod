@@ -2,6 +2,7 @@ package dev.kirill.hbk.client.mixin;
 
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.client.ProgenitorClientState;
+import dev.kirill.hbk.client.FurryPlayerClientState;
 import dev.kirill.hbk.registry.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -10,6 +11,7 @@ import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.client.model.geom.ModelPart;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Avatar;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -28,6 +30,16 @@ public abstract class AvatarRendererMixin {
 			cir.setReturnValue(HBK_PROGENITOR_SKIN);
 		} else if (state.chestEquipment.is(ModItems.WESTERN_CHESTPLATE)) {
 			cir.setReturnValue(HBK_BLACK_SKIN);
+		} else if (FurryPlayerClientState.isActive(state)) {
+			cir.setReturnValue(FurryPlayerClientState.texture(FurryPlayerClientState.getColorId(state)));
+		}
+	}
+
+	@Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
+	private void hbk$hideHumanCapeOnWolf(Avatar player, AvatarRenderState state, float tickProgress, CallbackInfo ci) {
+		if (FurryPlayerClientState.isActive(state)) {
+			state.showCape = false;
+			state.showExtraEars = false;
 		}
 	}
 
@@ -43,6 +55,9 @@ public abstract class AvatarRendererMixin {
 			Identifier texture, ModelPart arm, boolean rightHand, CallbackInfo ci) {
 		var player = Minecraft.getInstance().player;
 		if (player != null && dev.kirill.hbk.mechanic.ProgenitorTransformation.isActive(player)) {
+			ci.cancel();
+		} else if (player != null && FurryPlayerClientState.renderFirstPersonHand(player,
+				arm == ((AvatarRenderer<?>) (Object) this).getModel().rightArm, poseStack, collector, light)) {
 			ci.cancel();
 		}
 	}
