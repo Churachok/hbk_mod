@@ -27,6 +27,7 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 			case "hunters_instinct" -> new HuntersInstinctClientGameTest().runTest(context);
 			case "furry" -> new FurrySyringeClientGameTest().runTest(context);
 			case "jagermeister_jei" -> new JeiJagermeisterClientGameTest().runTest(context);
+			case "rofl" -> new RoflClientGameTest().runTest(context);
 			case "all" -> {
 				new KitchenClientGameTest().runTest(context);
 				new LiberalBloodClientGameTest().runTest(context);
@@ -38,8 +39,9 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 				new KonataHouseClientGameTest().runTest(context);
 				new BusClientGameTest().runTest(context);
 				new FlyingCarpetClientGameTest().runTest(context);
+				new RoflClientGameTest().runTest(context);
 			}
-			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, furry, jagermeister_jei or all");
+			default -> throw new IllegalArgumentException("hbkClientTest must be kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, furry, jagermeister_jei, rofl or all");
 		}
 	}
 

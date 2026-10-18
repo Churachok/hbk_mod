@@ -7,6 +7,7 @@
 		"AdvancementMixin",
 		"BlockStateBaseMixin",
 		"CauldronDispatcherAccessor",
+		"EntityRoflBounceMixin",
 		"LivingEntityDamageMixin",
 		"HuntersInstinctMixin",
 		"LivingEntitySpinMixin",

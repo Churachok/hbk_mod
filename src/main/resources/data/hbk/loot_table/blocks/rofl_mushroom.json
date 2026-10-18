@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:block",
+  "pools": [{
+    "rolls": 1,
+    "conditions": [{"condition": "minecraft:survives_explosion"}],
+    "entries": [{
+      "type": "minecraft:alternatives",
+      "children": [
+        {
+          "type": "minecraft:item",
+          "name": "hbk:rofl_mushroom",
+          "conditions": [{"condition": "minecraft:match_tool", "predicate": {"items": "minecraft:shears"}}]
+        },
+        {"type": "minecraft:item", "name": "hbk:rofl_block"}
+      ]
+    }]
+  }],
+  "random_sequence": "hbk:blocks/rofl_mushroom"
+}

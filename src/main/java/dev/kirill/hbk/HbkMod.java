@@ -25,6 +25,7 @@ import dev.kirill.hbk.world.ReferenceNpcSpawning;
 import dev.kirill.hbk.world.UnknownEncounter;
 import dev.kirill.hbk.world.SquirrelEncounter;
 import dev.kirill.hbk.world.SovietBusEvent;
+import dev.kirill.hbk.world.RoflMushroomGeneration;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
 import net.fabricmc.api.ModInitializer;
 import net.minecraft.resources.Identifier;
@@ -53,6 +54,7 @@ public class HbkMod implements ModInitializer {
 		FuelValueEvents.BUILD.register((builder, context) -> builder.add(ModItems.URANIUM_235, 600 * 20));
 		ModLoot.register();
 		ReferenceNpcSpawning.register();
+		RoflMushroomGeneration.register();
 		ModNetworking.register();
 		ModMechanics.register();
 		HuntersInstinct.register();
