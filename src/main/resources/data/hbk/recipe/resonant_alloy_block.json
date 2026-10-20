@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": "hbk:resonant_alloy_ingot"
+  },
+  "result": {
+    "id": "hbk:resonant_alloy_block"
+  }
+}

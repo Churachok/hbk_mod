@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:labyrinthine_shard",
+    "hbk:labyrinthine_shard",
+    "hbk:labyrinthine_shard",
+    "hbk:labyrinthine_shard"
+  ],
+  "result": {
+    "id": "hbk:labyrinthine_mineral",
+    "count": 1
+  }
+}

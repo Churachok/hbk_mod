@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sedimentary_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:sedimentary_shard"
+          }
+        ]
+      }
+    },
+    "has_sedimentary_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:sedimentary_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sedimentary_shard",
+      "has_sedimentary_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:sedimentary_mineral"
+    ]
+  }
+}

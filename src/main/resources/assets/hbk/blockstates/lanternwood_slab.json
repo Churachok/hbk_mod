@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/lanternwood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/lanternwood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/lanternwood_planks"
+    }
+  }
+}

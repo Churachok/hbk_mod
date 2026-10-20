@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.registry.ModGameRules;
 import dev.kirill.hbk.world.GulagPlacer;
+import dev.kirill.hbk.world.AnomalyZones;
 import dev.kirill.hbk.world.UnknownEncounter;
 import dev.kirill.hbk.world.SquirrelEncounter;
 import dev.kirill.hbk.world.SovietBusEvent;
@@ -28,6 +29,10 @@ public final class ModCommands {
 
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
+			dispatcher.register(Commands.literal("anomaly")
+					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.then(Commands.literal("locate").then(Commands.argument("number", IntegerArgumentType.integer(1, AnomalyZones.TYPE_COUNT))
+							.executes(ctx -> locateAnomaly(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "number"))))));
 			dispatcher.register(Commands.literal("bus")
 					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 					.executes(ctx -> startBus(ctx.getSource(), ctx.getSource().getPlayerOrException()))
@@ -60,6 +65,20 @@ public final class ModCommands {
 							.executes(ctx -> startSquirrel(ctx.getSource(), EntityArgument.getPlayer(ctx, "player"))))
 			);
 		});
+	}
+
+	private static int locateAnomaly(CommandSourceStack source, int number) {
+		if (!source.getLevel().dimension().equals(Level.OVERWORLD)) {
+			source.sendFailure(Component.translatable("commands.hbk.anomaly.overworld"));
+			return 0;
+		}
+		var zone = AnomalyZones.nearest(
+				AnomalyZones.layoutSeed(source.getLevel().getSeed()),
+				(int) source.getPosition().x, (int) source.getPosition().z, number);
+		if (zone == null) return 0;
+		source.sendSuccess(() -> Component.translatable("commands.hbk.anomaly.found", number,
+				zone.centerX(), zone.centerZ()), false);
+		return 1;
 	}
 
 	private static int startSquirrel(CommandSourceStack source, ServerPlayer player) {

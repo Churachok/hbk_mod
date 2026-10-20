@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:shardwood_slab",
+    "count": 6
+  },
+  "pattern": [
+    "PPP"
+  ],
+  "key": {
+    "P": "hbk:shardwood_planks"
+  }
+}

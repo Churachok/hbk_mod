@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_stairs",
+    "hbk:sailwood_stairs",
+    "hbk:chordwood_stairs",
+    "hbk:lanternwood_stairs",
+    "hbk:knotwood_stairs",
+    "hbk:siltwood_stairs",
+    "hbk:loopwood_stairs",
+    "hbk:shardwood_stairs",
+    "hbk:pendantwood_stairs",
+    "hbk:terracewood_stairs"
+  ]
+}

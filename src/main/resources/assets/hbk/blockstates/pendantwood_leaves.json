@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hbk:block/pendantwood_leaves",
+        "weight": 3
+      },
+      {
+        "model": "hbk:block/pendantwood_leaves_alt"
+      }
+    ]
+  }
+}

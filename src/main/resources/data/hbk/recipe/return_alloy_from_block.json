@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:return_alloy_block"
+  ],
+  "result": {
+    "id": "hbk:return_alloy_ingot",
+    "count": 9
+  }
+}

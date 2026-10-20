@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:netherite_upgrade_smithing_template",
+  "base": "minecraft:netherite_ingot",
+  "addition": "hbk:lantern_alloy_ingot",
+  "result": {
+    "id": "hbk:growth_lamp"
+  }
+}

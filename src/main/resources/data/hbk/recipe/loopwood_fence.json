@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:loopwood_fence",
+    "count": 3
+  },
+  "pattern": [
+    "PSP",
+    "PSP"
+  ],
+  "key": {
+    "P": "hbk:loopwood_planks",
+    "S": "minecraft:stick"
+  }
+}

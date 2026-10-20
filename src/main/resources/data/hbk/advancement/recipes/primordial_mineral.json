@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_primordial_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:primordial_shard"
+          }
+        ]
+      }
+    },
+    "has_primordial_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:primordial_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_primordial_shard",
+      "has_primordial_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:primordial_mineral"
+    ]
+  }
+}

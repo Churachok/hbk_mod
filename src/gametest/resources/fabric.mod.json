@@ -5,8 +5,11 @@
 	"name": "HBK NPC behavior tests",
 	"environment": "*",
 	"entrypoints": {
-		"fabric-client-gametest": ["dev.kirill.hbk.HbkClientGameTests"],
+		"fabric-client-gametest": [
+			"dev.kirill.hbk.HbkClientGameTests"
+		],
 		"fabric-gametest": [
+			"dev.kirill.hbk.TimeFurnaceGameTests",
 			"dev.kirill.hbk.RoflGameTests",
 			"dev.kirill.hbk.world.SovietBusGameTests",
 			"dev.kirill.hbk.KitchenGameTests",
@@ -21,7 +24,16 @@
 			"dev.kirill.hbk.world.SpawnAndGraveyardGameTests",
 			"dev.kirill.hbk.world.StalinDachaGameTests",
 			"dev.kirill.hbk.world.GroveStreetGameTests",
-			"dev.kirill.hbk.world.feature.RadioactiveRuinGameTests"
+			"dev.kirill.hbk.world.feature.RadioactiveRuinGameTests",
+			"dev.kirill.hbk.world.AnomalyGameTests",
+			"dev.kirill.hbk.UniverseGameTests",
+			"dev.kirill.hbk.UniverseEcologyGameTests",
+			"dev.kirill.hbk.UniverseEquipmentGameTests",
+			"dev.kirill.hbk.UniverseAlloyGameTests",
+			"dev.kirill.hbk.UniverseMinesGameTests"
 		]
-	}
+	},
+	"mixins": [
+		"hbk.gametest.mixins.json"
+	]
 }

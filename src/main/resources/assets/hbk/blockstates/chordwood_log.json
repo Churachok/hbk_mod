@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "hbk:block/chordwood_log"
+    },
+    "axis=x": {
+      "model": "hbk:block/chordwood_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z": {
+      "model": "hbk:block/chordwood_log",
+      "x": 90
+    }
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:sedimentary_shard",
+    "hbk:sedimentary_shard",
+    "hbk:sedimentary_shard",
+    "hbk:sedimentary_shard"
+  ],
+  "result": {
+    "id": "hbk:sedimentary_mineral",
+    "count": 1
+  }
+}

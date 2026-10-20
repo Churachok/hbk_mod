@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:columnar_stone",
+    "hbk:columnar_stone",
+    "hbk:columnar_stone",
+    "hbk:columnar_stone",
+    "hbk:columnar_mineral",
+    "hbk:columnar_mineral",
+    "hbk:columnar_mineral",
+    "hbk:columnar_mineral"
+  ],
+  "result": {
+    "id": "hbk:columnar_formation",
+    "count": 4
+  }
+}

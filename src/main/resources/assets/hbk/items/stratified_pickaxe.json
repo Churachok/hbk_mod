@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "hbk:item/stratified_pickaxe",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -4668726
+      }
+    ]
+  }
+}

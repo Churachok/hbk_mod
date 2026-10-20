@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/botany/siltwood_log",
+    "end": "hbk:block/botany/siltwood_log_top"
+  }
+}

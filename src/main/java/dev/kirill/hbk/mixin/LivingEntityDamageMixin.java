@@ -20,6 +20,11 @@ public abstract class LivingEntityDamageMixin {
 	private void hbk$protectPipeGuardBystanders(ServerLevel level, DamageSource source, float amount,
 			CallbackInfoReturnable<Boolean> result) {
 		LivingEntity victim = (LivingEntity) (Object) this;
+		if (source.is(net.minecraft.world.damagesource.DamageTypes.FALL)
+				&& dev.kirill.hbk.world.AnomalyZones.contains(victim)) {
+			result.setReturnValue(false);
+			return;
+		}
 		if (source.getEntity() instanceof NkvdEntity guard && (
 				victim instanceof ReferenceNpcEntity npc && npc.isNpc("grisha")
 						|| guard.isPipeGuard() && !NkvdEntity.isPipeGuardEnemy(victim))) {

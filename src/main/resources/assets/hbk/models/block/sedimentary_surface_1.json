@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/sedimentary_surface_1",
+    "end": "hbk:block/universe/sedimentary_surface_1_top"
+  }
+}

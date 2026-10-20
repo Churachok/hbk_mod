@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hbk:block/knotwood_leaves",
+        "weight": 3
+      },
+      {
+        "model": "hbk:block/knotwood_leaves_alt"
+      }
+    ]
+  }
+}

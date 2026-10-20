@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:cavernous_shard",
+    "hbk:cavernous_shard",
+    "hbk:cavernous_shard",
+    "hbk:cavernous_shard"
+  ],
+  "result": {
+    "id": "hbk:cavernous_mineral",
+    "count": 1
+  }
+}

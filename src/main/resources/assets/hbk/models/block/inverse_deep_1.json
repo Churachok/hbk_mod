@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/inverse_deep_1",
+    "end": "hbk:block/universe/inverse_deep_1_top"
+  }
+}

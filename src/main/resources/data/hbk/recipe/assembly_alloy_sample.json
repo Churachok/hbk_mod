@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/primordial",
+    "#hbk:alloy_materials/fragmented"
+  ],
+  "result": {
+    "id": "hbk:assembly_alloy_sample"
+  }
+}

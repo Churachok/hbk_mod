@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_helmet",
+    "hbk:celestial_helmet",
+    "hbk:columnar_helmet",
+    "hbk:cavernous_helmet",
+    "hbk:woven_helmet",
+    "hbk:sedimentary_helmet",
+    "hbk:labyrinthine_helmet",
+    "hbk:fragmented_helmet",
+    "hbk:inverse_helmet",
+    "hbk:stratified_helmet",
+    "hbk:mining_helmet",
+    "hbk:hermetic_helmet"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/terracewood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/terracewood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/terracewood_planks"
+    }
+  }
+}

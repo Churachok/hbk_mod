@@ -38,7 +38,8 @@ public abstract class AbstractFurnaceBlockEntityMixin {
 		int base = recipe.get().value().cookingTime();
 		boolean uranium = self.litTimeRemaining > 1 && self.litTotalTime == 600 * 20
 				|| self.litTimeRemaining <= 1 && self.items.get(1).is(ModItems.URANIUM_235);
-		int desired = base * (uranium ? 4 : 1);
+		boolean washed = furnace instanceof net.minecraft.world.level.block.entity.BlastFurnaceBlockEntity && dev.kirill.hbk.universe.AlloyActions.number(input, "washed", 0) == 1;
+		int desired = Math.max(1, base * (uranium ? 4 : 1) / (washed ? 2 : 1));
 		if (self.cookingTotalTime != desired) {
 			self.cookingTimer = self.cookingTotalTime > 0
 					? self.cookingTimer * desired / self.cookingTotalTime : 0;

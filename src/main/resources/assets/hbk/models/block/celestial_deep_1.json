@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/celestial_deep_1",
+    "end": "hbk:block/universe/celestial_deep_1_top"
+  }
+}

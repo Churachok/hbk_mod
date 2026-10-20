@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fragmented_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:fragmented_stone"
+          }
+        ]
+      }
+    },
+    "has_fragmented_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:fragmented_mineral"
+          }
+        ]
+      }
+    },
+    "has_fragmented_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:fragmented_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fragmented_stone",
+      "has_fragmented_mineral",
+      "has_fragmented_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:fragmented_formation"
+    ]
+  }
+}

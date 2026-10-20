@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:primordial_stone",
+    "hbk:primordial_stone",
+    "hbk:primordial_stone",
+    "hbk:primordial_stone",
+    "hbk:primordial_mineral",
+    "hbk:primordial_mineral",
+    "hbk:primordial_mineral",
+    "hbk:primordial_mineral"
+  ],
+  "result": {
+    "id": "hbk:primordial_formation",
+    "count": 4
+  }
+}

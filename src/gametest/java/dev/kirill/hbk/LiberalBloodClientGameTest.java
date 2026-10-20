@@ -84,7 +84,7 @@ public final class LiberalBloodClientGameTest implements FabricClientGameTest {
 			context.takeScreenshot("hbk-liberal-night-flowers");
 			var guide = context.computeOnClient(client -> new BookViewScreen(BookViewScreen.BookAccess.fromItem(GraveyardRecipeBook.create())));
 			context.setScreen(() -> guide);
-			context.runOnClient(client -> guide.setPage(1 + GraveyardRecipeBook.RECIPES.size()
+			context.runOnClient(client -> guide.setPage(1 + GraveyardRecipeBook.DIAGRAM_RECIPES.size()
 					+ GraveyardRecipeBook.INFO_PAGES.indexOf("liberal_blood")));
 			context.waitTicks(3);
 			context.takeScreenshot("hbk-liberal-guide");

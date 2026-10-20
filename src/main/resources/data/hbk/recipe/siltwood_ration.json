@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:siltwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:siltwood_fruit",
+    "hbk:siltwood_fruit",
+    "minecraft:wheat",
+    "hbk:sedimentary_mineral"
+  ]
+}

@@ -2,12 +2,14 @@ package dev.kirill.hbk.registry;
 
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.block.StrangeChestBlock;
+import dev.kirill.hbk.block.TimeFurnaceBlock;
 import dev.kirill.hbk.block.ToxicWaterBlock;
 import dev.kirill.hbk.block.WastelandPlantBlock;
 import dev.kirill.hbk.block.BloodySpermBlock;
 import dev.kirill.hbk.block.SpermBlock;
 import dev.kirill.hbk.block.RoflBlock;
 import dev.kirill.hbk.block.RoflMushroomBlock;
+import dev.kirill.hbk.block.FracturedBlock;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -22,6 +24,14 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.util.ColorRGBA;
 
 public final class ModBlocks {
+	public static final Block TIME_FURNACE = register("time_furnace", properties -> new TimeFurnaceBlock(properties
+			.mapColor(MapColor.STONE).strength(3.5f).requiresCorrectToolForDrops().sound(SoundType.STONE)
+			.noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
+	public static final Block FRACTURED_BLOCK = register("fractured_block", properties -> new FracturedBlock(properties
+			.mapColor(MapColor.COLOR_LIGHT_BLUE).strength(3.0f, 12.0f).sound(SoundType.AMETHYST)
+			.noOcclusion().lightLevel(state -> 15).emissiveRendering(state -> true)
+			.isSuffocating((state, level, pos) -> false).isViewBlocking((state, level, pos) -> false)
+			.pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
 	public static final Block ROFL_BLOCK = register("rofl_block", properties -> new RoflBlock(properties
 			.mapColor(MapColor.COLOR_YELLOW).strength(0.3f).sound(SoundType.SLIME_BLOCK)));
 	public static final Block ROFL_MUSHROOM = register("rofl_mushroom", properties -> new RoflMushroomBlock(properties

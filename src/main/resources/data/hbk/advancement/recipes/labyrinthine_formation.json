@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_labyrinthine_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:labyrinthine_stone"
+          }
+        ]
+      }
+    },
+    "has_labyrinthine_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:labyrinthine_mineral"
+          }
+        ]
+      }
+    },
+    "has_labyrinthine_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:labyrinthine_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_labyrinthine_stone",
+      "has_labyrinthine_mineral",
+      "has_labyrinthine_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:labyrinthine_formation"
+    ]
+  }
+}

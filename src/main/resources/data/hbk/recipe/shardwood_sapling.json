@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:shardwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:shardwood_fruit",
+    "hbk:fragmented_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": "hbk:trail_steel_ingot"
+  },
+  "result": {
+    "id": "hbk:trail_steel_block"
+  }
+}

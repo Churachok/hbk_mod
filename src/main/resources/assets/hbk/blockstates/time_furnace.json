@@ -1,0 +1,36 @@
+{
+  "variants": {
+    "facing=north,half=lower": {
+      "model": "hbk:block/time_furnace_body",
+      "y": 0
+    },
+    "facing=north,half=upper": {
+      "model": "hbk:block/time_furnace_chimney",
+      "y": 0
+    },
+    "facing=east,half=lower": {
+      "model": "hbk:block/time_furnace_body",
+      "y": 90
+    },
+    "facing=east,half=upper": {
+      "model": "hbk:block/time_furnace_chimney",
+      "y": 90
+    },
+    "facing=south,half=lower": {
+      "model": "hbk:block/time_furnace_body",
+      "y": 180
+    },
+    "facing=south,half=upper": {
+      "model": "hbk:block/time_furnace_chimney",
+      "y": 180
+    },
+    "facing=west,half=lower": {
+      "model": "hbk:block/time_furnace_body",
+      "y": 270
+    },
+    "facing=west,half=upper": {
+      "model": "hbk:block/time_furnace_chimney",
+      "y": 270
+    }
+  }
+}

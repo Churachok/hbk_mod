@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/columnar",
+    "#hbk:alloy_materials/woven"
+  ],
+  "result": {
+    "id": "hbk:spring_steel_sample"
+  }
+}

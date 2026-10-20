@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:primordial_shard",
+    "hbk:primordial_shard",
+    "hbk:primordial_shard",
+    "hbk:primordial_shard"
+  ],
+  "result": {
+    "id": "hbk:primordial_mineral",
+    "count": 1
+  }
+}

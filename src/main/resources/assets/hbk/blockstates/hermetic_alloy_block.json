@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hbk:block/hermetic_alloy_block"
+    }
+  }
+}

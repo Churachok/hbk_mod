@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "variant=0": {
+      "model": "hbk:block/columnar_surface_0"
+    },
+    "variant=1": {
+      "model": "hbk:block/columnar_surface_1"
+    },
+    "variant=2": {
+      "model": "hbk:block/columnar_surface_2"
+    },
+    "variant=3": {
+      "model": "hbk:block/columnar_surface_3"
+    }
+  }
+}

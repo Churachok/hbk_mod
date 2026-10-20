@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/columnar",
+    "#hbk:alloy_materials/stratified"
+  ],
+  "result": {
+    "id": "hbk:riveted_steel_sample"
+  }
+}

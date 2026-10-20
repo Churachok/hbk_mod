@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/shardwood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/shardwood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/shardwood_planks"
+    }
+  }
+}

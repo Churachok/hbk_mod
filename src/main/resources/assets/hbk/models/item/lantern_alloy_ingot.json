@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hbk:item/alloys/lantern_alloy_ingot"
+  }
+}

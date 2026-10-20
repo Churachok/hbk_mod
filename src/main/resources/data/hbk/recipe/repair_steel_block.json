@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": "hbk:repair_steel_ingot"
+  },
+  "result": {
+    "id": "hbk:repair_steel_block"
+  }
+}

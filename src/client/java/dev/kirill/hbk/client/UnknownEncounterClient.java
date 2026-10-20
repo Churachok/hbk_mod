@@ -162,6 +162,10 @@ public final class UnknownEncounterClient {
 	}
 
 	private static void startMusic(Minecraft client) {
+		if (AnomalyClient.active()) {
+			stopMusic(client);
+			return;
+		}
 		if (activeMusic != null && (activeMusic.isStopped()
 				|| activeMusic.hasStarted() && !client.getSoundManager().isActive(activeMusic))) {
 			activeMusic = null;

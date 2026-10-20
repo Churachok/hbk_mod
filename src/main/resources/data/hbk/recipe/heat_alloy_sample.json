@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/cavernous",
+    "#hbk:alloy_materials/stratified"
+  ],
+  "result": {
+    "id": "hbk:heat_alloy_sample"
+  }
+}

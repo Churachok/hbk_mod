@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hbk:light_bronze_sample",
+  "result": {
+    "id": "hbk:light_bronze_ingot"
+  },
+  "experience": 1.0,
+  "cookingtime": 200
+}

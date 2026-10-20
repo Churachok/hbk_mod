@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/botany/knotwood_log",
+    "end": "hbk:block/botany/knotwood_log_top"
+  }
+}

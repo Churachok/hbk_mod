@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:netherite_upgrade_smithing_template",
+  "base": "minecraft:netherite_helmet",
+  "addition": "hbk:light_steel_ingot",
+  "result": {
+    "id": "hbk:mining_helmet"
+  }
+}

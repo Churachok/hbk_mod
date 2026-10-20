@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/woven_surface_3",
+    "end": "hbk:block/universe/woven_surface_3_top"
+  }
+}

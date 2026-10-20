@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "variant=0": {
+      "model": "hbk:block/woven_stone_0"
+    },
+    "variant=1": {
+      "model": "hbk:block/woven_stone_1"
+    },
+    "variant=2": {
+      "model": "hbk:block/woven_stone_2"
+    },
+    "variant=3": {
+      "model": "hbk:block/woven_stone_3"
+    }
+  }
+}

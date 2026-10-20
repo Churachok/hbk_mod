@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:chordwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:chordwood_fruit",
+    "hbk:chordwood_fruit",
+    "minecraft:wheat",
+    "hbk:columnar_mineral"
+  ]
+}

@@ -80,10 +80,10 @@ public final class KitchenClientGameTest implements FabricClientGameTest {
 			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.RECIPES.indexOf("hard_doshirak_kettle") + 1));
 			context.waitTicks(3);
 			context.takeScreenshot("hbk-noodle-kettle-recipe");
-			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.RECIPES.size() + 2));
+			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.DIAGRAM_RECIPES.size() + 2));
 			context.waitTicks(3);
 			context.takeScreenshot("hbk-funny-button-guide");
-			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.RECIPES.size() + 3));
+			context.runOnClient(client -> guide.setPage(GraveyardRecipeBook.DIAGRAM_RECIPES.size() + 3));
 			context.waitTicks(3);
 			context.takeScreenshot("hbk-dandruff-guide");
 			context.setScreen(() -> null);

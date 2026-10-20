@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_leaves",
+    "hbk:sailwood_leaves",
+    "hbk:chordwood_leaves",
+    "hbk:lanternwood_leaves",
+    "hbk:knotwood_leaves",
+    "hbk:siltwood_leaves",
+    "hbk:loopwood_leaves",
+    "hbk:shardwood_leaves",
+    "hbk:pendantwood_leaves",
+    "hbk:terracewood_leaves"
+  ]
+}

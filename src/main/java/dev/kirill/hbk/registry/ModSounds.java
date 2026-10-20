@@ -19,6 +19,8 @@ public final class ModSounds {
 	public static final SoundEvent MAD_LIBERAL_MUSIC = register("music.mad_liberal");
 	public static final SoundEvent UNKNOWN_MUSIC = register("music.unknown");
 	public static final SoundEvent UNKNOWN_DEATH = register("unknown_death");
+	public static final SoundEvent ANOMALY_GLITCH = register("anomaly_glitch");
+	public static final SoundEvent ANOMALY_AMBIENT = register("anomaly_ambient");
 	public static final SoundEvent KONATA_AMBIENT = register("entity.konata.ambient");
 	public static final SoundEvent KONATA_PUPUE = register("entity.konata.pupue");
 	public static final SoundEvent KONATA_GOOD = register("entity.konata.good");

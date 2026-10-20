@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "hbk:block/alloys/light_bronze_block"
+  }
+}

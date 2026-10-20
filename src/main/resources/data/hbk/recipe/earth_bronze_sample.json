@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/primordial",
+    "#hbk:alloy_materials/sedimentary"
+  ],
+  "result": {
+    "id": "hbk:earth_bronze_sample"
+  }
+}

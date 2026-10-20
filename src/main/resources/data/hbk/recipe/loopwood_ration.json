@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:loopwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:loopwood_fruit",
+    "hbk:loopwood_fruit",
+    "minecraft:wheat",
+    "hbk:labyrinthine_mineral"
+  ]
+}

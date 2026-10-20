@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/foldwood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/foldwood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/foldwood_planks"
+    }
+  }
+}

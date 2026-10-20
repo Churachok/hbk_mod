@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hbk:ramming_steel_sample",
+  "result": {
+    "id": "hbk:ramming_steel_ingot"
+  },
+  "experience": 1.0,
+  "cookingtime": 200
+}

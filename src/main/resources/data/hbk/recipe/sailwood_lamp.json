@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:sailwood_lamp",
+    "count": 4
+  },
+  "pattern": [
+    "PFP",
+    "FMF",
+    "PFP"
+  ],
+  "key": {
+    "P": "hbk:sailwood_planks",
+    "F": "hbk:sailwood_fruit",
+    "M": "hbk:celestial_mineral"
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cavernous_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:cavernous_shard"
+          }
+        ]
+      }
+    },
+    "has_cavernous_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:cavernous_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cavernous_shard",
+      "has_cavernous_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:cavernous_mineral"
+    ]
+  }
+}

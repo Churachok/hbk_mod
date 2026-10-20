@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/columnar",
+    "#hbk:alloy_materials/sedimentary"
+  ],
+  "result": {
+    "id": "hbk:seabed_steel_sample"
+  }
+}

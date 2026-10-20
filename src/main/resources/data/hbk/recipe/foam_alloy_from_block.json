@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:foam_alloy_block"
+  ],
+  "result": {
+    "id": "hbk:foam_alloy_ingot",
+    "count": 9
+  }
+}

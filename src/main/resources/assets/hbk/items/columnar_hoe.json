@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "hbk:item/columnar_hoe",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -7504033
+      }
+    ]
+  }
+}

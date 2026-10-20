@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "hbk:item/fragmented_boots",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -5205558
+      }
+    ]
+  }
+}

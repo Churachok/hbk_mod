@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "phase=material": {
+      "model": "hbk:block/fractured_block"
+    },
+    "phase=phantom": {
+      "model": "hbk:block/fractured_block_phantom"
+    },
+    "phase=displaced": {
+      "model": "hbk:block/fractured_block"
+    }
+  }
+}

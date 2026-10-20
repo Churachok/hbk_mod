@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_sapling",
+    "hbk:sailwood_sapling",
+    "hbk:chordwood_sapling",
+    "hbk:lanternwood_sapling",
+    "hbk:knotwood_sapling",
+    "hbk:siltwood_sapling",
+    "hbk:loopwood_sapling",
+    "hbk:shardwood_sapling",
+    "hbk:pendantwood_sapling",
+    "hbk:terracewood_sapling"
+  ]
+}

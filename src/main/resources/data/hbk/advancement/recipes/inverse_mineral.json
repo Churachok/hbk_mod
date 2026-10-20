@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_inverse_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:inverse_shard"
+          }
+        ]
+      }
+    },
+    "has_inverse_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:inverse_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_inverse_shard",
+      "has_inverse_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:inverse_mineral"
+    ]
+  }
+}

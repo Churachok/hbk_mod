@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "hbk:item/woven_helmet",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -4998031
+      }
+    ]
+  }
+}

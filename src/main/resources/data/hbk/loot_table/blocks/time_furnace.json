@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:block",
+  "pools": [{
+    "rolls": 1,
+    "conditions": [
+      {"condition": "minecraft:survives_explosion"},
+      {"condition": "minecraft:block_state_property", "block": "hbk:time_furnace", "properties": {"half": "lower"}}
+    ],
+    "entries": [{"type": "minecraft:item", "name": "hbk:time_furnace"}]
+  }],
+  "random_sequence": "hbk:blocks/time_furnace"
+}

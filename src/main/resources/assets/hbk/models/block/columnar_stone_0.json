@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/columnar_stone_0",
+    "end": "hbk:block/universe/columnar_stone_0_top"
+  }
+}

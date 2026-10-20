@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:knotwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:knotwood_fruit",
+    "hbk:knotwood_fruit",
+    "minecraft:wheat",
+    "hbk:woven_mineral"
+  ]
+}

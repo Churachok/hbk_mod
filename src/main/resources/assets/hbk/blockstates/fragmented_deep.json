@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "variant=0": {
+      "model": "hbk:block/fragmented_deep_0"
+    },
+    "variant=1": {
+      "model": "hbk:block/fragmented_deep_1"
+    },
+    "variant=2": {
+      "model": "hbk:block/fragmented_deep_2"
+    },
+    "variant=3": {
+      "model": "hbk:block/fragmented_deep_3"
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:fragmented_stone",
+    "hbk:fragmented_stone",
+    "hbk:fragmented_stone",
+    "hbk:fragmented_stone",
+    "hbk:fragmented_mineral",
+    "hbk:fragmented_mineral",
+    "hbk:fragmented_mineral",
+    "hbk:fragmented_mineral"
+  ],
+  "result": {
+    "id": "hbk:fragmented_formation",
+    "count": 4
+  }
+}

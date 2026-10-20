@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:lanternwood_planks",
+    "count": 4
+  },
+  "ingredients": [
+    "#hbk:lanternwood_logs"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:light_bronze_block"
+  ],
+  "result": {
+    "id": "hbk:light_bronze_ingot",
+    "count": 9
+  }
+}

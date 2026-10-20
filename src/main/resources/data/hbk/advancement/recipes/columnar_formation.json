@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_columnar_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:columnar_stone"
+          }
+        ]
+      }
+    },
+    "has_columnar_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:columnar_mineral"
+          }
+        ]
+      }
+    },
+    "has_columnar_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:columnar_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_columnar_stone",
+      "has_columnar_mineral",
+      "has_columnar_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:columnar_formation"
+    ]
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_celestial_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:celestial_stone"
+          }
+        ]
+      }
+    },
+    "has_celestial_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:celestial_mineral"
+          }
+        ]
+      }
+    },
+    "has_celestial_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:celestial_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_celestial_stone",
+      "has_celestial_mineral",
+      "has_celestial_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:celestial_formation"
+    ]
+  }
+}

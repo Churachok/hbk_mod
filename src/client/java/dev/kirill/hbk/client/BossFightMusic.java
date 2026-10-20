@@ -26,7 +26,7 @@ public final class BossFightMusic {
 	}
 
 	private static void tick(Minecraft client) {
-		if (UnknownEncounterClient.isMusicActive()) {
+		if (UnknownEncounterClient.isMusicActive() || AnomalyClient.active()) {
 			stop(client);
 			return;
 		}

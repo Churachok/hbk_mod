@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:netherite_upgrade_smithing_template",
+  "base": "minecraft:netherite_boots",
+  "addition": "hbk:seabed_steel_ingot",
+  "result": {
+    "id": "hbk:diving_boots"
+  }
+}

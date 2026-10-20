@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:foldwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:foldwood_fruit",
+    "hbk:foldwood_fruit",
+    "minecraft:wheat",
+    "hbk:primordial_mineral"
+  ]
+}

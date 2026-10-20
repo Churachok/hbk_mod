@@ -41,11 +41,20 @@ public class HbkMod implements ModInitializer {
 		ModEffects.register();
 		ModSounds.register();
 		ModBlocks.register();
+		dev.kirill.hbk.registry.ModBlockEntities.register();
 		ModFeatures.register();
 		ModStructures.register();
 		ModEntityTypes.register();
 		ModEntityTypes.registerAttributes();
 		ModItems.register();
+		dev.kirill.hbk.universe.UniverseMaterials.register();
+		dev.kirill.hbk.universe.UniverseEquipment.register();
+		dev.kirill.hbk.universe.UniverseBotany.register();
+		dev.kirill.hbk.universe.UniverseAlloys.register();
+		dev.kirill.hbk.universe.UniverseCreativeTab.register();
+		net.minecraft.core.Registry.register(net.minecraft.core.registries.BuiltInRegistries.CHUNK_GENERATOR, id("universe"), dev.kirill.hbk.universe.UniverseChunkGenerator.CODEC);
+		dev.kirill.hbk.universe.UniverseManager.register();
+		dev.kirill.hbk.universe.UniverseCommands.register();
 		ModMenuTypes.register();
 		FuelValueEvents.BUILD.register((builder, context) -> builder.add(ModItems.URANIUM_235, 600 * 20));
 		ModLoot.register();
@@ -56,6 +65,7 @@ public class HbkMod implements ModInitializer {
 		ProgenitorTransformation.register();
 		UraniumArmorEffects.register();
 		ModWorldEvents.register();
+		dev.kirill.hbk.world.AnomalyZones.register();
 		UnknownEncounter.register();
 		SquirrelEncounter.register();
 		SovietBusEvent.register();

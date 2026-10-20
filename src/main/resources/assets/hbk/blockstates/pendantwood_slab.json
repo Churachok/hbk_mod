@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/pendantwood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/pendantwood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/pendantwood_planks"
+    }
+  }
+}

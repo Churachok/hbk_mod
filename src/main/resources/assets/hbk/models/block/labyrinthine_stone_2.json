@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/labyrinthine_stone_2",
+    "end": "hbk:block/universe/labyrinthine_stone_2_top"
+  }
+}

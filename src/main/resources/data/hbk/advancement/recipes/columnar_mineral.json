@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_columnar_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:columnar_shard"
+          }
+        ]
+      }
+    },
+    "has_columnar_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:columnar_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_columnar_shard",
+      "has_columnar_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:columnar_mineral"
+    ]
+  }
+}

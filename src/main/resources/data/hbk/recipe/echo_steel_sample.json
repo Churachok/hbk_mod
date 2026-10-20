@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/cavernous",
+    "#hbk:alloy_materials/labyrinthine"
+  ],
+  "result": {
+    "id": "hbk:echo_steel_sample"
+  }
+}

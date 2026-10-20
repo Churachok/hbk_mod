@@ -1,0 +1,18 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_boots",
+    "hbk:celestial_boots",
+    "hbk:columnar_boots",
+    "hbk:cavernous_boots",
+    "hbk:woven_boots",
+    "hbk:sedimentary_boots",
+    "hbk:labyrinthine_boots",
+    "hbk:fragmented_boots",
+    "hbk:inverse_boots",
+    "hbk:stratified_boots",
+    "hbk:anchor_boots",
+    "hbk:sail_boots",
+    "hbk:diving_boots"
+  ]
+}

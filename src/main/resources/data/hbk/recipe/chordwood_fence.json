@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:chordwood_fence",
+    "count": 3
+  },
+  "pattern": [
+    "PSP",
+    "PSP"
+  ],
+  "key": {
+    "P": "hbk:chordwood_planks",
+    "S": "minecraft:stick"
+  }
+}

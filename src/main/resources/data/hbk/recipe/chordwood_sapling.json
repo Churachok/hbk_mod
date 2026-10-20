@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:chordwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:chordwood_fruit",
+    "hbk:columnar_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

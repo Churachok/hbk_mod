@@ -1,0 +1,25 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_plant",
+    "hbk:foldwood_sapling",
+    "hbk:sailwood_plant",
+    "hbk:sailwood_sapling",
+    "hbk:chordwood_plant",
+    "hbk:chordwood_sapling",
+    "hbk:lanternwood_plant",
+    "hbk:lanternwood_sapling",
+    "hbk:knotwood_plant",
+    "hbk:knotwood_sapling",
+    "hbk:siltwood_plant",
+    "hbk:siltwood_sapling",
+    "hbk:loopwood_plant",
+    "hbk:loopwood_sapling",
+    "hbk:shardwood_plant",
+    "hbk:shardwood_sapling",
+    "hbk:pendantwood_plant",
+    "hbk:pendantwood_sapling",
+    "hbk:terracewood_plant",
+    "hbk:terracewood_sapling"
+  ]
+}

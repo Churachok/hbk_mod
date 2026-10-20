@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/chordwood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/chordwood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/chordwood_planks"
+    }
+  }
+}

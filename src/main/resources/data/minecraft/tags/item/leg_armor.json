@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_leggings",
+    "hbk:celestial_leggings",
+    "hbk:columnar_leggings",
+    "hbk:cavernous_leggings",
+    "hbk:woven_leggings",
+    "hbk:sedimentary_leggings",
+    "hbk:labyrinthine_leggings",
+    "hbk:fragmented_leggings",
+    "hbk:inverse_leggings",
+    "hbk:stratified_leggings"
+  ]
+}

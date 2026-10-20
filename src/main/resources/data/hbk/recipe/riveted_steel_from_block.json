@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:riveted_steel_block"
+  ],
+  "result": {
+    "id": "hbk:riveted_steel_ingot",
+    "count": 9
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:loopwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:loopwood_fruit",
+    "hbk:labyrinthine_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

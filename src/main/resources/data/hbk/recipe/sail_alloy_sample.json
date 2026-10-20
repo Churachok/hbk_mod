@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/celestial",
+    "#hbk:alloy_materials/inverse"
+  ],
+  "result": {
+    "id": "hbk:sail_alloy_sample"
+  }
+}

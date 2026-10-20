@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_axe",
+    "hbk:celestial_axe",
+    "hbk:columnar_axe",
+    "hbk:cavernous_axe",
+    "hbk:woven_axe",
+    "hbk:sedimentary_axe",
+    "hbk:labyrinthine_axe",
+    "hbk:fragmented_axe",
+    "hbk:inverse_axe",
+    "hbk:stratified_axe",
+    "hbk:forest_axe"
+  ]
+}

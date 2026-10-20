@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:lanternwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:lanternwood_fruit",
+    "hbk:lanternwood_fruit",
+    "minecraft:wheat",
+    "hbk:cavernous_mineral"
+  ]
+}

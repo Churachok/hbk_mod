@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "MMM",
+    " S ",
+    " S "
+  ],
+  "key": {
+    "M": "hbk:stratified_mineral",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "hbk:stratified_pickaxe"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:repair_steel_block"
+  ],
+  "result": {
+    "id": "hbk:repair_steel_ingot",
+    "count": 9
+  }
+}

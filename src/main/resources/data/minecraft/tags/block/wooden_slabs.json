@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_slab",
+    "hbk:sailwood_slab",
+    "hbk:chordwood_slab",
+    "hbk:lanternwood_slab",
+    "hbk:knotwood_slab",
+    "hbk:siltwood_slab",
+    "hbk:loopwood_slab",
+    "hbk:shardwood_slab",
+    "hbk:pendantwood_slab",
+    "hbk:terracewood_slab"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:route_inverite_block"
+  ],
+  "result": {
+    "id": "hbk:route_inverite_ingot",
+    "count": 9
+  }
+}

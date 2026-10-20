@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/woven",
+    "#hbk:alloy_materials/labyrinthine"
+  ],
+  "result": {
+    "id": "hbk:loop_steel_sample"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=y": {
+      "model": "hbk:block/shardwood_log"
+    },
+    "axis=x": {
+      "model": "hbk:block/shardwood_log",
+      "x": 90,
+      "y": 90
+    },
+    "axis=z": {
+      "model": "hbk:block/shardwood_log",
+      "x": 90
+    }
+  }
+}
