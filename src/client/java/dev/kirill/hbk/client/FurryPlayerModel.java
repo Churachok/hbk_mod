@@ -22,6 +22,27 @@ public final class FurryPlayerModel extends PlayerModel {
 		this.hideHumanClothing();
 		this.tail.yRot += Mth.sin(state.ageInTicks * 0.12f) * 0.12f;
 		this.tail.xRot += Mth.cos(state.ageInTicks * 0.08f) * 0.03f;
+		if (((FurryPlayerRenderState) state).hbk$isFurrySprinting()
+				&& !state.isPassenger && !state.isVisuallySwimming && state.swimAmount <= 0
+				&& !state.isFallFlying && !state.isCrouching) {
+			this.applyFourLeggedSprintPose(state);
+		}
+	}
+
+	private void applyFourLeggedSprintPose(AvatarRenderState state) {
+		float stride = Mth.cos(state.walkAnimationPos * 0.9f) * Math.min(0.9f, state.walkAnimationSpeed * 0.9f);
+		this.body.xRot = 1.35f;
+		this.body.y = this.head.y = 6.0f;
+		this.head.z = -5.0f;
+		this.head.xRot = 0.2f;
+		this.rightArm.y = this.leftArm.y = 8.0f;
+		this.rightArm.z = this.leftArm.z = -4.0f;
+		this.rightArm.xRot = -0.8f + stride;
+		this.leftArm.xRot = -0.8f - stride;
+		this.rightLeg.z = this.leftLeg.z = 4.0f;
+		this.rightLeg.xRot = 0.55f - stride;
+		this.leftLeg.xRot = 0.55f + stride;
+		this.tail.xRot = -0.2f;
 	}
 
 	private void hideHumanClothing() {

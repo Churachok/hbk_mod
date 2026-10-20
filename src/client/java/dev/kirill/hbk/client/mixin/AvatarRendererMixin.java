@@ -3,6 +3,7 @@ package dev.kirill.hbk.client.mixin;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.client.ProgenitorClientState;
 import dev.kirill.hbk.client.FurryPlayerClientState;
+import dev.kirill.hbk.client.FurryPlayerRenderState;
 import dev.kirill.hbk.registry.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -37,6 +38,8 @@ public abstract class AvatarRendererMixin {
 
 	@Inject(method = "extractRenderState(Lnet/minecraft/world/entity/Avatar;Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;F)V", at = @At("TAIL"))
 	private void hbk$hideHumanCapeOnWolf(Avatar player, AvatarRenderState state, float tickProgress, CallbackInfo ci) {
+		((FurryPlayerRenderState) state).hbk$setFurrySprinting(
+				FurryPlayerClientState.isActive(state) && player.isSprinting());
 		if (FurryPlayerClientState.isActive(state)) {
 			state.showCape = false;
 			state.showExtraEars = false;

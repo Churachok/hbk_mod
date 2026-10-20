@@ -2,8 +2,10 @@ package dev.kirill.hbk;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.JsonOps;
+import dev.kirill.hbk.mechanic.FurryBreeding;
 import dev.kirill.hbk.mechanic.FurryTransformation;
 import dev.kirill.hbk.registry.ModAttachments;
+import dev.kirill.hbk.registry.ModEffects;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
 import io.netty.channel.embedded.EmbeddedChannel;
@@ -12,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.PacketFlow;
+import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.util.ProblemReporter;
@@ -19,6 +22,10 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.GameType;
@@ -133,7 +140,7 @@ public final class FurrySyringeGameTests {
 	}
 
 	@GameTest
-	public void transformationLeavesEveryPlayerAttributeHitboxAndUnrelatedItemUnchanged(GameTestHelper test) {
+	public void transformationAddsOnlyFourArmorAndPreservesOtherAttributesHitboxAndUnrelatedItems(GameTestHelper test) {
 		var player = player(test, GameType.SURVIVAL);
 		try {
 			player.getInventory().setSelectedSlot(2);
@@ -161,14 +168,18 @@ public final class FurrySyringeGameTests {
 			expectedInventory.get(2).shrink(1);
 			int wolves = test.getEntities(ModEntityTypes.PINK_FURRY_WOLF).size();
 			test.assertTrue(ModItems.FURRY_SYRINGE.use(test.getLevel(), player, InteractionHand.MAIN_HAND).consumesAction(),
-					"The cosmetic-invariance fixture must actually use a syringe");
-			test.assertTrue(beforeValues.equals(attributes.stream().map(player::getAttributeValue).toList())
-					&& player.getHealth() == 11 && player.getFoodData().getFoodLevel() == 7 && player.getFoodData().getSaturationLevel() == 3
+					"The invariance fixture must actually use a syringe");
+			for (int attribute = 0; attribute < attributes.size(); attribute++) {
+				double expected = beforeValues.get(attribute) + (attributes.get(attribute).equals(Attributes.ARMOR) ? 4 : 0);
+				test.assertTrue(player.getAttributeValue(attributes.get(attribute)) == expected,
+						"Transformation must add exactly four armor while preserving every other non-sprinting player attribute");
+			}
+			test.assertTrue(player.getHealth() == 11 && player.getFoodData().getFoodLevel() == 7 && player.getFoodData().getSaturationLevel() == 3
 					&& player.experienceLevel == 4 && player.totalExperience == 100 && player.experienceProgress == 0.25f
 					&& player.getBoundingBox().equals(box) && player.getEyeHeight() == eye
 					&& player.getBbWidth() == width && player.getBbHeight() == height
 					&& player.getActiveEffects().size() == 1 && player.getEffect(MobEffects.SPEED).getDuration() == 300,
-					"Only the visual attachment may change: every player attribute, health, hunger, XP, hitbox, eye height and existing effect must stay intact");
+					"Apart from the specified armor bonus, health, hunger, XP, hitbox, eye height and existing effects must stay intact on injection");
 			for (int slot = 0; slot < expectedInventory.size(); slot++) {
 				test.assertTrue(ItemStack.matches(player.getInventory().getItem(slot), expectedInventory.get(slot)),
 						"Transformation must preserve the complete inventory except for the single syringe spent");
@@ -224,6 +235,252 @@ public final class FurrySyringeGameTests {
 			removePlayer(test, player);
 		}
 		test.succeed();
+	}
+
+	@GameTest
+	public void formArmorAndSprintSpeedRespectEquipmentAndStrongerPotionsAndCleanUpOnlyTheirOwnBonuses(GameTestHelper test) {
+		var player = player(test, GameType.SURVIVAL);
+		try {
+			// A real ServerPlayer rejects damage until its native client-loaded acknowledgement arrives.
+			player.connection.handleAcceptPlayerLoad(new ServerboundPlayerLoadedPacket());
+			test.assertTrue(player.connection.hasClientLoaded(), "The damage fixture must finish the native client-loading immunity");
+			double walking = player.getAttributeValue(Attributes.MOVEMENT_SPEED);
+			double ordinaryArmor = player.getAttributeValue(Attributes.ARMOR);
+			FurryTransformation.start(player);
+			test.assertTrue(FurryTransformation.hasProtection(player) && !FurryTransformation.isSprinting(player)
+					&& FurryTransformation.ARMOR_BONUS == 4 && player.getAttributeValue(Attributes.ARMOR) == ordinaryArmor + 4
+					&& player.getAttributeValue(Attributes.MOVEMENT_SPEED) == walking && player.getActiveEffects().isEmpty(),
+					"Walking form must add four armor without a speed boost or synthetic vanilla potion effects");
+			player.setHealth(20);
+			test.assertTrue(player.hurtServer(test.getLevel(), test.getLevel().damageSources().magic(), 10)
+					&& player.getHealth() == 10,
+					"Armor-bypassing magic must deal full damage: the form must no longer retain a hidden Resistance I bonus");
+			player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE));
+			player.doTick();
+			test.assertTrue(player.getAttributeValue(Attributes.ARMOR) == ordinaryArmor + 8 + 4,
+					"The form's four armor must add to the real eight armor supplied by an equipped diamond chestplate");
+			player.setSprinting(true);
+			FurryTransformation.tick(player);
+			test.assertTrue(FurryTransformation.isSprinting(player)
+					&& Math.abs(player.getAttributeValue(Attributes.MOVEMENT_SPEED) - walking * 1.3 * 1.4) < 0.000001,
+					"Four-legged sprinting must add precisely Speed II on top of vanilla's ordinary sprint modifier");
+			player.setSprinting(false);
+			FurryTransformation.tick(player);
+			test.assertTrue(player.getAttributeValue(Attributes.MOVEMENT_SPEED) == walking
+					&& player.getAttribute(Attributes.MOVEMENT_SPEED).getModifier(FurryTransformation.SPRINT_SPEED_MODIFIER_ID) == null,
+					"Stopping sprinting must immediately remove only the form-owned movement modifier");
+			player.setSprinting(true);
+			for (int amplifier = 0; amplifier <= 2; amplifier++) {
+				player.removeEffect(MobEffects.SPEED);
+				player.addEffect(new MobEffectInstance(MobEffects.SPEED, 8000, amplifier));
+				FurryTransformation.tick(player);
+				double expected = walking * 1.3 * Math.max(1.4, 1 + 0.2 * (amplifier + 1));
+				test.assertTrue(Math.abs(player.getAttributeValue(Attributes.MOVEMENT_SPEED) - expected) < 0.000001
+						&& player.getEffect(MobEffects.SPEED).getAmplifier() == amplifier
+						&& player.getEffect(MobEffects.SPEED).getDuration() == 8000,
+						"Sprint must supplement Speed I, match Speed II and leave stronger Speed III intact without stacking or refreshing it");
+			}
+			player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 8000, 2));
+			player.invulnerableTime = 0;
+			player.setHealth(20);
+			test.assertTrue(player.hurtServer(test.getLevel(), test.getLevel().damageSources().magic(), 10)
+					&& Math.abs(player.getHealth() - 16) < 0.0001,
+					"Existing Resistance III must continue to reduce magic normally, without any additional resistance from the form");
+			player.setAttached(ModAttachments.FURRY_EXPIRES_AT, now(test));
+			FurryTransformation.tick(player);
+			test.assertTrue(!FurryTransformation.hasProtection(player)
+					&& player.getAttribute(Attributes.MOVEMENT_SPEED).getModifier(FurryTransformation.SPRINT_SPEED_MODIFIER_ID) == null
+					&& player.getAttribute(Attributes.ARMOR).getModifier(FurryTransformation.ARMOR_MODIFIER_ID) == null
+					&& player.getAttributeValue(Attributes.ARMOR) == ordinaryArmor + 8
+					&& player.getItemBySlot(EquipmentSlot.CHEST).is(Items.DIAMOND_CHESTPLATE)
+					&& Math.abs(player.getAttributeValue(Attributes.MOVEMENT_SPEED) - walking * 1.3 * 1.6) < 0.000001
+					&& player.getEffect(MobEffects.SPEED).getAmplifier() == 2 && player.getEffect(MobEffects.SPEED).getDuration() == 8000
+					&& player.getEffect(MobEffects.RESISTANCE).getAmplifier() == 2 && player.getEffect(MobEffects.RESISTANCE).getDuration() == 8000,
+					"Expiry must remove only form-owned armor and speed, preserving the equipped chestplate and stronger existing potions unchanged");
+			player.removeAllEffects();
+			player.invulnerableTime = 0;
+			player.setHealth(20);
+			test.assertTrue(player.hurtServer(test.getLevel(), test.getLevel().damageSources().magic(), 10) && player.getHealth() == 10,
+					"After form and potion removal genuine incoming damage must return to the ordinary amount");
+		} finally {
+			removePlayer(test, player);
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void onlyLoveModeRegeneratesEveryTwentyFiveTicksAndEndingItRestoresNativeHealingWithoutEndingTheForm(GameTestHelper test) {
+		var player = player(test, GameType.SURVIVAL);
+		var control = player(test, GameType.SURVIVAL);
+		try {
+			player.setHealth(8);
+			FurryTransformation.start(player);
+			test.assertTrue(player.getHealth() == 8 && !player.hasEffect(MobEffects.REGENERATION),
+					"Injection must not heal immediately or introduce a short vanilla regeneration effect");
+			for (int tick = 1; tick <= 50; tick++) {
+				player.tickCount = tick;
+				FurryTransformation.tickRegeneration(player);
+				test.assertTrue(player.getHealth() == 8,
+						"The ordinary furry form must never heal by itself when breeding mode is inactive");
+			}
+			test.assertTrue(FurryBreeding.enterLove(player) && FurryTransformation.hasLoveRegeneration(player),
+					"The regeneration fixture must explicitly enter breeding mode before receiving Regeneration II");
+			for (int tick = 1; tick <= 50; tick++) {
+				player.tickCount = tick;
+				FurryTransformation.tickRegeneration(player);
+				test.assertTrue(player.getHealth() == 8 + tick / 25,
+						"Breeding-mode Regeneration II must restore exactly one health at ticks 25 and 50, never between them");
+			}
+			player.addEffect(new MobEffectInstance(ModEffects.HUNTERS_INSTINCT, 3600, 0));
+			player.setHealth(8);
+			ModEffects.HUNTERS_INSTINCT.value().applyEffectTick(test.getLevel(), player, 0);
+			test.assertTrue(player.getHealth() == 8,
+					"Hunter's weaker built-in Regeneration I must not add a second heal while the stronger furry regeneration is active");
+			player.tickCount = 75;
+			FurryTransformation.tickRegeneration(player);
+			test.assertTrue(player.getHealth() == 9, "The stronger form must still provide its one normal heal while Hunter's Instinct is present");
+			player.removeEffect(ModEffects.HUNTERS_INSTINCT);
+			for (int amplifier = 0; amplifier <= 2; amplifier++) {
+				player.removeEffect(MobEffects.REGENERATION);
+				control.removeEffect(MobEffects.REGENERATION);
+				player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 8000, amplifier));
+				control.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 8000, Math.max(1, amplifier)));
+				player.setHealth(8);
+				control.setHealth(8);
+				for (int tick = 1; tick <= 50; tick++) {
+					player.tickCount = control.tickCount = tick;
+					player.getEffect(MobEffects.REGENERATION).tickServer(test.getLevel(), player, () -> {});
+					control.getEffect(MobEffects.REGENERATION).tickServer(test.getLevel(), control, () -> {});
+					FurryTransformation.tickRegeneration(player);
+					test.assertTrue(player.getHealth() == control.getHealth(),
+							"Existing Regeneration I must heal at the form's level-II rate, while II/III retain their native rate without double healing");
+				}
+				test.assertTrue(player.getEffect(MobEffects.REGENERATION).getAmplifier() == amplifier
+						&& player.getEffect(MobEffects.REGENERATION).getDuration() == 7950,
+						"The form must not replace or refresh the saved duration or amplifier of any native regeneration potion, including level I");
+			}
+			player.removeEffect(MobEffects.REGENERATION);
+			player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 7925, 0));
+			player.setHealth(8);
+			player.setAttached(ModAttachments.FURRY_LOVE_UNTIL, now(test));
+			FurryBreeding.tickPlayer(player);
+			FurryTransformation.tick(player);
+			test.assertTrue(FurryTransformation.isActive(player) && !FurryTransformation.hasLoveRegeneration(player)
+					&& player.getAttributeValue(Attributes.ARMOR) == 4
+					&& player.getEffect(MobEffects.REGENERATION).getDuration() == 7925,
+					"Ending love must preserve the furry form, its four armor and the unchanged native potion duration");
+			for (int tick = 1; tick <= 50; tick++) {
+				player.tickCount = 100 + tick;
+				FurryTransformation.tickRegeneration(player);
+				player.getEffect(MobEffects.REGENERATION).tickServer(test.getLevel(), player, () -> {});
+				test.assertTrue(player.getHealth() == (tick <= 25 ? 8 : 9),
+						"After love ends, native Regeneration I must return to its fifty-tick interval, with no fallback heal from the still-active form");
+			}
+			test.assertTrue(player.getEffect(MobEffects.REGENERATION).getAmplifier() == 0
+					&& player.getEffect(MobEffects.REGENERATION).getDuration() == 7875,
+					"Returning to the native healing interval must preserve the original potion level and continue, not reset, its countdown");
+			player.removeEffect(MobEffects.REGENERATION);
+			player.setHealth(8);
+			player.tickCount = 175;
+			FurryTransformation.tickRegeneration(player);
+			test.assertTrue(player.getHealth() == 8, "Ending love must immediately stop fallback healing even while the form remains active");
+			player.addEffect(new MobEffectInstance(ModEffects.HUNTERS_INSTINCT, 3600, 0));
+			ModEffects.HUNTERS_INSTINCT.value().applyEffectTick(test.getLevel(), player, 0);
+			test.assertTrue(player.getHealth() == 9 && FurryTransformation.isActive(player),
+					"Outside breeding mode the ordinary furry form must allow Hunter's Instinct to provide its own normal Regeneration I");
+			player.removeEffect(ModEffects.HUNTERS_INSTINCT);
+			player.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 7950, 2));
+			test.assertTrue(FurryBreeding.enterLove(player), "The expiry case must start with an active breeding-mode regeneration bonus");
+			player.setAttached(ModAttachments.FURRY_EXPIRES_AT, now(test));
+			player.tickCount = 75;
+			float health = player.getHealth();
+			FurryTransformation.tickRegeneration(player);
+			FurryTransformation.tick(player);
+			FurryBreeding.tickPlayer(player);
+			test.assertTrue(player.getHealth() == health && !FurryTransformation.isActive(player)
+					&& player.getEffect(MobEffects.REGENERATION).getAmplifier() == 2
+					&& player.getEffect(MobEffects.REGENERATION).getDuration() == 7950,
+					"The exact expiry tick must stop built-in healing without removing the player's unrelated regeneration potion");
+			player.removeEffect(MobEffects.REGENERATION);
+			player.setHealth(8);
+			for (int tick = 100; tick <= 200; tick += 25) {
+				player.tickCount = tick;
+				FurryTransformation.tickRegeneration(player);
+			}
+			test.assertTrue(player.getHealth() == 8, "After expiry no hidden regeneration timer may keep healing the ordinary player");
+			FurryTransformation.start(player);
+			test.assertTrue(FurryBreeding.enterLove(player), "The death case must begin with active breeding-mode regeneration");
+			player.setHealth(0);
+			player.tickCount = 225;
+			FurryTransformation.tickRegeneration(player);
+			test.assertTrue(player.getHealth() == 0, "A dead transformed player must never be healed back to life by the form");
+		} finally {
+			removePlayer(test, player);
+			removePlayer(test, control);
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void onlySuccessfulOrdinaryMeleeFromAnActiveFurryCanWinTheThreePercentRageRoll(GameTestHelper test) {
+		var attacker = player(test, GameType.SURVIVAL);
+		var victim = test.spawnWithNoFreeWill(EntityTypes.COW, new Vec3(4, 2, 4));
+		var arrow = new Arrow(EntityTypes.ARROW, test.getLevel());
+		arrow.setOwner(attacker);
+		try {
+			FurryTransformation.start(attacker);
+			long winningSeed = rageSeed(true), losingSeed = rageSeed(false);
+			test.assertTrue(FurryTransformation.RAGE_CHANCE == 0.03f,
+					"The melee infection probability must remain exactly three percent");
+			attacker.getRandom().setSeed(winningSeed);
+			test.assertTrue(victim.hurtServer(test.getLevel(), test.getLevel().damageSources().playerAttack(attacker), 1)
+					&& victim.hasEffect(ModEffects.GOSHAS_RAGE) && victim.getEffect(ModEffects.GOSHAS_RAGE).getDuration() == 2400
+					&& victim.getEffect(ModEffects.GOSHAS_RAGE).getAmplifier() == 0,
+					"A real successful ordinary melee hit with the winning native random roll must infect its victim for exactly two minutes");
+			victim.removeEffect(ModEffects.GOSHAS_RAGE);
+			victim.setHealth(victim.getMaxHealth());
+			victim.invulnerableTime = 0;
+			attacker.getRandom().setSeed(losingSeed);
+			test.assertTrue(victim.hurtServer(test.getLevel(), test.getLevel().damageSources().playerAttack(attacker), 1)
+					&& !victim.hasEffect(ModEffects.GOSHAS_RAGE),
+					"A successful melee hit outside the three-percent interval must deal damage without infecting the victim");
+			victim.invulnerableTime = 0;
+			attacker.getRandom().setSeed(winningSeed);
+			test.assertTrue(victim.hurtServer(test.getLevel(), test.getLevel().damageSources().arrow(arrow, attacker), 1)
+					&& !victim.hasEffect(ModEffects.GOSHAS_RAGE),
+					"An arrow owned by the same transformed player must never infect even when the next roll would win");
+			victim.setInvulnerable(true);
+			victim.invulnerableTime = 0;
+			attacker.getRandom().setSeed(winningSeed);
+			test.assertTrue(!victim.hurtServer(test.getLevel(), test.getLevel().damageSources().playerAttack(attacker), 1)
+					&& !victim.hasEffect(ModEffects.GOSHAS_RAGE),
+					"Rejected native damage must not trigger the infection callback");
+			victim.setInvulnerable(false);
+			FurryTransformation.onMeleeHit(victim, test.getLevel().damageSources().playerAttack(attacker), false);
+			test.assertTrue(!victim.hasEffect(ModEffects.GOSHAS_RAGE)
+					&& attacker.getRandom().nextFloat() == RandomSource.create(winningSeed).nextFloat(),
+					"Explicit failed-hit callbacks must not consume the attacker's random roll or infect anything");
+			attacker.setAttached(ModAttachments.FURRY_EXPIRES_AT, now(test));
+			attacker.getRandom().setSeed(winningSeed);
+			victim.invulnerableTime = 0;
+			test.assertTrue(victim.hurtServer(test.getLevel(), test.getLevel().damageSources().playerAttack(attacker), 1)
+					&& !victim.hasEffect(ModEffects.GOSHAS_RAGE),
+					"The exact form deadline must stop melee infection before the normal end-of-tick cleanup");
+		} finally {
+			arrow.discard();
+			victim.discard();
+			removePlayer(test, attacker);
+		}
+		test.succeed();
+	}
+
+	private static long rageSeed(boolean winning) {
+		var seeds = RandomSource.create(0x4655525259524147L);
+		for (int attempt = 0; attempt < 10000; attempt++) {
+			long seed = seeds.nextLong();
+			if ((RandomSource.create(seed).nextFloat() < 0.03f) == winning) return seed;
+		}
+		throw new AssertionError("The fixed native random sequence must contain both a winning and a losing rage roll");
 	}
 
 	private static ServerPlayer player(GameTestHelper test, GameType gameType) {

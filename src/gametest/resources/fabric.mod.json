@@ -8,6 +8,7 @@
 		"fabric-client-gametest": ["dev.kirill.hbk.HbkClientGameTests"],
 		"fabric-gametest": [
 			"dev.kirill.hbk.FurrySyringeGameTests",
+			"dev.kirill.hbk.FurryBreedingGameTests",
 			"dev.kirill.hbk.RoflGameTests",
 			"dev.kirill.hbk.world.SovietBusGameTests",
 			"dev.kirill.hbk.KitchenGameTests",

@@ -64,6 +64,7 @@ def gameTestProfiles = [
 	hunters_instinct: 'hunters_instinct_game_tests_*',
 	npc: 'npc_game_tests_*',
 	furry: 'furry_syringe_game_tests_*',
+	furry_breeding: 'furry_breeding_game_tests_*',
 	rofl: 'rofl_game_tests_*',
 	members: 'member_game_tests_*',
 	boss: 'boss_game_tests_*',

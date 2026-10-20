@@ -6,6 +6,7 @@ import dev.kirill.hbk.mechanic.ModMechanics;
 import dev.kirill.hbk.mechanic.HuntersInstinct;
 import dev.kirill.hbk.mechanic.ProgenitorTransformation;
 import dev.kirill.hbk.mechanic.FurryTransformation;
+import dev.kirill.hbk.mechanic.FurryBreeding;
 import dev.kirill.hbk.mechanic.UraniumArmorEffects;
 import dev.kirill.hbk.menu.ModMenuTypes;
 import dev.kirill.hbk.network.ModNetworking;
@@ -60,6 +61,7 @@ public class HbkMod implements ModInitializer {
 		HuntersInstinct.register();
 		ProgenitorTransformation.register();
 		FurryTransformation.register();
+		FurryBreeding.register();
 		UraniumArmorEffects.register();
 		ModWorldEvents.register();
 		UnknownEncounter.register();

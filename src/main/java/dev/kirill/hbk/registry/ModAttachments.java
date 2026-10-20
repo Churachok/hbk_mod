@@ -28,6 +28,13 @@ public final class ModAttachments {
 			.persistent(Codec.LONG)
 			.initializer(() -> 0L)
 			.buildAndRegister(HbkMod.id("furry_expires_at"));
+	public static final AttachmentType<Long> FURRY_LOVE_UNTIL = AttachmentRegistry.<Long>builder()
+			.persistent(Codec.LONG)
+			.syncWith(ByteBufCodecs.VAR_LONG, AttachmentSyncPredicate.targetOnly())
+			.buildAndRegister(HbkMod.id("furry_love_until"));
+	public static final AttachmentType<Long> FURRY_BREED_COOLDOWN_UNTIL = AttachmentRegistry.<Long>builder()
+			.persistent(Codec.LONG)
+			.buildAndRegister(HbkMod.id("furry_breed_cooldown_until"));
 
 	private ModAttachments() {
 	}

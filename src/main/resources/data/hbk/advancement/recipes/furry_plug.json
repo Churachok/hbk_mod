@@ -1,0 +1,23 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_iron": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {"items": [{"items": "minecraft:iron_nugget"}]}
+    },
+    "has_amethyst": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {"items": [{"items": "minecraft:amethyst_shard"}]}
+    },
+    "has_plug": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {"items": [{"items": "hbk:furry_plug"}]}
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {"recipe": "hbk:furry_plug"}
+    }
+  },
+  "requirements": [["has_iron", "has_amethyst", "has_plug", "has_the_recipe"]],
+  "rewards": {"recipes": ["hbk:furry_plug"]}
+}

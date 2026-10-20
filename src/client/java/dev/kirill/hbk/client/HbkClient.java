@@ -26,6 +26,7 @@ public class HbkClient implements ClientModInitializer {
 		JagermeisterCauldronColors.register();
 		JagermeisterBrewingHud.register();
 		HuntersInstinctClient.register();
+		FurryLoveClientEffects.register();
 		MenuScreens.register(ModMenuTypes.IMPROVED_BOAT_FUEL, ImprovedBoatFuelScreen::new);
 		GoshasRageClient.register();
 		BossFightMusic.register();

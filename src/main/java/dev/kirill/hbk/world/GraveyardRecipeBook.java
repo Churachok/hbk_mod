@@ -15,7 +15,7 @@ public final class GraveyardRecipeBook {
 	public static final List<String> RECIPES = List.of(
 			"buckwheat", "stew", "condensed_milk", "currant_tincture",
 			"onigiri", "kirill_kettle", "hard_kirill_kettle",
-			"denis_doshirak", "doshirak_kettle", "hard_doshirak_kettle", "funny_button", "empty_jagermeister_bottle",
+			"denis_doshirak", "doshirak_kettle", "hard_doshirak_kettle", "funny_button", "empty_jagermeister_bottle", "furry_plug",
 			"balalaika_pickaxe", "shovel_sword", "sickle_and_hammer", "western_chestplate",
 			"flying_carpet", "improved_oak_boat", "improved_spruce_boat", "improved_birch_boat",
 			"improved_jungle_boat", "improved_acacia_boat", "improved_cherry_boat",
@@ -26,7 +26,7 @@ public final class GraveyardRecipeBook {
 			"uranium_chestplate_smithing", "uranium_leggings_smithing",
 			"uranium_boots_smithing");
 	public static final List<String> INFO_PAGES = List.of("doshirak", "funny_button", "dandruff", "feeding_onigiri", "lebedev_head", "bus",
-			"liberal_blood", "young_liberal", "jagermeister");
+			"liberal_blood", "young_liberal", "jagermeister", "furry_breeding");
 	public static final int PAGE_COUNT = 1 + RECIPES.size() + INFO_PAGES.size();
 
 	private GraveyardRecipeBook() {

@@ -1,6 +1,7 @@
 package dev.kirill.hbk.effect;
 
 import dev.kirill.hbk.HbkMod;
+import dev.kirill.hbk.mechanic.FurryTransformation;
 import dev.kirill.hbk.registry.ModEffects;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
@@ -36,6 +37,7 @@ public final class HuntersInstinctEffect extends MobEffect {
 		int regenPhase = effect != null && effect.isInfiniteDuration() ? entity.tickCount
 				: effect == null ? -1 : effect.getDuration();
 		if (effect != null && regenPhase % 50 == 0 && !entity.hasEffect(MobEffects.REGENERATION)
+				&& !FurryTransformation.hasLoveRegeneration(entity)
 				&& entity.getHealth() < entity.getMaxHealth()) {
 			entity.heal(1.0f);
 		}

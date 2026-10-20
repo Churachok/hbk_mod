@@ -12,6 +12,7 @@ import dev.kirill.hbk.item.HammerFighterMemberItem;
 import dev.kirill.hbk.item.FemaleVaginaItem;
 import dev.kirill.hbk.item.ProgenitorTransformationItem;
 import dev.kirill.hbk.item.FurrySyringeItem;
+import dev.kirill.hbk.item.FurryPlugItem;
 import dev.kirill.hbk.item.CondensedMilkItem;
 import dev.kirill.hbk.item.BandageItem;
 import dev.kirill.hbk.item.BuckwheatItem;
@@ -271,6 +272,8 @@ public class ModItems {
 	);
 	public static final Item FURRY_SYRINGE = register("furry_syringe", FurrySyringeItem::new,
 			new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON));
+	public static final Item FURRY_PLUG = register("furry_plug", FurryPlugItem::new,
+			new Item.Properties().stacksTo(16));
 	public static final Item FOUNDING_PENIS = register(
 			"founding_penis",
 			ProgenitorTransformationItem::new,
@@ -589,6 +592,7 @@ public class ModItems {
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
 			output.accept(FURRY_SYRINGE);
+			output.accept(FURRY_PLUG);
 			output.accept(EMPTY_BEER_BOTTLE);
 			output.accept(EMPTY_JAGERMEISTER_BOTTLE);
 			output.accept(BROKEN_BEER_BOTTLE);

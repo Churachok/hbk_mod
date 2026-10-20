@@ -38,5 +38,7 @@ public final class FurrySyringeItem extends Item {
 			Consumer<Component> tooltip, TooltipFlag flag) {
 		super.appendHoverText(stack, context, display, tooltip, flag);
 		tooltip.accept(Component.translatable("item.hbk.furry_syringe.tooltip").withStyle(ChatFormatting.GRAY));
+		tooltip.accept(Component.translatable("item.hbk.furry_syringe.abilities").withStyle(ChatFormatting.GRAY));
+		tooltip.accept(Component.translatable("item.hbk.furry_syringe.love_ability").withStyle(ChatFormatting.GRAY));
 	}
 }

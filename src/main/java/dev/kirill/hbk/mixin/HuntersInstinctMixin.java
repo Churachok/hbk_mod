@@ -3,8 +3,10 @@ package dev.kirill.hbk.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.kirill.hbk.effect.HuntersInstinctEffect;
+import dev.kirill.hbk.mechanic.FurryTransformation;
 import dev.kirill.hbk.registry.ModEffects;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -34,6 +36,11 @@ public abstract class HuntersInstinctMixin {
 			return new MobEffectInstance(MobEffects.RESISTANCE, 1, 1, false, false, false);
 		}
 		return resistance;
+	}
+
+	@Inject(method = "tickEffects", at = @At("HEAD"))
+	private void hbk$applyFurryRegenerationBeforeNativeEffects(CallbackInfo ci) {
+		if ((Object) this instanceof ServerPlayer player) FurryTransformation.tickRegeneration(player);
 	}
 
 	@Inject(method = {"onEffectAdded", "onEffectUpdated", "onEffectsRemoved"}, at = @At("TAIL"))

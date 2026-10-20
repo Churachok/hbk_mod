@@ -12,6 +12,7 @@
 		"EntityRendererMixin",
 		"EntityRenderStateMixin",
 		"EntityRenderDispatcherMixin",
+		"FurryLoveMovementMixin",
 		"GameRendererMixin",
 		"GameRendererInvoker",
 		"HumanoidModelMixin",
