@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_soil",
+    "hbk:sailwood_soil",
+    "hbk:chordwood_soil",
+    "hbk:lanternwood_soil",
+    "hbk:knotwood_soil",
+    "hbk:siltwood_soil",
+    "hbk:loopwood_soil",
+    "hbk:shardwood_soil",
+    "hbk:pendantwood_soil",
+    "hbk:terracewood_soil"
+  ]
+}

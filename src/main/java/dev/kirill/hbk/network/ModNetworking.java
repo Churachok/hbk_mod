@@ -164,6 +164,24 @@ public final class ModNetworking {
 	}
 
 	public static void register() {
+		PayloadTypeRegistry.serverboundPlay().register(TravelTimeFurnacePayload.TYPE, TravelTimeFurnacePayload.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(TravelTimeFurnacePayload.TYPE, (payload, context) -> context.server().execute(() -> {
+			var player = context.player();
+			if (player.containerMenu.containerId == payload.containerId()
+					&& player.containerMenu instanceof dev.kirill.hbk.menu.TimeFurnaceMenu menu) {
+				menu.travel(player, payload.code(), payload.home());
+			}
+		}));
+		PayloadTypeRegistry.serverboundPlay().register(SetTimeFurnaceCodePayload.TYPE, SetTimeFurnaceCodePayload.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(SetTimeFurnaceCodePayload.TYPE, (payload, context) ->
+				context.server().execute(() -> {
+					var player = context.player();
+					if (player.containerMenu.containerId == payload.containerId()
+							&& player.containerMenu instanceof dev.kirill.hbk.menu.TimeFurnaceMenu menu) {
+						menu.saveCode(player, payload.code());
+					}
+				}));
+		PayloadTypeRegistry.clientboundPlay().register(AnomalyLayoutPayload.TYPE, AnomalyLayoutPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(OpenStrangeChestPayload.TYPE, OpenStrangeChestPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownEncounterPayload.TYPE, UnknownEncounterPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownTypingPayload.TYPE, UnknownTypingPayload.CODEC);
@@ -201,5 +219,30 @@ public final class ModNetworking {
 					}
 				})
 		);
+	}
+
+	public record TravelTimeFurnacePayload(int containerId, String code, boolean home) implements CustomPacketPayload {
+		public static final Type<TravelTimeFurnacePayload> TYPE = new Type<>(HbkMod.id("travel_time_furnace"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, TravelTimeFurnacePayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> { buffer.writeVarInt(payload.containerId()); buffer.writeUtf(payload.code(), 5); buffer.writeBoolean(payload.home()); },
+				buffer -> new TravelTimeFurnacePayload(buffer.readVarInt(), buffer.readUtf(5), buffer.readBoolean()));
+		@Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+	}
+
+	public record SetTimeFurnaceCodePayload(int containerId, String code) implements CustomPacketPayload {
+		public static final Type<SetTimeFurnaceCodePayload> TYPE = new Type<>(HbkMod.id("set_time_furnace_code"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, SetTimeFurnaceCodePayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> { buffer.writeVarInt(payload.containerId()); buffer.writeUtf(payload.code(), 5); },
+				buffer -> new SetTimeFurnaceCodePayload(buffer.readVarInt(), buffer.readUtf(5)));
+		@Override
+		public Type<? extends CustomPacketPayload> type() { return TYPE; }
+	}
+
+	public record AnomalyLayoutPayload(long seed) implements CustomPacketPayload {
+		public static final Type<AnomalyLayoutPayload> TYPE = new Type<>(HbkMod.id("anomaly_layout"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, AnomalyLayoutPayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> buffer.writeLong(payload.seed), buffer -> new AnomalyLayoutPayload(buffer.readLong()));
+		@Override
+		public Type<? extends CustomPacketPayload> type() { return TYPE; }
 	}
 }

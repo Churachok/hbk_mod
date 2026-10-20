@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hbk:repair_steel_sample",
+  "result": {
+    "id": "hbk:repair_steel_ingot"
+  },
+  "experience": 1.0,
+  "cookingtime": 200
+}

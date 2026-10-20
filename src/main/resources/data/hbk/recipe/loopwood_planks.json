@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:loopwood_planks",
+    "count": 4
+  },
+  "ingredients": [
+    "#hbk:loopwood_logs"
+  ]
+}

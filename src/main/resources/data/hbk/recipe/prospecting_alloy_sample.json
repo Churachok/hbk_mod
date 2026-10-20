@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/labyrinthine",
+    "#hbk:alloy_materials/fragmented"
+  ],
+  "result": {
+    "id": "hbk:prospecting_alloy_sample"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:drilling_steel_block"
+  ],
+  "result": {
+    "id": "hbk:drilling_steel_ingot",
+    "count": 9
+  }
+}

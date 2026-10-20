@@ -1,4 +1,19 @@
 {
   "replace": false,
-  "values": ["hbk:redstone_pickaxe"]
+  "values": [
+    "hbk:redstone_pickaxe",
+    "hbk:primordial_pickaxe",
+    "hbk:celestial_pickaxe",
+    "hbk:columnar_pickaxe",
+    "hbk:cavernous_pickaxe",
+    "hbk:woven_pickaxe",
+    "hbk:sedimentary_pickaxe",
+    "hbk:labyrinthine_pickaxe",
+    "hbk:fragmented_pickaxe",
+    "hbk:inverse_pickaxe",
+    "hbk:stratified_pickaxe",
+    "hbk:drill_pickaxe",
+    "hbk:seismic_hammer",
+    "hbk:smelting_pickaxe"
+  ]
 }

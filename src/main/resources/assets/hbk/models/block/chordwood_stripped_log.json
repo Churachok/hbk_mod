@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/botany/chordwood_stripped_log",
+    "end": "hbk:block/botany/chordwood_log_top"
+  }
+}

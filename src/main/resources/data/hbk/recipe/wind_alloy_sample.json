@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/celestial",
+    "#hbk:alloy_materials/labyrinthine"
+  ],
+  "result": {
+    "id": "hbk:wind_alloy_sample"
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_primordial_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:primordial_stone"
+          }
+        ]
+      }
+    },
+    "has_primordial_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:primordial_mineral"
+          }
+        ]
+      }
+    },
+    "has_primordial_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:primordial_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_primordial_stone",
+      "has_primordial_mineral",
+      "has_primordial_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:primordial_formation"
+    ]
+  }
+}

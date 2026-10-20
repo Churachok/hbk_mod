@@ -1,4 +1,11 @@
 {
+	"anomaly_ambient": {
+		"sounds": [{"name": "hbk:ambient/anomaly_ambient", "stream": true}]
+	},
+	"anomaly_glitch": {
+		"subtitle": "subtitles.hbk.anomaly_glitch",
+		"sounds": ["hbk:anomaly_glitch"]
+	},
 	"canned_laughter": {
 		"subtitle": "subtitles.hbk.canned_laughter",
 		"sounds": [{"name": "hbk:canned_laughter", "attenuation_distance": 64}]

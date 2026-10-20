@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:spring_steel_block"
+  ],
+  "result": {
+    "id": "hbk:spring_steel_ingot",
+    "count": 9
+  }
+}

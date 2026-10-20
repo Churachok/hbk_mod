@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:siltwood_lamp",
+    "count": 4
+  },
+  "pattern": [
+    "PFP",
+    "FMF",
+    "PFP"
+  ],
+  "key": {
+    "P": "hbk:siltwood_planks",
+    "F": "hbk:siltwood_fruit",
+    "M": "hbk:sedimentary_mineral"
+  }
+}

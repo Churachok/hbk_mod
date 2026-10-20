@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": "hbk:support_inverite_ingot"
+  },
+  "result": {
+    "id": "hbk:support_inverite_block"
+  }
+}

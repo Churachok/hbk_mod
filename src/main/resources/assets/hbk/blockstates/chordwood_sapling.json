@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "stage=0,hanging=false": {
+      "model": "hbk:block/chordwood_sapling_0"
+    },
+    "stage=0,hanging=true": {
+      "model": "hbk:block/chordwood_sapling_0",
+      "x": 180
+    },
+    "stage=1,hanging=false": {
+      "model": "hbk:block/chordwood_sapling_1"
+    },
+    "stage=1,hanging=true": {
+      "model": "hbk:block/chordwood_sapling_1",
+      "x": 180
+    }
+  }
+}

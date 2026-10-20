@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:terracewood_lamp",
+    "count": 4
+  },
+  "pattern": [
+    "PFP",
+    "FMF",
+    "PFP"
+  ],
+  "key": {
+    "P": "hbk:terracewood_planks",
+    "F": "hbk:terracewood_fruit",
+    "M": "hbk:stratified_mineral"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:celestial_stone",
+    "hbk:celestial_stone",
+    "hbk:celestial_stone",
+    "hbk:celestial_stone",
+    "hbk:celestial_mineral",
+    "hbk:celestial_mineral",
+    "hbk:celestial_mineral",
+    "hbk:celestial_mineral"
+  ],
+  "result": {
+    "id": "hbk:celestial_formation",
+    "count": 4
+  }
+}

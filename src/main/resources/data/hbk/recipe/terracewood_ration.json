@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:terracewood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:terracewood_fruit",
+    "hbk:terracewood_fruit",
+    "minecraft:wheat",
+    "hbk:stratified_mineral"
+  ]
+}

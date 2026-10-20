@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:foldwood_lamp",
+    "count": 4
+  },
+  "pattern": [
+    "PFP",
+    "FMF",
+    "PFP"
+  ],
+  "key": {
+    "P": "hbk:foldwood_planks",
+    "F": "hbk:foldwood_fruit",
+    "M": "hbk:primordial_mineral"
+  }
+}

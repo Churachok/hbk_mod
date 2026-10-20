@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:cavernous_stone",
+    "hbk:cavernous_stone",
+    "hbk:cavernous_stone",
+    "hbk:cavernous_stone",
+    "hbk:cavernous_mineral",
+    "hbk:cavernous_mineral",
+    "hbk:cavernous_mineral",
+    "hbk:cavernous_mineral"
+  ],
+  "result": {
+    "id": "hbk:cavernous_formation",
+    "count": 4
+  }
+}

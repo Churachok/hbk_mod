@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "hbk:item/inverse_chestplate",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -5662762
+      }
+    ]
+  }
+}

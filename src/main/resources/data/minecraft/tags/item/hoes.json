@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_hoe",
+    "hbk:celestial_hoe",
+    "hbk:columnar_hoe",
+    "hbk:cavernous_hoe",
+    "hbk:woven_hoe",
+    "hbk:sedimentary_hoe",
+    "hbk:labyrinthine_hoe",
+    "hbk:fragmented_hoe",
+    "hbk:inverse_hoe",
+    "hbk:stratified_hoe",
+    "hbk:field_hoe",
+    "hbk:harvest_sickle"
+  ]
+}

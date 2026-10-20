@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:dawn_alloy_block"
+  ],
+  "result": {
+    "id": "hbk:dawn_alloy_ingot",
+    "count": 9
+  }
+}

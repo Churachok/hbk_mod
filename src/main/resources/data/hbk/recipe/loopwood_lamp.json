@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:loopwood_lamp",
+    "count": 4
+  },
+  "pattern": [
+    "PFP",
+    "FMF",
+    "PFP"
+  ],
+  "key": {
+    "P": "hbk:loopwood_planks",
+    "F": "hbk:loopwood_fruit",
+    "M": "hbk:labyrinthine_mineral"
+  }
+}

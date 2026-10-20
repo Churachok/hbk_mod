@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/outer_stairs",
+  "textures": {
+    "bottom": "hbk:block/botany/foldwood_planks",
+    "top": "hbk:block/botany/foldwood_planks",
+    "side": "hbk:block/botany/foldwood_planks"
+  }
+}

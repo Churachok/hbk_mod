@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hbk:slit_alloy_sample",
+  "result": {
+    "id": "hbk:slit_alloy_ingot"
+  },
+  "experience": 1.0,
+  "cookingtime": 200
+}

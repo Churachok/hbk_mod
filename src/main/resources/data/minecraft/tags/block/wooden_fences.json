@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_fence",
+    "hbk:sailwood_fence",
+    "hbk:chordwood_fence",
+    "hbk:lanternwood_fence",
+    "hbk:knotwood_fence",
+    "hbk:siltwood_fence",
+    "hbk:loopwood_fence",
+    "hbk:shardwood_fence",
+    "hbk:pendantwood_fence",
+    "hbk:terracewood_fence"
+  ]
+}

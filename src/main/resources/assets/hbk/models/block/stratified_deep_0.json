@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/stratified_deep_0",
+    "end": "hbk:block/universe/stratified_deep_0_top"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/celestial_ore_2",
+    "end": "hbk:block/universe/celestial_ore_2_top"
+  }
+}

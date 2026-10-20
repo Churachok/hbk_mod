@@ -1,6 +1,8 @@
 package dev.kirill.hbk.client.mixin;
 
 import dev.kirill.hbk.client.KirillGlassesClient;
+import dev.kirill.hbk.client.AnomalyScreenEffects;
+import com.mojang.blaze3d.resource.CrossFrameResourcePool;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
@@ -16,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(GameRenderer.class)
 public abstract class GameRendererMixin {
 	@Shadow @Final private Minecraft minecraft;
+	@Shadow @Final private CrossFrameResourcePool resourcePool;
 
 	@Redirect(method = "render", at = @At(value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/LevelRenderer;doEntityOutline()V"))
@@ -31,6 +34,10 @@ public abstract class GameRendererMixin {
 			CallbackInfo ci) {
 		if (renderLevel && KirillGlassesClient.hasMobOutline()) {
 			this.minecraft.levelRenderer.doEntityOutline();
+		}
+		if (renderLevel) {
+			AnomalyScreenEffects.render(((GameRenderer) (Object) this).mainRenderTarget(), resourcePool,
+					deltaTracker.getGameTimeDeltaPartialTick(false));
 		}
 	}
 }

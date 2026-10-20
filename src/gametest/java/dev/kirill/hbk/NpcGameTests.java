@@ -31,7 +31,7 @@ public final class NpcGameTests {
 	}
 
 	@GameTest
-	public void hbkCreativeTabContainsEveryModItem(GameTestHelper test) {
+	public void hbkCreativeTabsPartitionEveryModItem(GameTestHelper test) {
 		var tab = net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB
 				.getValue(ModItems.HBK_CREATIVE_TAB_KEY);
 		test.assertTrue(tab != null, "HBK creative tab must be registered");
@@ -47,8 +47,16 @@ public final class NpcGameTests {
 				.filter(item -> HbkMod.MOD_ID.equals(
 						net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(item).getNamespace()))
 				.collect(java.util.stream.Collectors.toSet());
-		test.assertTrue(displayedItems.equals(registeredModItems),
-				"HBK creative tab must contain every registered mod item exactly once");
+		var worlds = net.minecraft.core.registries.BuiltInRegistries.CREATIVE_MODE_TAB.getValue(dev.kirill.hbk.universe.UniverseCreativeTab.KEY);
+		test.assertTrue(worlds != null && worlds.getDisplayName().equals(net.minecraft.network.chat.Component.translatable("itemGroup.hbk.worlds")), "Named worlds catalogue is registered");
+		worlds.buildContents(new net.minecraft.world.item.CreativeModeTab.ItemDisplayParameters(
+				test.getLevel().enabledFeatures(), true, test.getLevel().registryAccess()));
+		var worldItems = worlds.getDisplayItems().stream().map(ItemStack::getItem).collect(java.util.stream.Collectors.toSet());
+		test.assertTrue(worldItems.equals(new java.util.HashSet<>(dev.kirill.hbk.universe.UniverseCreativeTab.items()))
+				&& !worldItems.contains(net.minecraft.world.item.Items.AIR), "All world IDs resolve to real displayed items");
+		test.assertTrue(java.util.Collections.disjoint(displayedItems, worldItems), "World content has its own catalogue without duplicate entries in HBK");
+		displayedItems.addAll(worldItems);
+		test.assertTrue(displayedItems.equals(registeredModItems), "Together both HBK tabs contain every registered item exactly once");
 		test.succeed();
 	}
 

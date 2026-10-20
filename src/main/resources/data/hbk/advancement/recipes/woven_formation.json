@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_woven_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:woven_stone"
+          }
+        ]
+      }
+    },
+    "has_woven_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:woven_mineral"
+          }
+        ]
+      }
+    },
+    "has_woven_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:woven_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_woven_stone",
+      "has_woven_mineral",
+      "has_woven_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:woven_formation"
+    ]
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:stratified_stone",
+    "hbk:stratified_stone",
+    "hbk:stratified_stone",
+    "hbk:stratified_stone",
+    "hbk:stratified_mineral",
+    "hbk:stratified_mineral",
+    "hbk:stratified_mineral",
+    "hbk:stratified_mineral"
+  ],
+  "result": {
+    "id": "hbk:stratified_formation",
+    "count": 4
+  }
+}

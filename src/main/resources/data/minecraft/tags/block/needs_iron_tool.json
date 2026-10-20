@@ -1,6 +1,26 @@
 {
   "replace": false,
   "values": [
-    "hbk:uranium_ore"
+    "hbk:uranium_ore",
+    "hbk:primordial_deep",
+    "hbk:primordial_ore",
+    "hbk:celestial_deep",
+    "hbk:celestial_ore",
+    "hbk:columnar_deep",
+    "hbk:columnar_ore",
+    "hbk:cavernous_deep",
+    "hbk:cavernous_ore",
+    "hbk:woven_deep",
+    "hbk:woven_ore",
+    "hbk:sedimentary_deep",
+    "hbk:sedimentary_ore",
+    "hbk:labyrinthine_deep",
+    "hbk:labyrinthine_ore",
+    "hbk:fragmented_deep",
+    "hbk:fragmented_ore",
+    "hbk:inverse_deep",
+    "hbk:inverse_ore",
+    "hbk:stratified_deep",
+    "hbk:stratified_ore"
   ]
 }

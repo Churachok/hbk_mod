@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:knotwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:knotwood_fruit",
+    "hbk:woven_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

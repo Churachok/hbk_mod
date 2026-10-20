@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:pendantwood_lamp",
+    "count": 4
+  },
+  "pattern": [
+    "PFP",
+    "FMF",
+    "PFP"
+  ],
+  "key": {
+    "P": "hbk:pendantwood_planks",
+    "F": "hbk:pendantwood_fruit",
+    "M": "hbk:inverse_mineral"
+  }
+}

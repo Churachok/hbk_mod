@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_labyrinthine_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:labyrinthine_shard"
+          }
+        ]
+      }
+    },
+    "has_labyrinthine_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:labyrinthine_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_labyrinthine_shard",
+      "has_labyrinthine_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:labyrinthine_mineral"
+    ]
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hbk:sharp_thread_sample",
+  "result": {
+    "id": "hbk:sharp_thread_ingot"
+  },
+  "experience": 1.0,
+  "cookingtime": 200
+}

@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cavernous_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:cavernous_stone"
+          }
+        ]
+      }
+    },
+    "has_cavernous_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:cavernous_mineral"
+          }
+        ]
+      }
+    },
+    "has_cavernous_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:cavernous_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_cavernous_stone",
+      "has_cavernous_mineral",
+      "has_cavernous_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:cavernous_formation"
+    ]
+  }
+}

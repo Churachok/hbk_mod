@@ -34,6 +34,11 @@ tasks.named('runClientGameTest', JavaExec) {
 	systemProperty 'hbk.client.gametest', providers.gradleProperty('hbkClientTest').getOrElse('all')
 }
 
+tasks.named('runGameTest', JavaExec) {
+	def filter = providers.gradleProperty('hbkGameTest')
+	if (filter.isPresent()) systemProperty 'fabric-api.gametest.filter', filter.get()
+}
+
 processResources {
 	def version = project.version
 	inputs.property "version", version

@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stratified_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:stratified_shard"
+          }
+        ]
+      }
+    },
+    "has_stratified_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:stratified_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stratified_shard",
+      "has_stratified_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:stratified_mineral"
+    ]
+  }
+}

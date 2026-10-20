@@ -1,0 +1,15 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:foldwood_planks",
+    "hbk:sailwood_planks",
+    "hbk:chordwood_planks",
+    "hbk:lanternwood_planks",
+    "hbk:knotwood_planks",
+    "hbk:siltwood_planks",
+    "hbk:loopwood_planks",
+    "hbk:shardwood_planks",
+    "hbk:pendantwood_planks",
+    "hbk:terracewood_planks"
+  ]
+}

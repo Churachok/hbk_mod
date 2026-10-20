@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_celestial_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:celestial_shard"
+          }
+        ]
+      }
+    },
+    "has_celestial_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:celestial_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_celestial_shard",
+      "has_celestial_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:celestial_mineral"
+    ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:sharp_thread_block"
+  ],
+  "result": {
+    "id": "hbk:sharp_thread_ingot",
+    "count": 9
+  }
+}

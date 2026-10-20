@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/sedimentary",
+    "#hbk:alloy_materials/stratified"
+  ],
+  "result": {
+    "id": "hbk:thermal_alloy_sample"
+  }
+}

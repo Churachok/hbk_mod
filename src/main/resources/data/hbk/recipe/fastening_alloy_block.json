@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": "hbk:fastening_alloy_ingot"
+  },
+  "result": {
+    "id": "hbk:fastening_alloy_block"
+  }
+}

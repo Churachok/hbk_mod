@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_fragmented_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:fragmented_shard"
+          }
+        ]
+      }
+    },
+    "has_fragmented_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:fragmented_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_fragmented_shard",
+      "has_fragmented_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:fragmented_mineral"
+    ]
+  }
+}

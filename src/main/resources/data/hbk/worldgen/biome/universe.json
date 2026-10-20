@@ -1,0 +1,21 @@
+{
+  "has_precipitation": true,
+  "temperature": 0.6,
+  "downfall": 0.5,
+  "effects": {
+    "water_color": "#6198b0"
+  },
+  "carvers": [],
+  "features": [],
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  }
+}

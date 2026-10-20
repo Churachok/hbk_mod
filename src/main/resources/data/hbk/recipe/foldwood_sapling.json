@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:foldwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:foldwood_fruit",
+    "hbk:primordial_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

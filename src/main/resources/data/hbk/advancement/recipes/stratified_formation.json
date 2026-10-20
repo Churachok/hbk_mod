@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_stratified_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:stratified_stone"
+          }
+        ]
+      }
+    },
+    "has_stratified_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:stratified_mineral"
+          }
+        ]
+      }
+    },
+    "has_stratified_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:stratified_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_stratified_stone",
+      "has_stratified_mineral",
+      "has_stratified_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:stratified_formation"
+    ]
+  }
+}

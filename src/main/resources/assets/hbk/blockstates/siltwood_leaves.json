@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hbk:block/siltwood_leaves",
+        "weight": 3
+      },
+      {
+        "model": "hbk:block/siltwood_leaves_alt"
+      }
+    ]
+  }
+}

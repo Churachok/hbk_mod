@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:sedimentary_stone",
+    "hbk:sedimentary_stone",
+    "hbk:sedimentary_stone",
+    "hbk:sedimentary_stone",
+    "hbk:sedimentary_mineral",
+    "hbk:sedimentary_mineral",
+    "hbk:sedimentary_mineral",
+    "hbk:sedimentary_mineral"
+  ],
+  "result": {
+    "id": "hbk:sedimentary_formation",
+    "count": 4
+  }
+}

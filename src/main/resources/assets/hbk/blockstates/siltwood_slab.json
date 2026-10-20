@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/siltwood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/siltwood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/siltwood_planks"
+    }
+  }
+}

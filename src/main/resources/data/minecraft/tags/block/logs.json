@@ -1,6 +1,26 @@
 {
   "replace": false,
   "values": [
-    "hbk:dry_log"
+    "hbk:dry_log",
+    "hbk:foldwood_log",
+    "hbk:foldwood_stripped_log",
+    "hbk:sailwood_log",
+    "hbk:sailwood_stripped_log",
+    "hbk:chordwood_log",
+    "hbk:chordwood_stripped_log",
+    "hbk:lanternwood_log",
+    "hbk:lanternwood_stripped_log",
+    "hbk:knotwood_log",
+    "hbk:knotwood_stripped_log",
+    "hbk:siltwood_log",
+    "hbk:siltwood_stripped_log",
+    "hbk:loopwood_log",
+    "hbk:loopwood_stripped_log",
+    "hbk:shardwood_log",
+    "hbk:shardwood_stripped_log",
+    "hbk:pendantwood_log",
+    "hbk:pendantwood_stripped_log",
+    "hbk:terracewood_log",
+    "hbk:terracewood_stripped_log"
   ]
 }

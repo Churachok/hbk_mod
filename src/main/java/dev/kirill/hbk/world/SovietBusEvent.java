@@ -99,6 +99,7 @@ public final class SovietBusEvent {
 	}
 
 	public static StartResult start(ServerPlayer player) {
+		if (AnomalyZones.contains(player)) return StartResult.UNAVAILABLE;
 		if (!player.isAlive() || player.isSpectator() || UnknownEncounter.isActive(player)) {
 			return StartResult.UNAVAILABLE;
 		}
@@ -137,6 +138,7 @@ public final class SovietBusEvent {
 	}
 
 	public static boolean board(ServerPlayer player, SovietBusEntity bus) {
+		if (AnomalyZones.contains(player) || AnomalyZones.contains(bus)) return false;
 		if (!bus.isWaiting() || bus.level() != player.level() || !startTrip(player)) return false;
 		sendBoardingSmoke(player.level(), bus.position());
 		// The van is consumed now, not after a departure animation in a possibly unloaded chunk.
@@ -164,6 +166,7 @@ public final class SovietBusEvent {
 	}
 
 	public static boolean startTrip(ServerPlayer player) {
+		if (AnomalyZones.contains(player)) return false;
 		// Pick the TYPE before looking up any locations. Distance and availability
 		// must never affect the six-way lottery or replace its result with another type.
 		Destination destination = chooseDestination(player.getRandom());

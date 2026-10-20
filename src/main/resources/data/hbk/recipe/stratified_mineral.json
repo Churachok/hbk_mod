@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:stratified_shard",
+    "hbk:stratified_shard",
+    "hbk:stratified_shard",
+    "hbk:stratified_shard"
+  ],
+  "result": {
+    "id": "hbk:stratified_mineral",
+    "count": 1
+  }
+}

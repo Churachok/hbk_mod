@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "pattern": [
+    "III",
+    "III",
+    "III"
+  ],
+  "key": {
+    "I": "hbk:sonorous_steel_ingot"
+  },
+  "result": {
+    "id": "hbk:sonorous_steel_block"
+  }
+}

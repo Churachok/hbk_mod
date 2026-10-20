@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_shovel",
+    "hbk:celestial_shovel",
+    "hbk:columnar_shovel",
+    "hbk:cavernous_shovel",
+    "hbk:woven_shovel",
+    "hbk:sedimentary_shovel",
+    "hbk:labyrinthine_shovel",
+    "hbk:fragmented_shovel",
+    "hbk:inverse_shovel",
+    "hbk:stratified_shovel",
+    "hbk:field_shovel"
+  ]
+}

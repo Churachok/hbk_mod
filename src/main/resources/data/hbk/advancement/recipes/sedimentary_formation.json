@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_sedimentary_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:sedimentary_stone"
+          }
+        ]
+      }
+    },
+    "has_sedimentary_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:sedimentary_mineral"
+          }
+        ]
+      }
+    },
+    "has_sedimentary_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:sedimentary_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_sedimentary_stone",
+      "has_sedimentary_mineral",
+      "has_sedimentary_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:sedimentary_formation"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": ["SCS", "RFR", "SBS"],
+  "key": {
+    "S": "hbk:spatial_shard",
+    "C": "minecraft:smoker",
+    "R": "minecraft:redstone",
+    "F": "minecraft:furnace",
+    "B": "minecraft:blast_furnace"
+  },
+  "result": {"id": "hbk:time_furnace", "count": 1}
+}

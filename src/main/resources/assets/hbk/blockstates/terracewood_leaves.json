@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hbk:block/terracewood_leaves",
+        "weight": 3
+      },
+      {
+        "model": "hbk:block/terracewood_leaves_alt"
+      }
+    ]
+  }
+}

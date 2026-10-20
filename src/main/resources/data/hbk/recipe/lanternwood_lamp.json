@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:lanternwood_lamp",
+    "count": 4
+  },
+  "pattern": [
+    "PFP",
+    "FMF",
+    "PFP"
+  ],
+  "key": {
+    "P": "hbk:lanternwood_planks",
+    "F": "hbk:lanternwood_fruit",
+    "M": "hbk:cavernous_mineral"
+  }
+}

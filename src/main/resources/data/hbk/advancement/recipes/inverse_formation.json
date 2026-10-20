@@ -1,0 +1,47 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_inverse_stone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:inverse_stone"
+          }
+        ]
+      }
+    },
+    "has_inverse_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:inverse_mineral"
+          }
+        ]
+      }
+    },
+    "has_inverse_formation": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:inverse_formation"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_inverse_stone",
+      "has_inverse_mineral",
+      "has_inverse_formation"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:inverse_formation"
+    ]
+  }
+}

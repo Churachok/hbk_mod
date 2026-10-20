@@ -1,0 +1,36 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_woven_shard": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:woven_shard"
+          }
+        ]
+      }
+    },
+    "has_woven_mineral": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "hbk:woven_mineral"
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_woven_shard",
+      "has_woven_mineral"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "hbk:woven_mineral"
+    ]
+  }
+}

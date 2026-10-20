@@ -81,6 +81,10 @@ public class ModItems {
 			Registries.JUKEBOX_SONG, HbkMod.id("ussr_anthem"));
 
 	public static final Item INFECTED_DIRT = block("infected_dirt", ModBlocks.INFECTED_DIRT);
+	public static final Item FRACTURED_BLOCK = block("fractured_block", ModBlocks.FRACTURED_BLOCK);
+	public static final Item TIME_FURNACE = block("time_furnace", ModBlocks.TIME_FURNACE);
+	public static final Item SPATIAL_SHARD = register("spatial_shard", Item::new,
+			new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE));
 	public static final Item RADIOACTIVE_STONE = block("radioactive_stone", ModBlocks.RADIOACTIVE_STONE);
 	public static final Item ASH_SOIL = block("ash_soil", ModBlocks.ASH_SOIL);
 	public static final Item CRACKED_RADIOACTIVE_STONE = block("cracked_radioactive_stone", ModBlocks.CRACKED_RADIOACTIVE_STONE);
@@ -483,6 +487,7 @@ public class ModItems {
 						.icon(ModItems::createHbkCreativeTabIcon)
 						.displayItems((parameters, output) -> BuiltInRegistries.ITEM.stream()
 								.filter(item -> HbkMod.MOD_ID.equals(BuiltInRegistries.ITEM.getKey(item).getNamespace()))
+								.filter(item -> !dev.kirill.hbk.universe.UniverseCreativeTab.contains(item))
 								.forEach(item -> output.accept(item)))
 						.build());
 
@@ -491,6 +496,8 @@ public class ModItems {
 				Identifier.withDefaultNamespace("natural_blocks")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(naturalBlocks).register(output -> {
+			output.accept(FRACTURED_BLOCK);
+			output.accept(SPATIAL_SHARD);
 			output.accept(INFECTED_DIRT);
 			output.accept(RADIOACTIVE_STONE);
 			output.accept(ASH_SOIL);

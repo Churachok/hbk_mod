@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:celestial_shard",
+    "hbk:celestial_shard",
+    "hbk:celestial_shard",
+    "hbk:celestial_shard"
+  ],
+  "result": {
+    "id": "hbk:celestial_mineral",
+    "count": 1
+  }
+}

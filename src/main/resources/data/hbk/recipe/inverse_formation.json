@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:inverse_stone",
+    "hbk:inverse_stone",
+    "hbk:inverse_stone",
+    "hbk:inverse_stone",
+    "hbk:inverse_mineral",
+    "hbk:inverse_mineral",
+    "hbk:inverse_mineral",
+    "hbk:inverse_mineral"
+  ],
+  "result": {
+    "id": "hbk:inverse_formation",
+    "count": 4
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "side": "hbk:block/universe/inverse_formation_0",
+    "end": "hbk:block/universe/inverse_formation_0_top"
+  }
+}

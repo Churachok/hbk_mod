@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:pendantwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:pendantwood_fruit",
+    "hbk:inverse_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/primordial",
+    "#hbk:alloy_materials/woven"
+  ],
+  "result": {
+    "id": "hbk:root_steel_sample"
+  }
+}

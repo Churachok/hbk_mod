@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:woven_stone",
+    "hbk:woven_stone",
+    "hbk:woven_stone",
+    "hbk:woven_stone",
+    "hbk:woven_mineral",
+    "hbk:woven_mineral",
+    "hbk:woven_mineral",
+    "hbk:woven_mineral"
+  ],
+  "result": {
+    "id": "hbk:woven_formation",
+    "count": 4
+  }
+}

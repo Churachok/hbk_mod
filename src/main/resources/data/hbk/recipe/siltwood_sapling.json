@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:siltwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:siltwood_fruit",
+    "hbk:sedimentary_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

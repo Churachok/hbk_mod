@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:lanternwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:lanternwood_fruit",
+    "hbk:cavernous_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:lantern_alloy_block"
+  ],
+  "result": {
+    "id": "hbk:lantern_alloy_ingot",
+    "count": 9
+  }
+}

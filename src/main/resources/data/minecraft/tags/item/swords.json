@@ -1,0 +1,16 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_sword",
+    "hbk:celestial_sword",
+    "hbk:columnar_sword",
+    "hbk:cavernous_sword",
+    "hbk:woven_sword",
+    "hbk:sedimentary_sword",
+    "hbk:labyrinthine_sword",
+    "hbk:fragmented_sword",
+    "hbk:inverse_sword",
+    "hbk:stratified_sword",
+    "hbk:rift_sword"
+  ]
+}

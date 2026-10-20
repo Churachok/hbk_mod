@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:pendantwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:pendantwood_fruit",
+    "hbk:pendantwood_fruit",
+    "minecraft:wheat",
+    "hbk:inverse_mineral"
+  ]
+}

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smithing_transform",
+  "template": "minecraft:netherite_upgrade_smithing_template",
+  "base": "minecraft:netherite_ingot",
+  "addition": "hbk:route_inverite_ingot",
+  "result": {
+    "id": "hbk:transition_plate"
+  }
+}

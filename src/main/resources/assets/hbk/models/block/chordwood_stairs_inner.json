@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "hbk:block/botany/chordwood_planks",
+    "top": "hbk:block/botany/chordwood_planks",
+    "side": "hbk:block/botany/chordwood_planks"
+  }
+}

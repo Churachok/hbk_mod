@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "hbk:block/alloys/magnetic_alloy_block"
+  }
+}

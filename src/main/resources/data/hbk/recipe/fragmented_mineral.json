@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:fragmented_shard",
+    "hbk:fragmented_shard",
+    "hbk:fragmented_shard",
+    "hbk:fragmented_shard"
+  ],
+  "result": {
+    "id": "hbk:fragmented_mineral",
+    "count": 1
+  }
+}

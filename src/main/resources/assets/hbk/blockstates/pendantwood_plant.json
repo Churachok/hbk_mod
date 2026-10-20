@@ -1,0 +1,32 @@
+{
+  "variants": {
+    "age=0,hanging=false": {
+      "model": "hbk:block/pendantwood_plant_0"
+    },
+    "age=0,hanging=true": {
+      "model": "hbk:block/pendantwood_plant_0",
+      "x": 180
+    },
+    "age=1,hanging=false": {
+      "model": "hbk:block/pendantwood_plant_1"
+    },
+    "age=1,hanging=true": {
+      "model": "hbk:block/pendantwood_plant_1",
+      "x": 180
+    },
+    "age=2,hanging=false": {
+      "model": "hbk:block/pendantwood_plant_2"
+    },
+    "age=2,hanging=true": {
+      "model": "hbk:block/pendantwood_plant_2",
+      "x": 180
+    },
+    "age=3,hanging=false": {
+      "model": "hbk:block/pendantwood_plant_3"
+    },
+    "age=3,hanging=true": {
+      "model": "hbk:block/pendantwood_plant_3",
+      "x": 180
+    }
+  }
+}

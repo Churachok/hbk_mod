@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/woven",
+    "#hbk:alloy_materials/stratified"
+  ],
+  "result": {
+    "id": "hbk:membrane_alloy_sample"
+  }
+}

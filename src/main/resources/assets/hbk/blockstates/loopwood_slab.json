@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "hbk:block/loopwood_slab"
+    },
+    "type=top": {
+      "model": "hbk:block/loopwood_slab_top"
+    },
+    "type=double": {
+      "model": "hbk:block/loopwood_planks"
+    }
+  }
+}

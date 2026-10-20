@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:sailwood_ration",
+    "count": 1
+  },
+  "ingredients": [
+    "hbk:sailwood_fruit",
+    "hbk:sailwood_fruit",
+    "minecraft:wheat",
+    "hbk:celestial_mineral"
+  ]
+}

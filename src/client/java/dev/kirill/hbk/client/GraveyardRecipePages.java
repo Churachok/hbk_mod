@@ -27,10 +27,10 @@ public final class GraveyardRecipePages {
 	}
 
 	public static void render(GuiGraphicsExtractor graphics, int page, int screenWidth, int mouseX, int mouseY) {
-		if (page < 1 || page > GraveyardRecipeBook.RECIPES.size()) {
+		if (page < 1 || page > GraveyardRecipeBook.DIAGRAM_RECIPES.size()) {
 			return;
 		}
-		RecipeDiagram diagram = CACHE.computeIfAbsent(GraveyardRecipeBook.RECIPES.get(page - 1), GraveyardRecipePages::load);
+		RecipeDiagram diagram = CACHE.computeIfAbsent(GraveyardRecipeBook.DIAGRAM_RECIPES.get(page - 1), GraveyardRecipePages::load);
 		if (diagram == null) {
 			return;
 		}

@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "hbk:primordial_chestplate",
+    "hbk:celestial_chestplate",
+    "hbk:columnar_chestplate",
+    "hbk:cavernous_chestplate",
+    "hbk:woven_chestplate",
+    "hbk:sedimentary_chestplate",
+    "hbk:labyrinthine_chestplate",
+    "hbk:fragmented_chestplate",
+    "hbk:inverse_chestplate",
+    "hbk:stratified_chestplate",
+    "hbk:gliding_chestplate",
+    "hbk:gravity_chestplate"
+  ]
+}

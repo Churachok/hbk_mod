@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:woven_shard",
+    "hbk:woven_shard",
+    "hbk:woven_shard",
+    "hbk:woven_shard"
+  ],
+  "result": {
+    "id": "hbk:woven_mineral",
+    "count": 1
+  }
+}

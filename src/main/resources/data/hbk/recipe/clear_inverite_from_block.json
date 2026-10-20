@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:clear_inverite_block"
+  ],
+  "result": {
+    "id": "hbk:clear_inverite_ingot",
+    "count": 9
+  }
+}

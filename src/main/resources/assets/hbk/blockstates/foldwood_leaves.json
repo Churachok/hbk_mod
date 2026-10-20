@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "hbk:block/foldwood_leaves",
+        "weight": 3
+      },
+      {
+        "model": "hbk:block/foldwood_leaves_alt"
+      }
+    ]
+  }
+}

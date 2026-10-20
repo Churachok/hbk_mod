@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hbk:block/magnetic_alloy_block"
+    }
+  }
+}

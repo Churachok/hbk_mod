@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "powered=false": {
+      "model": "minecraft:block/tinted_glass"
+    },
+    "powered=true": {
+      "model": "minecraft:block/glass"
+    }
+  }
+}

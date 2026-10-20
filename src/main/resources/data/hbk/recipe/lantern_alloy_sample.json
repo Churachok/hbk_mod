@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "#hbk:alloy_materials/cavernous",
+    "#hbk:alloy_materials/woven"
+  ],
+  "result": {
+    "id": "hbk:lantern_alloy_sample"
+  }
+}

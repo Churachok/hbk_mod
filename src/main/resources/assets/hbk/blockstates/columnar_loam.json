@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hbk:block/columnar_loam"
+    }
+  }
+}

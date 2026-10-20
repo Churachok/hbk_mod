@@ -23,8 +23,12 @@ public class HbkClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
 		MenuScreens.register(ModMenuTypes.IMPROVED_BOAT_FUEL, ImprovedBoatFuelScreen::new);
+		MenuScreens.register(ModMenuTypes.TIME_FURNACE, TimeFurnaceScreen::new);
 		GoshasRageClient.register();
 		BossFightMusic.register();
+		AnomalyClient.register();
+		UniverseClient.register();
+		EntityRendererRegistry.register(dev.kirill.hbk.universe.UniverseAlloys.CARGO_MINECART, ctx -> new net.minecraft.client.renderer.entity.MinecartRenderer(ctx, net.minecraft.client.model.geom.ModelLayers.CHEST_MINECART));
 		UnknownEncounterClient.register();
 		UnknownDeathClient.register();
 		ModEntityModelLayers.register();

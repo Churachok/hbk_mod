@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "hbk:columnar_shard",
+    "hbk:columnar_shard",
+    "hbk:columnar_shard",
+    "hbk:columnar_shard"
+  ],
+  "result": {
+    "id": "hbk:columnar_mineral",
+    "count": 1
+  }
+}

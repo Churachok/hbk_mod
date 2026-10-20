@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:sailwood_sapling",
+    "count": 2
+  },
+  "ingredients": [
+    "hbk:sailwood_fruit",
+    "hbk:celestial_mineral",
+    "#hbk:sapling_soil"
+  ]
+}

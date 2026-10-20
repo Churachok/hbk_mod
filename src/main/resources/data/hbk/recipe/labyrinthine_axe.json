@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "MM",
+    "MS",
+    " S"
+  ],
+  "key": {
+    "M": "hbk:labyrinthine_mineral",
+    "S": "minecraft:stick"
+  },
+  "result": {
+    "id": "hbk:labyrinthine_axe"
+  }
+}

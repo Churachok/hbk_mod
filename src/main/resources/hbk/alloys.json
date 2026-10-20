@@ -1,0 +1,775 @@
+[
+  {
+    "first": 0,
+    "second": 1,
+    "id": "light_bronze",
+    "ru": "Лёгкая бронза",
+    "en": "Light Bronze",
+    "rewards": [
+      {
+        "id": "gliding_chestplate",
+        "role": "chestplate",
+        "model": "netherite_chestplate",
+        "ru": "Планирующий нагрудник",
+        "en": "Gliding Chestplate",
+        "base": "netherite_chestplate"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 2,
+    "id": "drilling_steel",
+    "ru": "Буровая сталь",
+    "en": "Drilling Steel",
+    "rewards": [
+      {
+        "id": "drill_pickaxe",
+        "role": "pickaxe",
+        "model": "netherite_pickaxe",
+        "ru": "Буровая кирка",
+        "en": "Drill Pickaxe",
+        "base": "netherite_pickaxe"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 3,
+    "id": "light_steel",
+    "ru": "Светосталь",
+    "en": "Lightsteel",
+    "rewards": [
+      {
+        "id": "mining_helmet",
+        "role": "helmet",
+        "model": "netherite_helmet",
+        "ru": "Шахтёрский шлем",
+        "en": "Mining Helmet",
+        "base": "netherite_helmet"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 4,
+    "id": "root_steel",
+    "ru": "Корневая сталь",
+    "en": "Root Steel",
+    "rewards": [
+      {
+        "id": "forest_axe",
+        "role": "axe",
+        "model": "netherite_axe",
+        "ru": "Лесной топор",
+        "en": "Forest Axe",
+        "base": "netherite_axe"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 5,
+    "id": "earth_bronze",
+    "ru": "Земляная бронза",
+    "en": "Earth Bronze",
+    "rewards": [
+      {
+        "id": "field_hoe",
+        "role": "hoe",
+        "model": "netherite_hoe",
+        "ru": "Полевая мотыга",
+        "en": "Field Hoe",
+        "base": "netherite_hoe"
+      },
+      {
+        "id": "field_shovel",
+        "role": "shovel",
+        "model": "netherite_shovel",
+        "ru": "Полевая лопата",
+        "en": "Field Shovel",
+        "base": "netherite_shovel"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 6,
+    "id": "trail_steel",
+    "ru": "Следовая сталь",
+    "en": "Trail Steel",
+    "rewards": [
+      {
+        "id": "entry_compass",
+        "role": "misc",
+        "model": "compass",
+        "ru": "Компас входа",
+        "en": "Entry Compass",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 7,
+    "id": "assembly_alloy",
+    "ru": "Сборочный сплав",
+    "en": "Assembly Alloy",
+    "rewards": [
+      {
+        "id": "recycling_anvil",
+        "role": "device",
+        "model": "anvil",
+        "ru": "Разборочная наковальня",
+        "en": "Recycling Anvil",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 8,
+    "id": "support_inverite",
+    "ru": "Опорный инверит",
+    "en": "Support Inverite",
+    "rewards": [
+      {
+        "id": "building_glove",
+        "role": "misc",
+        "model": "brush",
+        "ru": "Строительная перчатка",
+        "en": "Building Glove",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 0,
+    "second": 9,
+    "id": "repair_steel",
+    "ru": "Ремонтная сталь",
+    "en": "Repair Steel",
+    "rewards": [
+      {
+        "id": "field_repair_kit",
+        "role": "misc",
+        "model": "shears",
+        "ru": "Походный ремкомплект",
+        "en": "Field Repair Kit",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 2,
+    "id": "ballast_alloy",
+    "ru": "Балластный сплав",
+    "en": "Ballast Alloy",
+    "rewards": [
+      {
+        "id": "anchor_boots",
+        "role": "boots",
+        "model": "netherite_boots",
+        "ru": "Якорные ботинки",
+        "en": "Anchor Boots",
+        "base": "netherite_boots"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 3,
+    "id": "dawn_alloy",
+    "ru": "Рассветный сплав",
+    "en": "Dawn Alloy",
+    "rewards": [
+      {
+        "id": "expedition_barometer",
+        "role": "misc",
+        "model": "clock",
+        "ru": "Экспедиционный барометр",
+        "en": "Expedition Barometer",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 4,
+    "id": "sail_wire",
+    "ru": "Парусная проволока",
+    "en": "Sail Wire",
+    "rewards": [
+      {
+        "id": "grappling_hook",
+        "role": "misc",
+        "model": "fishing_rod",
+        "ru": "Крюк-кошка",
+        "en": "Grappling Hook",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 5,
+    "id": "foam_alloy",
+    "ru": "Пенный сплав",
+    "en": "Foam Alloy",
+    "rewards": [
+      {
+        "id": "air_tank",
+        "role": "misc",
+        "model": "nautilus_shell",
+        "ru": "Дыхательный баллон",
+        "en": "Air Tank",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 6,
+    "id": "wind_alloy",
+    "ru": "Ветровой сплав",
+    "en": "Wind Alloy",
+    "rewards": [
+      {
+        "id": "wind_vane",
+        "role": "device",
+        "model": "daylight_detector",
+        "ru": "Флюгер",
+        "en": "Wind Vane",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 7,
+    "id": "impulse_alloy",
+    "ru": "Импульсный сплав",
+    "en": "Impulse Alloy",
+    "rewards": [
+      {
+        "id": "impulse_crossbow",
+        "role": "crossbow",
+        "model": "crossbow",
+        "ru": "Импульсный арбалет",
+        "en": "Impulse Crossbow",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 8,
+    "id": "sail_alloy",
+    "ru": "Парусный сплав",
+    "en": "Sail Alloy",
+    "rewards": [
+      {
+        "id": "sail_boots",
+        "role": "boots",
+        "model": "netherite_boots",
+        "ru": "Парусные ботинки",
+        "en": "Sail Boots",
+        "base": "netherite_boots"
+      }
+    ]
+  },
+  {
+    "first": 1,
+    "second": 9,
+    "id": "lifting_alloy",
+    "ru": "Подъёмный сплав",
+    "en": "Lifting Alloy",
+    "rewards": [
+      {
+        "id": "lift_platform",
+        "role": "device",
+        "model": "heavy_weighted_pressure_plate",
+        "ru": "Лифт-платформа",
+        "en": "Lift Platform",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 2,
+    "second": 3,
+    "id": "sonorous_steel",
+    "ru": "Гулкая сталь",
+    "en": "Sonorous Steel",
+    "rewards": [
+      {
+        "id": "seismic_hammer",
+        "role": "pickaxe",
+        "model": "netherite_pickaxe",
+        "ru": "Сейсмический молот",
+        "en": "Seismic Hammer",
+        "base": "netherite_pickaxe"
+      }
+    ]
+  },
+  {
+    "first": 2,
+    "second": 4,
+    "id": "spring_steel",
+    "ru": "Упругая сталь",
+    "en": "Spring Steel",
+    "rewards": [
+      {
+        "id": "spring_shield",
+        "role": "shield",
+        "model": "shield",
+        "ru": "Упругий щит",
+        "en": "Spring Shield",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 2,
+    "second": 5,
+    "id": "seabed_steel",
+    "ru": "Донная сталь",
+    "en": "Seabed Steel",
+    "rewards": [
+      {
+        "id": "diving_boots",
+        "role": "boots",
+        "model": "netherite_boots",
+        "ru": "Водолазные ботинки",
+        "en": "Diving Boots",
+        "base": "netherite_boots"
+      }
+    ]
+  },
+  {
+    "first": 2,
+    "second": 6,
+    "id": "fastening_alloy",
+    "ru": "Крепёжный сплав",
+    "en": "Fastening Alloy",
+    "rewards": [
+      {
+        "id": "row_builder",
+        "role": "misc",
+        "model": "brush",
+        "ru": "Укладчик",
+        "en": "Row Builder",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 2,
+    "second": 7,
+    "id": "ramming_steel",
+    "ru": "Таранная сталь",
+    "en": "Ramming Steel",
+    "rewards": [
+      {
+        "id": "blast_shield",
+        "role": "shield",
+        "model": "shield",
+        "ru": "Противовзрывной щит",
+        "en": "Blast Shield",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 2,
+    "second": 8,
+    "id": "counterweight_alloy",
+    "ru": "Обратновесный сплав",
+    "en": "Counterweight Alloy",
+    "rewards": [
+      {
+        "id": "gravity_chestplate",
+        "role": "chestplate",
+        "model": "netherite_chestplate",
+        "ru": "Гравитационный нагрудник",
+        "en": "Gravity Chestplate",
+        "base": "netherite_chestplate"
+      }
+    ]
+  },
+  {
+    "first": 2,
+    "second": 9,
+    "id": "riveted_steel",
+    "ru": "Клёпаная сталь",
+    "en": "Riveted Steel",
+    "rewards": [
+      {
+        "id": "cargo_minecart",
+        "role": "minecart",
+        "model": "chest_minecart",
+        "ru": "Грузовая вагонетка",
+        "en": "Cargo Minecart",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 3,
+    "second": 4,
+    "id": "lantern_alloy",
+    "ru": "Фонарный сплав",
+    "en": "Lantern Alloy",
+    "rewards": [
+      {
+        "id": "growth_lamp",
+        "role": "device",
+        "model": "sea_lantern",
+        "ru": "Светильник-теплица",
+        "en": "Growth Lamp",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 3,
+    "second": 5,
+    "id": "filtering_alloy",
+    "ru": "Фильтрующий сплав",
+    "en": "Filtering Alloy",
+    "rewards": [
+      {
+        "id": "air_purifier",
+        "role": "device",
+        "model": "blast_furnace",
+        "ru": "Очиститель воздуха",
+        "en": "Air Purifier",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 3,
+    "second": 6,
+    "id": "echo_steel",
+    "ru": "Эхосталь",
+    "en": "Echosteel",
+    "rewards": [
+      {
+        "id": "anomaly_sensor",
+        "role": "device",
+        "model": "observer",
+        "ru": "Датчик аномалий",
+        "en": "Anomaly Sensor",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 3,
+    "second": 7,
+    "id": "resonant_alloy",
+    "ru": "Резонансный сплав",
+    "en": "Resonant Alloy",
+    "rewards": [
+      {
+        "id": "tuning_fork",
+        "role": "misc",
+        "model": "amethyst_shard",
+        "ru": "Камертон",
+        "en": "Tuning Fork",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 3,
+    "second": 8,
+    "id": "clear_inverite",
+    "ru": "Просветный инверит",
+    "en": "Clear Inverite",
+    "rewards": [
+      {
+        "id": "phase_glass",
+        "role": "device",
+        "model": "tinted_glass",
+        "ru": "Фазовое стекло",
+        "en": "Phase Glass",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 3,
+    "second": 9,
+    "id": "heat_alloy",
+    "ru": "Жаровой сплав",
+    "en": "Heat Alloy",
+    "rewards": [
+      {
+        "id": "smelting_pickaxe",
+        "role": "pickaxe",
+        "model": "netherite_pickaxe",
+        "ru": "Жаровая кирка",
+        "en": "Smelting Pickaxe",
+        "base": "netherite_pickaxe"
+      }
+    ]
+  },
+  {
+    "first": 4,
+    "second": 5,
+    "id": "hermetic_alloy",
+    "ru": "Герметичный сплав",
+    "en": "Hermetic Alloy",
+    "rewards": [
+      {
+        "id": "hermetic_helmet",
+        "role": "helmet",
+        "model": "netherite_helmet",
+        "ru": "Герметичный шлем",
+        "en": "Hermetic Helmet",
+        "base": "netherite_helmet"
+      }
+    ]
+  },
+  {
+    "first": 4,
+    "second": 6,
+    "id": "loop_steel",
+    "ru": "Петельная сталь",
+    "en": "Loop Steel",
+    "rewards": [
+      {
+        "id": "rope_ladder_spool",
+        "role": "misc",
+        "model": "lead",
+        "ru": "Катушка верёвочной лестницы",
+        "en": "Rope Ladder Spool",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 4,
+    "second": 7,
+    "id": "sharp_thread",
+    "ru": "Остронит",
+    "en": "Sharpthread",
+    "rewards": [
+      {
+        "id": "harvest_sickle",
+        "role": "hoe",
+        "model": "netherite_hoe",
+        "ru": "Серп",
+        "en": "Harvest Sickle",
+        "base": "netherite_hoe"
+      }
+    ]
+  },
+  {
+    "first": 4,
+    "second": 8,
+    "id": "reverse_wire",
+    "ru": "Обратная проволока",
+    "en": "Reverse Wire",
+    "rewards": [
+      {
+        "id": "carrying_grips",
+        "role": "misc",
+        "model": "shears",
+        "ru": "Переносные захваты",
+        "en": "Carrying Grips",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 4,
+    "second": 9,
+    "id": "membrane_alloy",
+    "ru": "Мембранный сплав",
+    "en": "Membrane Alloy",
+    "rewards": [
+      {
+        "id": "sample_bag",
+        "role": "misc",
+        "model": "bundle",
+        "ru": "Сумка образцов",
+        "en": "Sample Bag",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 5,
+    "second": 6,
+    "id": "washing_alloy",
+    "ru": "Промывочный сплав",
+    "en": "Washing Alloy",
+    "rewards": [
+      {
+        "id": "washing_trough",
+        "role": "device",
+        "model": "cauldron",
+        "ru": "Промывочный лоток",
+        "en": "Washing Trough",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 5,
+    "second": 7,
+    "id": "magnetic_alloy",
+    "ru": "Магнитный сплав",
+    "en": "Magnetic Alloy",
+    "rewards": [
+      {
+        "id": "miner_belt",
+        "role": "misc",
+        "model": "iron_nugget",
+        "ru": "Шахтёрский пояс",
+        "en": "Miner Belt",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 5,
+    "second": 8,
+    "id": "capillary_alloy",
+    "ru": "Капиллярный сплав",
+    "en": "Capillary Alloy",
+    "rewards": [
+      {
+        "id": "drain_pump",
+        "role": "device",
+        "model": "dispenser",
+        "ru": "Осушающий насос",
+        "en": "Drain Pump",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 5,
+    "second": 9,
+    "id": "thermal_alloy",
+    "ru": "Теплоёмкий сплав",
+    "en": "Thermal Alloy",
+    "rewards": [
+      {
+        "id": "heat_cartridge",
+        "role": "misc",
+        "model": "blaze_rod",
+        "ru": "Тепловая кассета",
+        "en": "Heat Cartridge",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 6,
+    "second": 7,
+    "id": "prospecting_alloy",
+    "ru": "Поисковый сплав",
+    "en": "Prospecting Alloy",
+    "rewards": [
+      {
+        "id": "ore_compass",
+        "role": "misc",
+        "model": "recovery_compass",
+        "ru": "Рудный компас",
+        "en": "Ore Compass",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 6,
+    "second": 8,
+    "id": "route_inverite",
+    "ru": "Маршрутный инверит",
+    "en": "Route Inverite",
+    "rewards": [
+      {
+        "id": "transition_plate",
+        "role": "device",
+        "model": "light_weighted_pressure_plate",
+        "ru": "Переходная плита",
+        "en": "Transition Plate",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 6,
+    "second": 9,
+    "id": "rhythm_steel",
+    "ru": "Ритмосталь",
+    "en": "Rhythmsteel",
+    "rewards": [
+      {
+        "id": "rhythm_controller",
+        "role": "device",
+        "model": "repeater",
+        "ru": "Ритмовый контроллер",
+        "en": "Rhythm Controller",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 7,
+    "second": 8,
+    "id": "slit_alloy",
+    "ru": "Щелевой сплав",
+    "en": "Slit Alloy",
+    "rewards": [
+      {
+        "id": "rift_sword",
+        "role": "sword",
+        "model": "netherite_sword",
+        "ru": "Щелевой меч",
+        "en": "Rift Sword",
+        "base": "netherite_sword"
+      }
+    ]
+  },
+  {
+    "first": 7,
+    "second": 9,
+    "id": "shard_steel",
+    "ru": "Осколочная сталь",
+    "en": "Shard Steel",
+    "rewards": [
+      {
+        "id": "shaped_charge",
+        "role": "misc",
+        "model": "fire_charge",
+        "ru": "Точный заряд",
+        "en": "Shaped Charge",
+        "base": "netherite_ingot"
+      }
+    ]
+  },
+  {
+    "first": 8,
+    "second": 9,
+    "id": "return_alloy",
+    "ru": "Возвратный сплав",
+    "en": "Return Alloy",
+    "rewards": [
+      {
+        "id": "return_capsule",
+        "role": "misc",
+        "model": "ender_pearl",
+        "ru": "Капсула возврата",
+        "en": "Return Capsule",
+        "base": "netherite_ingot"
+      }
+    ]
+  }
+]

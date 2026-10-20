@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hbk:block/fragmented_loam"
+    }
+  }
+}

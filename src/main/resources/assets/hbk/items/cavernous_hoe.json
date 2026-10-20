@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "hbk:item/cavernous_hoe",
+    "tints": [
+      {
+        "type": "minecraft:constant",
+        "value": -1715558
+      }
+    ]
+  }
+}

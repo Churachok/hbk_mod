@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hbk:block/filtering_alloy_block"
+    }
+  }
+}

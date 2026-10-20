@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "result": {
+    "id": "hbk:foldwood_fence",
+    "count": 3
+  },
+  "pattern": [
+    "PSP",
+    "PSP"
+  ],
+  "key": {
+    "P": "hbk:foldwood_planks",
+    "S": "minecraft:stick"
+  }
+}

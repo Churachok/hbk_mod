@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "ingredient": "hbk:sonorous_steel_sample",
+  "result": {
+    "id": "hbk:sonorous_steel_ingot"
+  },
+  "experience": 1.0,
+  "cookingtime": 200
+}

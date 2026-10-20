@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "result": {
+    "id": "hbk:chordwood_planks",
+    "count": 4
+  },
+  "ingredients": [
+    "#hbk:chordwood_logs"
+  ]
+}
