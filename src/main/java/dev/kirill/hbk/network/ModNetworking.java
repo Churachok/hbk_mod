@@ -182,6 +182,7 @@ public final class ModNetworking {
 					}
 				}));
 		PayloadTypeRegistry.clientboundPlay().register(AnomalyLayoutPayload.TYPE, AnomalyLayoutPayload.CODEC);
+		JagermeisterRescuePayload.register();
 		PayloadTypeRegistry.clientboundPlay().register(OpenStrangeChestPayload.TYPE, OpenStrangeChestPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownEncounterPayload.TYPE, UnknownEncounterPayload.CODEC);
 		PayloadTypeRegistry.clientboundPlay().register(UnknownTypingPayload.TYPE, UnknownTypingPayload.CODEC);

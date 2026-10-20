@@ -1,0 +1,15 @@
+{
+  "parent": "hbk:hentai_beginnings",
+  "display": {
+    "icon": {"id": "hbk:furry_plug"},
+    "title": {"translate": "advancement.hbk.torn_ace.title"},
+    "description": {"translate": "advancement.hbk.torn_ace.description"},
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "burst": {"trigger": "minecraft:impossible"}
+  }
+}

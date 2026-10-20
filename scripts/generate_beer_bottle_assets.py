@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the blocky green beer bottle from the Models-chat concept.
+"""Build intact, empty and shattered beer bottles from the Models-chat concepts.
 
 Requires Pillow. Geometry, labels and palette are repository-local and reproducible;
 the original reference/concept image is not a runtime or generator dependency.
@@ -58,6 +58,13 @@ def texture():
     d.rectangle((32, 48, 47, 63), fill="#165b25")
     for x in range(33, 47, 3):
         d.line((x, 49, x, 62), fill="#319328")
+    # Unused atlas corner: dark inner glass and bright exposed fracture edges.
+    d.rectangle((48, 48, 55, 63), fill="#0c3519")
+    for y in range(49, 64, 4):
+        d.line((49, y, 54, y), fill="#174c26")
+    d.rectangle((56, 48, 63, 63), fill="#6eb94a")
+    for y in range(49, 64, 3):
+        d.line((57, y, 62, y), fill="#a8d875")
     folder = ASSETS / "textures/item"
     folder.mkdir(parents=True, exist_ok=True)
     image.save(folder / "beer_bottle.png")
@@ -75,6 +82,15 @@ def model():
             for side in ("north", "south", "east", "west"):
                 faces[side]["uv"] = front_surface
         return {"from": start, "to": end, "faces": faces}
+
+    def write_model(identifier, value):
+        for folder, asset in (
+            ("models/item", value),
+            ("items", {"model": {"type": "minecraft:model", "model": f"hbk:item/{identifier}"}}),
+        ):
+            target = ASSETS / folder
+            target.mkdir(parents=True, exist_ok=True)
+            (target / f"{identifier}.json").write_text(json.dumps(asset, indent=2) + "\n")
 
     result = {
         "parent": "minecraft:block/block",
@@ -97,16 +113,80 @@ def model():
             "firstperson_lefthand": {"rotation": [0, 20, 0], "translation": [0, 1, 0], "scale": [0.8, 0.8, 0.8]},
         },
     }
-    for folder, value in (
-        ("models/item", result),
-        ("items", {"model": {"type": "minecraft:model", "model": "hbk:item/beer_bottle"}}),
+    write_model("beer_bottle", result)
+
+    # Empty glass retains the original silhouette/label rather than becoming a
+    # vanilla potion bottle. Its separate ID makes the refillable weapon explicit.
+    write_model("empty_beer_bottle", {
+        "parent": "hbk:item/beer_bottle",
+    })
+
+    inner, fracture = [12, 12, 14, 16], [14, 12, 16, 16]
+    elements = []
+
+    def wall(start, end, outside, inside, label=None):
+        part = cube(start, end, glass)
+        part["faces"][outside]["uv"] = label if label is not None else glass
+        part["faces"][inside]["uv"] = inner
+        part["faces"]["down"]["uv"] = fracture
+        elements.append(part)
+
+    # Keep the upper half only. Four thin walls surround a genuine open cavity;
+    # no floor or full-width body cube closes the broken underside.
+    upper_label = [0, 0, 8, 6]
+    wall([6, 6.5, 6], [10, 9, 6.3], "north", "south", upper_label)
+    wall([6, 6.5, 9.7], [10, 9, 10], "south", "north")
+    wall([6, 6.5, 6.3], [6.3, 9, 9.7], "west", "east")
+    wall([9.7, 6.5, 6.3], [10, 9, 9.7], "east", "west")
+
+    def shard(center, depth, side):
+        # Three progressively narrower steps form a sharp, pixel-style tip.
+        for tier, width in enumerate((0.7, 0.4, 0.15)):
+            top = 6.5 - depth * tier / 3
+            bottom = 6.5 - depth * (tier + 1) / 3
+            if side in ("north", "south"):
+                z = 6 if side == "north" else 9.7
+                start, end = [center - width / 2, bottom, z], [center + width / 2, top, z + 0.3]
+                inside = "south" if side == "north" else "north"
+            else:
+                x = 6 if side == "west" else 9.7
+                start, end = [x, bottom, center - width / 2], [x + 0.3, top, center + width / 2]
+                inside = "east" if side == "west" else "west"
+            wall(start, end, side, inside)
+            elements[-1]["faces"][side]["uv"] = fracture if tier == 2 else glass
+
+    for side, pieces in (
+        ("north", ((6.5, 1.2), (7.7, 0.7), (8.7, 2.0), (9.6, 1.1))),
+        ("south", ((6.5, 0.7), (7.7, 1.6), (9.2, 1.0))),
+        ("west", ((7.0, 1.7), (8.6, 0.8))),
+        ("east", ((7.2, 1.1), (8.8, 1.8))),
     ):
-        target = ASSETS / folder
-        target.mkdir(parents=True, exist_ok=True)
-        (target / "beer_bottle.json").write_text(json.dumps(value, indent=2) + "\n")
+        for center, depth in pieces:
+            shard(center, depth, side)
+
+    elements.extend(result["elements"][2:])
+    broken_display = dict(result["display"])
+    broken_display["gui"] = {"rotation": [10, -25, 0], "translation": [0, -2, 0], "scale": [1, 1, 1]}
+    # Rotate the fragment upside down and anchor the long neck at the hand.
+    # The jagged hollow body projects above the fist, instead of being gripped
+    # by its missing base. Inventory/frame views remain upright like the concept.
+    for hand in ("right", "left"):
+        broken_display[f"thirdperson_{hand}hand"] = {
+            "rotation": [0, 0, 180], "translation": [0, 3.15, 0], "scale": [0.7, 0.7, 0.7],
+        }
+        broken_display[f"firstperson_{hand}hand"] = {
+            "rotation": [0, -20 if hand == "right" else 20, 180],
+            "translation": [0, 3.6, 0], "scale": [0.8, 0.8, 0.8],
+        }
+    write_model("broken_beer_bottle", {
+        "parent": "minecraft:block/block",
+        "textures": result["textures"],
+        "elements": elements,
+        "display": broken_display,
+    })
 
 
 if __name__ == "__main__":
     texture()
     model()
-    print("Generated the six-cuboid green beer bottle, pixel labels and item definition")
+    print("Generated intact, empty and hollow shattered beer bottle models, labels and item definitions")

@@ -22,6 +22,11 @@ import dev.kirill.hbk.network.ModNetworking;
 public class HbkClient implements ClientModInitializer {
 	@Override
 	public void onInitializeClient() {
+		BeerCauldronColors.register();
+		JagermeisterCauldronColors.register();
+		JagermeisterBrewingHud.register();
+		HuntersInstinctClient.register();
+		FurryLoveClientEffects.register();
 		MenuScreens.register(ModMenuTypes.IMPROVED_BOAT_FUEL, ImprovedBoatFuelScreen::new);
 		MenuScreens.register(ModMenuTypes.TIME_FURNACE, TimeFurnaceScreen::new);
 		GoshasRageClient.register();

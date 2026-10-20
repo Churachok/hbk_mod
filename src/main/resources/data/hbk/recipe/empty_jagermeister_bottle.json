@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "# #",
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": "minecraft:green_stained_glass"
+  },
+  "result": {
+    "id": "hbk:empty_jagermeister_bottle",
+    "count": 1
+  }
+}

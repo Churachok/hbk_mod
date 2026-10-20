@@ -8,6 +8,7 @@ import dev.kirill.hbk.effect.GoshasRageEffect;
 import dev.kirill.hbk.effect.HeartyLunchEffect;
 import dev.kirill.hbk.effect.FunnySpinEffect;
 import dev.kirill.hbk.effect.BeerEffect;
+import dev.kirill.hbk.effect.HuntersInstinctEffect;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,6 +32,9 @@ public final class ModEffects {
 			BuiltInRegistries.MOB_EFFECT, HbkMod.id("funny_spin"), new FunnySpinEffect());
 	public static final Holder.Reference<MobEffect> BEER = Registry.registerForHolder(
 			BuiltInRegistries.MOB_EFFECT, HbkMod.id("beer"), new BeerEffect(0xD9A438)
+	);
+	public static final Holder.Reference<MobEffect> HUNTERS_INSTINCT = Registry.registerForHolder(
+			BuiltInRegistries.MOB_EFFECT, HbkMod.id("hunters_instinct"), new HuntersInstinctEffect()
 	);
 
 	public static final Holder.Reference<MobEffect> ONIGIRI = Registry.registerForHolder(

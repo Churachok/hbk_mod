@@ -16,6 +16,9 @@
 		],
 		"client": [
 			"dev.kirill.hbk.client.HbkClient"
+		],
+		"jei_mod_plugin": [
+			"dev.kirill.hbk.client.compat.jei.HbkJeiPlugin"
 		]
 	},
 	"mixins": [

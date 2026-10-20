@@ -1,9 +1,12 @@
 package dev.kirill.hbk.registry;
 
+import com.mojang.serialization.Codec;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.player.KonataDailyClaim;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.minecraft.network.codec.ByteBufCodecs;
 
 public final class ModAttachments {
 	public static final AttachmentType<Boolean> ROFL_SAFE_FALL = AttachmentRegistry.<Boolean>builder()
@@ -15,6 +18,23 @@ public final class ModAttachments {
 					.copyOnDeath()
 					.initializer(() -> KonataDailyClaim.EMPTY)
 					.buildAndRegister(HbkMod.id("konata_daily_claim"));
+	// Neither part is copied on death: only the appearance is sent to the owner and tracking players.
+	public static final AttachmentType<Integer> FURRY_COLOR = AttachmentRegistry.<Integer>builder()
+			.persistent(Codec.intRange(-1, 15))
+			.initializer(() -> -1)
+			.syncWith(ByteBufCodecs.VAR_INT, AttachmentSyncPredicate.all())
+			.buildAndRegister(HbkMod.id("furry_color"));
+	public static final AttachmentType<Long> FURRY_EXPIRES_AT = AttachmentRegistry.<Long>builder()
+			.persistent(Codec.LONG)
+			.initializer(() -> 0L)
+			.buildAndRegister(HbkMod.id("furry_expires_at"));
+	public static final AttachmentType<Long> FURRY_LOVE_UNTIL = AttachmentRegistry.<Long>builder()
+			.persistent(Codec.LONG)
+			.syncWith(ByteBufCodecs.VAR_LONG, AttachmentSyncPredicate.targetOnly())
+			.buildAndRegister(HbkMod.id("furry_love_until"));
+	public static final AttachmentType<Long> FURRY_BREED_COOLDOWN_UNTIL = AttachmentRegistry.<Long>builder()
+			.persistent(Codec.LONG)
+			.buildAndRegister(HbkMod.id("furry_breed_cooldown_until"));
 
 	private ModAttachments() {
 	}

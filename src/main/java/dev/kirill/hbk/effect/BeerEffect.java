@@ -33,6 +33,7 @@ public final class BeerEffect extends MobEffect {
 	public boolean applyEffectTick(ServerLevel level, LivingEntity entity, int amplifier) {
 		var beer = entity.getEffect(ModEffects.BEER);
 		if (beer != null && beer.getDuration() % 50 == 0 && !entity.hasEffect(MobEffects.REGENERATION)
+				&& !entity.hasEffect(ModEffects.HUNTERS_INSTINCT)
 				&& entity.getHealth() < entity.getMaxHealth()) {
 			entity.heal(1.0f);
 		}

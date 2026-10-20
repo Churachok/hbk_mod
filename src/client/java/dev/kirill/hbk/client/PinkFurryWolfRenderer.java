@@ -1,5 +1,6 @@
 package dev.kirill.hbk.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.entity.PinkFurryWolfEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -18,6 +19,13 @@ public final class PinkFurryWolfRenderer extends HumanoidMobRenderer<PinkFurryWo
 	@Override
 	public PinkFurryWolfRenderState createRenderState() {
 		return new PinkFurryWolfRenderState();
+	}
+
+	@Override
+	protected void scale(PinkFurryWolfRenderState state, PoseStack poseStack) {
+		// AgeableMob supplies .5 for babies, but the shared adult/baby model
+		// constructor does not scale geometry. Keep the original anatomy/poses.
+		poseStack.scale(state.ageScale, state.ageScale, state.ageScale);
 	}
 
 	@Override

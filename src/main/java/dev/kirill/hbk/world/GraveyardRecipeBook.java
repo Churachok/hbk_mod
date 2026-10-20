@@ -15,7 +15,7 @@ public final class GraveyardRecipeBook {
 	public static final List<String> DIAGRAM_RECIPES = java.util.stream.Stream.concat(List.of(
 			"buckwheat", "stew", "condensed_milk", "currant_tincture",
 			"onigiri", "kirill_kettle", "hard_kirill_kettle",
-			"denis_doshirak", "doshirak_kettle", "hard_doshirak_kettle", "funny_button",
+			"denis_doshirak", "doshirak_kettle", "hard_doshirak_kettle", "funny_button", "empty_jagermeister_bottle", "furry_plug",
 			"balalaika_pickaxe", "shovel_sword", "sickle_and_hammer", "western_chestplate",
 			"flying_carpet", "improved_oak_boat", "improved_spruce_boat", "improved_birch_boat",
 			"improved_jungle_boat", "improved_acacia_boat", "improved_cherry_boat",
@@ -30,7 +30,7 @@ public final class GraveyardRecipeBook {
 	public static final List<String> RECIPES = java.util.stream.Stream.of(DIAGRAM_RECIPES,
 			dev.kirill.hbk.universe.UniverseBotany.recipes(), dev.kirill.hbk.universe.UniverseEquipment.recipes(), dev.kirill.hbk.universe.UniverseAlloys.recipes()).flatMap(List::stream).toList();
 	public static final List<String> INFO_PAGES = java.util.stream.Stream.concat(List.of("doshirak", "funny_button", "dandruff", "feeding_onigiri", "lebedev_head", "bus",
-			"liberal_blood", "young_liberal", "universe_travel", "universe_ecology", "universe_equipment", "universe_mining", "universe_alloys").stream(),
+			"liberal_blood", "young_liberal", "jagermeister", "furry_breeding", "universe_travel", "universe_ecology", "universe_equipment", "universe_mining", "universe_alloys").stream(),
 			dev.kirill.hbk.universe.UniverseBotany.SPECIES.stream().flatMap(s -> java.util.stream.Stream.of(s + "_flora", s + "_crafts"))).toList();
 	public static final int PAGE_COUNT = 1 + DIAGRAM_RECIPES.size() + INFO_PAGES.size();
 

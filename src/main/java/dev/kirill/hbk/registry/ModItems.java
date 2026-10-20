@@ -11,6 +11,8 @@ import dev.kirill.hbk.item.BeastlikeMemberItem;
 import dev.kirill.hbk.item.HammerFighterMemberItem;
 import dev.kirill.hbk.item.FemaleVaginaItem;
 import dev.kirill.hbk.item.ProgenitorTransformationItem;
+import dev.kirill.hbk.item.FurrySyringeItem;
+import dev.kirill.hbk.item.FurryPlugItem;
 import dev.kirill.hbk.item.CondensedMilkItem;
 import dev.kirill.hbk.item.BandageItem;
 import dev.kirill.hbk.item.BuckwheatItem;
@@ -19,6 +21,9 @@ import dev.kirill.hbk.item.ImprovedBoatItem;
 import dev.kirill.hbk.item.GoldenCrownItem;
 import dev.kirill.hbk.item.GoshasRageBottleItem;
 import dev.kirill.hbk.item.BeerBottleItem;
+import dev.kirill.hbk.item.JagermeisterBottleItem;
+import dev.kirill.hbk.item.EmptyJagermeisterBottleItem;
+import dev.kirill.hbk.item.BottleWeaponItem;
 import dev.kirill.hbk.item.RationItem;
 import dev.kirill.hbk.item.ResetCompassItem;
 import dev.kirill.hbk.item.StalinPipeItem;
@@ -269,6 +274,10 @@ public class ModItems {
 			ProgenitorTransformationItem::new,
 			new Item.Properties().stacksTo(1).rarity(net.minecraft.world.item.Rarity.EPIC)
 	);
+	public static final Item FURRY_SYRINGE = register("furry_syringe", FurrySyringeItem::new,
+			new Item.Properties().stacksTo(16).rarity(net.minecraft.world.item.Rarity.UNCOMMON));
+	public static final Item FURRY_PLUG = register("furry_plug", FurryPlugItem::new,
+			new Item.Properties().stacksTo(16));
 	public static final Item FOUNDING_PENIS = register(
 			"founding_penis",
 			ProgenitorTransformationItem::new,
@@ -327,10 +336,25 @@ public class ModItems {
 					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
 					.usingConvertsTo(Items.GLASS_BOTTLE)
 	);
+	public static final Item EMPTY_JAGERMEISTER_BOTTLE = register("empty_jagermeister_bottle", EmptyJagermeisterBottleItem::new,
+			new Item.Properties().stacksTo(16));
+	public static final Item JAGERMEISTER_BOTTLE = register("jagermeister_bottle", JagermeisterBottleItem::new,
+			new Item.Properties().stacksTo(16)
+					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
+					.component(ModDataComponents.JAGERMEISTER_SIPS, JagermeisterBottleItem.MAX_SIPS));
+
 	public static final Item BEER_BOTTLE = register("beer_bottle", BeerBottleItem::new,
 			new Item.Properties().stacksTo(16)
 					.component(DataComponents.CONSUMABLE, Consumables.DEFAULT_DRINK)
-					.usingConvertsTo(Items.GLASS_BOTTLE));
+					.component(ModDataComponents.BEER_SIPS, BeerBottleItem.MAX_SIPS));
+	public static final Item EMPTY_BEER_BOTTLE = register("empty_beer_bottle",
+			properties -> new BottleWeaponItem(properties, false),
+			new Item.Properties().stacksTo(1).attributes(BottleWeaponItem.attackAttributes(8))
+					.component(DataComponents.WEAPON, new net.minecraft.world.item.component.Weapon(0)));
+	public static final Item BROKEN_BEER_BOTTLE = register("broken_beer_bottle",
+			properties -> new BottleWeaponItem(properties, true),
+			new Item.Properties().stacksTo(1).attributes(BottleWeaponItem.attackAttributes(15))
+					.component(DataComponents.WEAPON, new net.minecraft.world.item.component.Weapon(0)));
 
 	public static final Item RATION = register("ration", RationItem::new, new Item.Properties().stacksTo(16));
 
@@ -554,6 +578,7 @@ public class ModItems {
 		CreativeModeTabEvents.modifyOutputEvent(foodAndDrinks).register(output -> {
 			output.accept(LIBERAL_BLOOD_BUCKET);
 			output.accept(BEER_BOTTLE);
+			output.accept(JAGERMEISTER_BOTTLE);
 			output.accept(ONIGIRI);
 			output.accept(HARD_KIRILL_KETTLE);
 			output.accept(DENIS_DOSHIRAK);
@@ -573,6 +598,11 @@ public class ModItems {
 				Identifier.withDefaultNamespace("tools_and_utilities")
 		);
 		CreativeModeTabEvents.modifyOutputEvent(toolsAndUtilities).register(output -> {
+			output.accept(FURRY_SYRINGE);
+			output.accept(FURRY_PLUG);
+			output.accept(EMPTY_BEER_BOTTLE);
+			output.accept(EMPTY_JAGERMEISTER_BOTTLE);
+			output.accept(BROKEN_BEER_BOTTLE);
 			output.accept(KIRILL_KETTLE);
 			output.accept(DOSHIRAK_KETTLE);
 			output.accept(FUNNY_BUTTON);

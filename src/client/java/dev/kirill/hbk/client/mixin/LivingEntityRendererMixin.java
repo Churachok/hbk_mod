@@ -1,10 +1,13 @@
 package dev.kirill.hbk.client.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.kirill.hbk.client.FurryPlayerClientState;
+import dev.kirill.hbk.client.FurryPlayerModel;
 import dev.kirill.hbk.client.ProgenitorClientState;
 import dev.kirill.hbk.client.ProgenitorModel;
 import dev.kirill.hbk.mechanic.ProgenitorTransformation;
 import net.minecraft.client.model.Model;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
@@ -15,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
@@ -23,6 +27,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntityRenderer.class)
 public abstract class LivingEntityRendererMixin {
+	@Shadow protected EntityModel<?> model;
+
+	@Unique
+	private EntityModel<?> hbk$originalPlayerModel;
+
+	@Unique
+	private FurryPlayerModel hbk$furryPlayerModel;
+
 	@Unique
 	private boolean hbk$renderingProgenitor;
 
@@ -31,6 +43,14 @@ public abstract class LivingEntityRendererMixin {
 			SubmitNodeCollector collector, CameraRenderState cameraState, CallbackInfo ci) {
 		this.hbk$renderingProgenitor = state instanceof AvatarRenderState avatar
 				&& ProgenitorClientState.isActive(avatar);
+		if (!this.hbk$renderingProgenitor && state instanceof AvatarRenderState avatar
+				&& FurryPlayerClientState.isActive(avatar)) {
+			if (this.hbk$furryPlayerModel == null) this.hbk$furryPlayerModel = new FurryPlayerModel();
+			this.hbk$originalPlayerModel = this.model;
+			// Layers must see the same PlayerModel as the body: held items and armor
+			// otherwise use an unrelated human pose or fail a PlayerModel cast.
+			this.model = this.hbk$furryPlayerModel;
+		}
 	}
 
 	@ModifyArg(method = "submit(Lnet/minecraft/client/renderer/entity/state/LivingEntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
@@ -44,6 +64,10 @@ public abstract class LivingEntityRendererMixin {
 	private void hbk$endProgenitorRender(LivingEntityRenderState state, PoseStack poseStack,
 			SubmitNodeCollector collector, CameraRenderState cameraState, CallbackInfo ci) {
 		this.hbk$renderingProgenitor = false;
+		if (this.hbk$originalPlayerModel != null) {
+			this.model = this.hbk$originalPlayerModel;
+			this.hbk$originalPlayerModel = null;
+		}
 	}
 
 	@Inject(method = "getBoundingBoxForCulling(Lnet/minecraft/world/entity/LivingEntity;)Lnet/minecraft/world/phys/AABB;", at = @At("RETURN"), cancellable = true)
