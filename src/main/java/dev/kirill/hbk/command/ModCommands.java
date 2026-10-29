@@ -7,6 +7,7 @@ import dev.kirill.hbk.world.GulagPlacer;
 import dev.kirill.hbk.world.AnomalyZones;
 import dev.kirill.hbk.world.UnknownEncounter;
 import dev.kirill.hbk.world.SquirrelEncounter;
+import dev.kirill.hbk.world.SkippingOwlEncounter;
 import dev.kirill.hbk.world.SovietBusEvent;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -29,6 +30,11 @@ public final class ModCommands {
 
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
+			dispatcher.register(Commands.literal("owl")
+					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.executes(ctx -> startOwl(ctx.getSource(), ctx.getSource().getPlayerOrException()))
+					.then(Commands.argument("player", EntityArgument.player())
+							.executes(ctx -> startOwl(ctx.getSource(), EntityArgument.getPlayer(ctx, "player")))));
 			dispatcher.register(Commands.literal("anomaly")
 					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 					.then(Commands.literal("locate").then(Commands.argument("number", IntegerArgumentType.integer(1, AnomalyZones.TYPE_COUNT))
@@ -100,6 +106,16 @@ public final class ModCommands {
 				yield 0;
 			}
 		};
+	}
+
+	private static int startOwl(CommandSourceStack source, ServerPlayer player) {
+		var result = SkippingOwlEncounter.start(player);
+		if (result == SkippingOwlEncounter.StartResult.STARTED) {
+			source.sendSuccess(() -> Component.translatable("commands.hbk.owl.started", player.getDisplayName()), false);
+			return 1;
+		}
+		source.sendFailure(Component.translatable("commands.hbk.owl." + result.name().toLowerCase(java.util.Locale.ROOT)));
+		return 0;
 	}
 
 	private static int getKonataShpermLimit(CommandSourceStack source) {

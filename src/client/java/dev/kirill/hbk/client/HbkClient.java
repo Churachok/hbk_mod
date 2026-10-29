@@ -36,6 +36,7 @@ public class HbkClient implements ClientModInitializer {
 		EntityRendererRegistry.register(dev.kirill.hbk.universe.UniverseAlloys.CARGO_MINECART, ctx -> new net.minecraft.client.renderer.entity.MinecartRenderer(ctx, net.minecraft.client.model.geom.ModelLayers.CHEST_MINECART));
 		UnknownEncounterClient.register();
 		UnknownDeathClient.register();
+		SkippingOwlScreenEffect.register();
 		ModEntityModelLayers.register();
 		EntityRendererRegistry.register(ModEntityTypes.LEBEDEV_HEAD, LebedevHeadRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.GOSHAS_DANDRUFF, ThrownItemRenderer::new);
@@ -69,6 +70,7 @@ public class HbkClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntityTypes.VLAD, context -> new ReferenceNpcRenderer(context, "vlad"));
 		EntityRendererRegistry.register(ModEntityTypes.LEX, LexRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.SQUIRREL, SquirrelRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.SKIPPING_OWL, SkippingOwlRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.PINK_FURRY_WOLF, PinkFurryWolfRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.CATGIRL, CatgirlRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.KONATA, Test3KonataRenderer::new);

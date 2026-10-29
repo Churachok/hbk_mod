@@ -57,6 +57,7 @@ tasks.named('check') {
 
 def gameTestProfiles = [
 	all: null,
+	owl: 'skipping_owl_game_tests_*',
 	kitchen: 'kitchen_game_tests_*',
 	blood: 'liberal_blood_game_tests_*',
 	beer: 'beer_game_tests_*',

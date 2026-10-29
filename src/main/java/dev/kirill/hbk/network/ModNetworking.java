@@ -164,6 +164,7 @@ public final class ModNetworking {
 	}
 
 	public static void register() {
+		SkippingOwlScenePayload.registerPayloads();
 		PayloadTypeRegistry.serverboundPlay().register(TravelTimeFurnacePayload.TYPE, TravelTimeFurnacePayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(TravelTimeFurnacePayload.TYPE, (payload, context) -> context.server().execute(() -> {
 			var player = context.player();

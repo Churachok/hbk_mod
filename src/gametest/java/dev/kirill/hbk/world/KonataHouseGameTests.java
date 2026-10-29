@@ -3,6 +3,7 @@ package dev.kirill.hbk.world;
 import com.mojang.serialization.JsonOps;
 import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.entity.KonataEntity;
+import dev.kirill.hbk.registry.ModItems;
 import net.fabricmc.fabric.api.gametest.v1.GameTest;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -19,6 +20,8 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.decoration.ItemFrame;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.vehicle.boat.Boat;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.ChunkPos;
@@ -41,6 +44,8 @@ import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.PoolElementStructurePiece;
 import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
@@ -54,6 +59,7 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
@@ -517,6 +523,176 @@ public final class KonataHouseGameTests {
 			cleanup.run();
 			throw error;
 		}
+	}
+
+	@GameTest(maxTicks = 240)
+	public void everyRotatedHouseGetsExactlyOneOrdinaryUpstairsSyringeFrame(GameTestHelper test) {
+		runInTickingChunks(test, 7, false, () -> {
+			var level = test.getLevel();
+			var data = new ModWorldData();
+			for (var rotation : Rotation.values()) {
+				var origin = origin(test, 7, rotation);
+				var box = placeHouse(test, origin, rotation, false);
+				String houseKey = "test_frame_house@" + origin.asLong();
+				String key = "konata_syringe@" + houseKey;
+				data.markStructurePopulated(houseKey);
+				data.markStructurePopulated("konata_basement@" + houseKey);
+				try {
+					ModStructurePopulator.populateKonataSyringe(level, origin, rotation, 11, data, key);
+					var frames = frames(level, box);
+					test.assertTrue(frames.size() == 1 && data.isStructurePopulated(key),
+							"Each already-populated house must independently receive exactly one syringe frame");
+					assertSyringeFrame(test, frames.getFirst(), origin, rotation, 11);
+					test.assertTrue(level.getBlockState(at(origin, rotation, 6, 13, 7)).is(Blocks.CHERRY_PLANKS),
+							"The real upstairs cherry wall, not a newly constructed support, must hold the rotated frame");
+					ModStructurePopulator.populateKonataSyringe(level, origin, rotation, 11, data, key);
+					test.assertTrue(frames(level, box).size() == 1,
+							"Repeated population must not duplicate an existing syringe frame in any rotation");
+				} finally {
+					clear(level, box);
+				}
+			}
+			test.succeed();
+		});
+	}
+
+	@GameTest(maxTicks = 240)
+	public void nativeFrameSavingAndLegacyFloorsNeverReplenishATakenSyringeOrDestroyedFrame(GameTestHelper test) {
+		runInTickingChunks(test, 8, true, () -> {
+			var level = test.getLevel();
+			for (int floorY : new int[] {11, 0}) {
+				var origin = origin(test, 8, Rotation.NONE).offset(floorY == 0 ? 120 : 0, 0, 0);
+				var box = floorY == 11 ? placeHouse(test, origin, Rotation.NONE, false)
+						: BoundingBox.fromCorners(origin, origin.offset(8, 6, 8));
+				if (floorY == 0) {
+					for (var pos : BlockPos.betweenClosed(origin, origin.offset(8, 6, 8))) {
+						level.setBlock(pos, pos.getY() == origin.getY()
+								? Blocks.CHERRY_PLANKS.defaultBlockState() : Blocks.AIR.defaultBlockState(), 2);
+					}
+					level.setBlockAndUpdate(origin.offset(6, 2, 7), Blocks.CHERRY_PLANKS.defaultBlockState());
+				}
+				var data = new ModWorldData();
+				String key = "konata_syringe@test_frame_save@" + origin.asLong();
+				Entity restored = null;
+				try {
+					ModStructurePopulator.populateKonataSyringe(level, origin, Rotation.NONE, floorY, data, key);
+					test.assertTrue(frames(level, box).size() == 1, "Both current and legacy seven-block houses must receive their frame");
+					var frame = frames(level, box).getFirst();
+					assertSyringeFrame(test, frame, origin, Rotation.NONE, floorY);
+					var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, level.registryAccess());
+					test.assertTrue(frame.save(output), "The ordinary item frame must be included in vanilla entity saving");
+					var savedData = ModWorldData.CODEC.encodeStart(JsonOps.INSTANCE, data).getOrThrow();
+					var loadedData = ModWorldData.CODEC.parse(JsonOps.INSTANCE, savedData).getOrThrow();
+					frame.discard();
+					restored = EntityType.loadEntityRecursive(
+							TagValueInput.create(ProblemReporter.DISCARDING, level.registryAccess(), output.buildResult()),
+							level, EntitySpawnReason.LOAD, EntityProcessor.NOP);
+					test.assertTrue(restored instanceof ItemFrame && loadedData.isStructurePopulated(key),
+							"Native entity loading and the world-data codec must restore the frame and its independent once-only flag");
+					var loadedFrame = (ItemFrame) restored;
+					assertSyringeFrame(test, loadedFrame, origin, Rotation.NONE, floorY);
+					test.assertTrue(level.addFreshEntity(loadedFrame), "The saved frame must return as a real loaded world entity");
+					ModStructurePopulator.populateKonataSyringe(level, origin, Rotation.NONE, floorY, loadedData, key);
+					test.assertTrue(frames(level, box).size() == 1, "A loaded population flag must not duplicate the loaded frame");
+					test.assertTrue(loadedFrame.hurtServer(level, level.damageSources().generic(), 1)
+							&& loadedFrame.isAlive() && loadedFrame.getItem().isEmpty(),
+							"The syringe must be removable by an ordinary native frame hit; the frame must not be Fixed or invulnerable");
+					var drops = level.getEntitiesOfClass(ItemEntity.class, AABB.of(box).inflate(1),
+							item -> item.isAlive() && item.getItem().is(ModItems.FURRY_SYRINGE));
+					test.assertTrue(drops.size() == 1 && drops.getFirst().getItem().getCount() == 1,
+							"Removing the displayed syringe must drop exactly one usable syringe item");
+					ModStructurePopulator.populateKonataSyringe(level, origin, Rotation.NONE, floorY, loadedData, key);
+					test.assertTrue(frames(level, box).size() == 1 && loadedFrame.getItem().isEmpty(),
+							"Revisiting after taking the syringe must leave the original frame empty");
+					loadedFrame.hurtServer(level, level.damageSources().generic(), 1);
+					test.assertTrue(loadedFrame.isRemoved(), "The ordinary empty frame must also remain breakable");
+					var reloadedData = ModWorldData.CODEC.parse(JsonOps.INSTANCE,
+							ModWorldData.CODEC.encodeStart(JsonOps.INSTANCE, loadedData).getOrThrow()).getOrThrow();
+					ModStructurePopulator.populateKonataSyringe(level, origin, Rotation.NONE, floorY, reloadedData, key);
+					test.assertTrue(frames(level, box).isEmpty() && reloadedData.isStructurePopulated(key),
+							"Destroying the frame and reloading world data must never cause a replacement or free syringe refill");
+				} finally {
+					if (restored != null) restored.discard();
+					clear(level, box);
+				}
+			}
+			test.succeed();
+		});
+	}
+
+	@GameTest(maxTicks = 240)
+	public void realHousePopulationRetriesBlockedSyringePlacementWithoutOverwritingPlayerChanges(GameTestHelper test) {
+		runInTickingChunks(test, 9, false, () -> {
+			var level = test.getLevel();
+			var origin = origin(test, 9, Rotation.NONE);
+			var box = placeHouse(test, origin, Rotation.NONE, false);
+			var chunk = level.getChunkAt(origin);
+			var savedStarts = new HashMap<>(chunk.getAllStarts());
+			var savedReferences = new HashMap<>(chunk.getAllReferences());
+			var savedWorldData = ModWorldData.get(level);
+			var data = new ModWorldData();
+			level.getDataStorage().set(ModWorldData.TYPE, data);
+			try {
+				var structure = terrainStructure(test);
+				var pool = level.registryAccess().lookupOrThrow(Registries.TEMPLATE_POOL)
+						.getOrThrow(ResourceKey.create(Registries.TEMPLATE_POOL, HbkMod.id("konata_house"))).value();
+				var piece = new PoolElementStructurePiece(level.getStructureManager(), pool.getRandomTemplate(RandomSource.create(4)),
+						origin, 12, Rotation.NONE, box, LiquidSettings.IGNORE_WATERLOGGING);
+				var start = new StructureStart(structure, chunk.getPos(), 0, new PiecesContainer(List.of(piece)));
+				chunk.setStartForStructure(structure, start);
+				chunk.addReferenceForStructure(structure, chunk.getPos().pack());
+				var startBox = start.getBoundingBox();
+				for (int x = startBox.minX() >> 4; x <= startBox.maxX() >> 4; x++) {
+					for (int z = startBox.minZ() >> 4; z <= startBox.maxZ() >> 4; z++) level.getChunk(x, z);
+				}
+				String houseKey = HbkMod.id("konata_house") + "@" + chunk.getPos().pack();
+				String key = "konata_syringe@" + houseKey;
+				data.markStructurePopulated(houseKey);
+				data.markStructurePopulated("konata_basement@" + houseKey);
+				var slot = origin.offset(6, 13, 6);
+				var support = origin.offset(6, 13, 7);
+				test.assertFalse(data.isStructurePopulated(key), "The fixture's independent syringe flag must begin unset");
+				level.setBlockAndUpdate(slot, Blocks.STONE.defaultBlockState());
+				ModStructurePopulator.tryPopulateInChunk(level, chunk);
+				test.assertTrue(frames(level, box).isEmpty() && !data.isStructurePopulated(key)
+						&& level.getBlockState(slot).is(Blocks.STONE) && level.getBlockState(support).is(Blocks.CHERRY_PLANKS),
+						"The real population caller must not replace an occupied slot or mark a failed frame placement complete");
+				level.setBlockAndUpdate(slot, Blocks.AIR.defaultBlockState());
+				for (var missingSupport : List.of(Blocks.STONE, Blocks.AIR)) {
+					level.setBlockAndUpdate(support, missingSupport.defaultBlockState());
+					ModStructurePopulator.tryPopulateInChunk(level, chunk);
+					test.assertTrue(frames(level, box).isEmpty() && !data.isStructurePopulated(key)
+							&& level.getBlockState(slot).isAir() && level.getBlockState(support).is(missingSupport),
+							"A missing or non-cherry support must remain untouched and retryable instead of rebuilding the player's wall");
+				}
+				level.setBlockAndUpdate(support, Blocks.CHERRY_PLANKS.defaultBlockState());
+				ModStructurePopulator.tryPopulateInChunk(level, chunk);
+				test.assertTrue(frames(level, box).size() == 1 && data.isStructurePopulated(key),
+						"Restoring the cherry wall must let the real caller populate a frame even though Konata and basement flags were already set");
+				assertSyringeFrame(test, frames(level, box).getFirst(), origin, Rotation.NONE, 11);
+				ModStructurePopulator.tryPopulateInChunk(level, chunk);
+				test.assertTrue(frames(level, box).size() == 1, "Repeated real structure population must not create a second syringe frame");
+			} finally {
+				level.getDataStorage().set(ModWorldData.TYPE, savedWorldData);
+				chunk.setAllStarts(savedStarts);
+				chunk.setAllReferences(savedReferences);
+				clear(level, box);
+			}
+			test.succeed();
+		});
+	}
+
+	private static void assertSyringeFrame(GameTestHelper test, ItemFrame frame, BlockPos origin,
+			Rotation rotation, int floorY) {
+		test.assertTrue(frame.getType() == EntityTypes.ITEM_FRAME && !frame.isInvisible()
+				&& frame.getPos().equals(at(origin, rotation, 6, floorY + 2, 6))
+				&& frame.getDirection() == rotation.rotate(Direction.NORTH) && frame.survives()
+				&& frame.getItem().is(ModItems.FURRY_SYRINGE) && frame.getItem().getCount() == 1,
+				"The living floor must contain one visible ordinary frame at its rotated anchor, facing into the room and holding exactly one syringe");
+	}
+
+	private static List<ItemFrame> frames(ServerLevel level, BoundingBox box) {
+		return level.getEntitiesOfClass(ItemFrame.class, AABB.of(box), Entity::isAlive);
 	}
 
 	private static void assertMechanism(GameTestHelper test, BlockPos origin, Rotation rotation) {

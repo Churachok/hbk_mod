@@ -25,6 +25,7 @@ import dev.kirill.hbk.world.ModWorldEvents;
 import dev.kirill.hbk.world.ReferenceNpcSpawning;
 import dev.kirill.hbk.world.UnknownEncounter;
 import dev.kirill.hbk.world.SquirrelEncounter;
+import dev.kirill.hbk.world.SkippingOwlEncounter;
 import dev.kirill.hbk.world.SovietBusEvent;
 import dev.kirill.hbk.world.RoflMushroomGeneration;
 import net.fabricmc.fabric.api.registry.FuelValueEvents;
@@ -75,6 +76,7 @@ public class HbkMod implements ModInitializer {
 		dev.kirill.hbk.world.AnomalyZones.register();
 		UnknownEncounter.register();
 		SquirrelEncounter.register();
+		SkippingOwlEncounter.register();
 		SovietBusEvent.register();
 		ModCommands.register();
 		LOGGER.info("hbk is ready to walk.");

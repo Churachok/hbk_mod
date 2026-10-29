@@ -289,20 +289,61 @@ public final class KitchenGameTests {
 	}
 
 	@GameTest
-	public void funnyButtonIsSingleUseInOffhandAndCreativeButCooldownDoesNotConsumeIt(GameTestHelper test) {
-		var player = test.makeMockPlayer(net.minecraft.world.level.GameType.CREATIVE);
-		try {
-			player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(ModItems.FUNNY_BUTTON));
-			ModItems.FUNNY_BUTTON.use(test.getLevel(), player, InteractionHand.OFF_HAND);
-			test.assertTrue(player.getOffhandItem().isEmpty(), "Button must disappear even in creative and offhand");
-			test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, InteractionHand.OFF_HAND)
-					== net.minecraft.world.InteractionResult.FAIL, "An empty hand must not activate another effect");
-			player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(ModItems.FUNNY_BUTTON));
-			test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, InteractionHand.OFF_HAND)
-					== net.minecraft.world.InteractionResult.FAIL, "Cooldown must still reject activation");
-			test.assertTrue(player.getOffhandItem().getCount() == 1, "Rejected activation must not consume a button");
-		} finally {
-			player.discard();
+	public void funnyButtonConsumptionRemainsSingleUseInBothHandsOutsideCreative(GameTestHelper test) {
+		for (var mode : List.of(net.minecraft.world.level.GameType.SURVIVAL, net.minecraft.world.level.GameType.ADVENTURE)) {
+			for (var hand : InteractionHand.values()) {
+				var player = test.makeMockPlayer(mode);
+				try {
+					player.setItemInHand(hand, new ItemStack(ModItems.FUNNY_BUTTON));
+					test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, hand)
+							== net.minecraft.world.InteractionResult.SUCCESS, "The first button must activate in " + mode + "/" + hand);
+					test.assertTrue(player.getItemInHand(hand).isEmpty(), "A successful button must still be single-use in " + mode + "/" + hand);
+					test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, hand)
+							== net.minecraft.world.InteractionResult.FAIL, "An empty hand must not activate another effect");
+					player.setItemInHand(hand, new ItemStack(ModItems.FUNNY_BUTTON));
+					test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, hand)
+							== net.minecraft.world.InteractionResult.FAIL, "Cooldown must still reject replacement buttons");
+					test.assertTrue(player.getItemInHand(hand).getCount() == 1, "Rejected activation must not consume a button");
+				} finally {
+					player.discard();
+				}
+			}
+		}
+		test.succeed();
+	}
+
+	@GameTest
+	public void funnyButtonConsumptionIsUnlimitedInCreativeButKeepsTheFullFiveSecondCooldown(GameTestHelper test) {
+		for (var hand : InteractionHand.values()) {
+			var player = test.makeMockPlayer(net.minecraft.world.level.GameType.CREATIVE);
+			try {
+				// The native mock overrides its game mode but does not initialize creative abilities.
+				net.minecraft.world.level.GameType.CREATIVE.updatePlayerAbilities(player.getAbilities());
+				var otherHand = hand == InteractionHand.MAIN_HAND ? InteractionHand.OFF_HAND : InteractionHand.MAIN_HAND;
+				var stack = new ItemStack(ModItems.FUNNY_BUTTON);
+				player.setItemInHand(hand, stack);
+				player.setItemInHand(otherHand, new ItemStack(ModItems.FUNNY_BUTTON));
+				test.assertTrue(player.hasInfiniteMaterials(), "The creative fixture must have native infinite materials");
+				test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, hand)
+						== net.minecraft.world.InteractionResult.SUCCESS && player.getItemInHand(hand) == stack && stack.getCount() == 1,
+						"A successful creative activation must retain the same button in " + hand);
+				test.assertTrue(player.getCooldowns().isOnCooldown(stack), "Creative reuse must retain the ordinary cooldown");
+				test.assertTrue(ModItems.FUNNY_BUTTON.use(test.getLevel(), player, hand) == net.minecraft.world.InteractionResult.FAIL
+						&& ModItems.FUNNY_BUTTON.use(test.getLevel(), player, otherHand) == net.minecraft.world.InteractionResult.FAIL
+						&& stack.getCount() == 1 && player.getItemInHand(otherHand).getCount() == 1,
+						"Neither repeated use nor switching hands may bypass the cooldown or consume a creative button");
+				for (int tick = 0; tick < 99; tick++) player.getCooldowns().tick();
+				test.assertTrue(player.getCooldowns().isOnCooldown(stack)
+						&& ModItems.FUNNY_BUTTON.use(test.getLevel(), player, hand) == net.minecraft.world.InteractionResult.FAIL,
+						"The creative cooldown must still block reuse after ninety-nine ticks");
+				player.getCooldowns().tick();
+				test.assertTrue(!player.getCooldowns().isOnCooldown(stack)
+						&& ModItems.FUNNY_BUTTON.use(test.getLevel(), player, hand) == net.minecraft.world.InteractionResult.SUCCESS
+						&& player.getItemInHand(hand) == stack && stack.getCount() == 1 && player.getCooldowns().isOnCooldown(stack),
+						"After exactly one hundred ticks the same creative button must activate again and start another full cooldown");
+			} finally {
+				player.discard();
+			}
 		}
 		test.succeed();
 	}

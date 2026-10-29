@@ -1,5 +1,6 @@
 package dev.kirill.hbk.world;
 
+import dev.kirill.hbk.entity.SkippingOwlEntity;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import net.fabricmc.fabric.api.biome.v1.BiomeModifications;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
@@ -16,6 +17,10 @@ public final class ReferenceNpcSpawning {
 	private ReferenceNpcSpawning() {}
 
 	public static void register() {
+		BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld(), MobCategory.CREATURE,
+				ModEntityTypes.SKIPPING_OWL, 4, 1, 1);
+		SpawnPlacements.register(ModEntityTypes.SKIPPING_OWL, SpawnPlacementTypes.ON_GROUND,
+				Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, SkippingOwlEntity::checkSpawnRules);
 		// Use vanilla's continuously retried monster spawner and cap, including already explored chunks.
 		for (var type : java.util.List.of(ModEntityTypes.ANTON, ModEntityTypes.GRISHA)) {
 			BiomeModifications.addSpawn(BiomeSelectors.foundInOverworld(), MobCategory.MONSTER, type, 10, 4, 4);

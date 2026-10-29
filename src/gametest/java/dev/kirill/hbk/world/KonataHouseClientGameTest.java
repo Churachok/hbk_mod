@@ -1,11 +1,15 @@
 package dev.kirill.hbk.world;
 
 import dev.kirill.hbk.HbkMod;
+import dev.kirill.hbk.registry.ModItems;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.context.ClientGameTestContext;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationUiState;
+import net.minecraft.client.renderer.entity.ItemFrameRenderer;
+import net.minecraft.client.renderer.entity.state.ItemFrameRenderState;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.Registries;
@@ -13,6 +17,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.sheep.Sheep;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
@@ -33,6 +38,7 @@ public final class KonataHouseClientGameTest implements FabricClientGameTest {
 	private static final BlockPos CARPET = HATCH.above();
 	private static final BlockPos PISTON = ORIGIN.offset(6, 2, 5);
 	private static final BlockPos LEVER = ORIGIN.offset(7, 2, 5);
+	private static final BlockPos SYRINGE_FRAME = ORIGIN.offset(6, 13, 6);
 
 	@Override
 	public void runTest(ClientGameTestContext context) {
@@ -69,6 +75,8 @@ public final class KonataHouseClientGameTest implements FabricClientGameTest {
 					}
 					ModStructurePopulator.populateKonataBasement(level, ORIGIN, Rotation.NONE,
 							ModWorldData.get(level), "konata_basement_client_test");
+					ModStructurePopulator.populateKonataSyringe(level, ORIGIN, Rotation.NONE, 11,
+							ModWorldData.get(level), "konata_syringe_client_test");
 					player.getInventory().clearContent();
 					player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
 					player.getAbilities().flying = true;
@@ -95,6 +103,13 @@ public final class KonataHouseClientGameTest implements FabricClientGameTest {
 					}
 				});
 				capture(context, "konata-house-hidden-hatch");
+
+				context.waitFor(KonataHouseClientGameTest::hasFramedSyringe, 100);
+				server.runCommand("tp @a 6.5 162 3.5 0 2");
+				context.runOnClient(KonataHouseClientGameTest::verifyFramedSyringe);
+				capture(context, "konata-house-framed-furry-syringe-above-crafting-table");
+				// Restore the original interaction point before opening the concealed hatch.
+				server.runCommand("tp @a 3.5 162 3.5 135 48");
 
 				server.runOnServer(instance -> {
 					var player = instance.getPlayerList().getPlayers().getFirst();
@@ -177,6 +192,34 @@ public final class KonataHouseClientGameTest implements FabricClientGameTest {
 					client.options.setCameraType(originalCamera);
 				});
 			}
+		}
+	}
+
+	private static boolean hasFramedSyringe(Minecraft client) {
+		return client.level != null && StreamSupport.stream(client.level.entitiesForRendering().spliterator(), false)
+				.anyMatch(entity -> entity instanceof ItemFrame frame && frame.getPos().equals(SYRINGE_FRAME)
+						&& frame.getDirection() == Direction.NORTH && frame.getItem().is(ModItems.FURRY_SYRINGE));
+	}
+
+	private static void verifyFramedSyringe(Minecraft client) {
+		var frames = StreamSupport.stream(client.level.entitiesForRendering().spliterator(), false)
+				.filter(ItemFrame.class::isInstance).map(ItemFrame.class::cast)
+				.filter(frame -> frame.getPos().equals(SYRINGE_FRAME)).toList();
+		if (frames.size() != 1) throw new AssertionError("Exactly one ordinary syringe frame must synchronize above Konata's crafting table");
+		var frame = frames.getFirst();
+		if (frame.getType() != EntityTypes.ITEM_FRAME || frame.isInvisible() || frame.getDirection() != Direction.NORTH
+				|| !frame.getItem().is(ModItems.FURRY_SYRINGE) || frame.getItem().getCount() != 1
+				|| !client.level.getBlockState(SYRINGE_FRAME.below()).is(Blocks.CRAFTING_TABLE)
+				|| !client.level.getBlockState(SYRINGE_FRAME.south()).is(Blocks.CHERRY_PLANKS)
+				|| !(client.getEntityRenderDispatcher().getRenderer(frame) instanceof ItemFrameRenderer)) {
+			throw new AssertionError("The syringe must occupy a visible non-glowing vanilla wall frame directly above the crafting table");
+		}
+		var state = (ItemFrameRenderState) client.getEntityRenderDispatcher().extractEntity(frame, 0.5f);
+		var particle = state.item.pickParticleMaterial(RandomSource.create(0));
+		if (state.isGlowFrame || state.direction != Direction.NORTH || state.item.isEmpty() || particle == null
+				|| particle.sprite().contents().name().equals(MissingTextureAtlasSprite.getLocation())
+				|| state.item.getModelBoundingBox().getXsize() < 0.01 || state.item.getModelBoundingBox().getZsize() < 0.01) {
+			throw new AssertionError("The vanilla frame renderer must resolve the real three-dimensional syringe model in its fixed display context");
 		}
 	}
 
