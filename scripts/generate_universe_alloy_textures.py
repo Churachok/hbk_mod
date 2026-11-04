@@ -91,4 +91,8 @@ def export(alloys):
 
 if __name__ == '__main__':
     import generate_universe_alloys
-    export(generate_universe_alloys.definitions())
+    import export_universe_reward_art
+    alloys = generate_universe_alloys.definitions()
+    export(alloys)
+    # The historical entry point must not put recoloured equipment over the v2 artwork.
+    export_universe_reward_art.export(alloys)

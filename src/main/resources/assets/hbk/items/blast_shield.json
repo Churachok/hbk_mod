@@ -1,6 +1,14 @@
 {
   "model": {
-    "type": "minecraft:model",
-    "model": "hbk:item/blast_shield"
+    "type": "minecraft:condition",
+    "property": "minecraft:using_item",
+    "on_true": {
+      "type": "minecraft:model",
+      "model": "hbk:item/blast_shield_blocking"
+    },
+    "on_false": {
+      "type": "minecraft:model",
+      "model": "hbk:item/blast_shield"
+    }
   }
 }

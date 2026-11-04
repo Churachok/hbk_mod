@@ -62,9 +62,9 @@ public final class AnomalyGlitchRenderer {
 	public static void render(LevelRenderContext context) {
 		var client = Minecraft.getInstance();
 		var level = client.level;
-		Long seed = AnomalyZones.clientSeed();
+		Long seed = AnomalyZones.seed(level);
 		var camera = context.levelState().cameraRenderState;
-		if (level == null || seed == null || !level.dimension().equals(Level.OVERWORLD)
+		if (level == null || seed == null
 				|| !nearZone(seed, camera.pos)) {
 			clear();
 			return;

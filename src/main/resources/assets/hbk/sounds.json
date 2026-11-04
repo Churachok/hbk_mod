@@ -1,4 +1,8 @@
 {
+	"god_loop": {
+		"subtitle": "subtitles.hbk.god_loop",
+		"sounds": [{"name": "hbk:god", "stream": true}]
+	},
 	"anomaly_ambient": {
 		"sounds": [{"name": "hbk:ambient/anomaly_ambient", "stream": true}]
 	},

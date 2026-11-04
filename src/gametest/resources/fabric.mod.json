@@ -9,6 +9,8 @@
 			"dev.kirill.hbk.HbkClientGameTests"
 		],
 		"fabric-gametest": [
+			"dev.kirill.hbk.UniverseExplorationGameTests",
+			"dev.kirill.hbk.world.GodGameTests",
 			"dev.kirill.hbk.TimeFurnaceGameTests",
 			"dev.kirill.hbk.FurrySyringeGameTests",
 			"dev.kirill.hbk.FurryBreedingGameTests",

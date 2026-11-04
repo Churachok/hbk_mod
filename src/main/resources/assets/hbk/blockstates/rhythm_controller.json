@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "minecraft:block/repeater_1tick"
+      "model": "hbk:block/rhythm_controller"
     }
   }
 }

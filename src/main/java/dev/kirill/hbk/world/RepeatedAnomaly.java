@@ -49,8 +49,8 @@ public final class RepeatedAnomaly {
 
 	/** Called at the head of decoration. Exactly one chunk runs native decoration to create the blueprint. */
 	public static boolean decorate(ChunkGenerator generator, WorldGenLevel world, ChunkAccess chunk, StructureManager structures) {
-		if (capturing() || !world.getLevel().dimension().equals(Level.OVERWORLD)) return false;
-		var zone = AnomalyZones.forChunk(AnomalyZones.layoutSeed(world.getSeed()),
+		if (capturing() || !AnomalyZones.supported(world.getLevel())) return false;
+		var zone = AnomalyZones.forChunk(AnomalyZones.seed(world.getLevel()),
 				chunk.getPos().getMinBlockX(), chunk.getPos().getMinBlockZ());
 		if (zone == null || zone.kind() != 6) return false;
 		var template = template(generator, world, chunk, structures, zone);
@@ -70,6 +70,7 @@ public final class RepeatedAnomaly {
 		var template = CACHE.get(key);
 		if (template != null) return template;
 		Path directory = world.getLevel().getServer().getWorldPath(LevelResource.DATA).resolve("hbk_anomaly_templates");
+		if (!world.getLevel().dimension().equals(Level.OVERWORLD)) directory = directory.resolve(world.getLevel().dimension().identifier().getPath());
 		Path file = directory.resolve("repeat_" + zone.minX() + "_" + zone.minZ() + ".nbt");
 		try {
 			if (Files.exists(file)) {
@@ -80,6 +81,17 @@ public final class RepeatedAnomaly {
 			} else {
 				CAPTURING.set(true);
 				try {
+					if (generator instanceof dev.kirill.hbk.universe.UniverseChunkGenerator parallel) {
+						var level = world.getLevel();
+						// Always capture the fixed origin, even if another tile is explored first.
+						chunk = new net.minecraft.world.level.chunk.ProtoChunk(new net.minecraft.world.level.ChunkPos(zone.minX() >> 4, zone.minZ() >> 4),
+								net.minecraft.world.level.chunk.UpgradeData.EMPTY, level, level.palettedContainerFactory(), null);
+						parallel.fillFromNoise(net.minecraft.world.level.levelgen.blending.Blender.empty(), level.getChunkSource().randomState(), structures, chunk).join();
+						parallel.templateSurface(chunk);
+						var biome = level.registryAccess().lookupOrThrow(Registries.BIOME).getOrThrow(ResourceKey.create(Registries.BIOME, dev.kirill.hbk.HbkMod.id("universe")));
+						chunk.fillBiomesFromNoise((x, y, z, sampler) -> biome, level.getChunkSource().randomState().sampler());
+						((net.minecraft.world.level.chunk.ProtoChunk) chunk).setPersistedStatus(net.minecraft.world.level.chunk.status.ChunkStatus.BIOMES);
+					}
 					generator.applyBiomeDecoration(world, chunk, structures);
 				} finally {
 					CAPTURING.remove();
@@ -140,7 +152,8 @@ public final class RepeatedAnomaly {
 		void apply(WorldGenLevel world, ChunkAccess chunk) {
 			int wx = chunk.getPos().getMinBlockX(), wz = chunk.getPos().getMinBlockZ();
 			var pos = new BlockPos.MutableBlockPos();
-			var random = RandomSource.create(world.getSeed() ^ chunk.getPos().pack());
+			var profile = dev.kirill.hbk.universe.UniverseProfile.of(world.getLevel());
+			var random = RandomSource.create((profile == null ? world.getSeed() : profile.seed()) ^ chunk.getPos().pack());
 			for (int y = minY; y < minY + height; y++) for (int z = 0; z < 16; z++) for (int x = 0; x < 16; x++) {
 				var state = palette[blocks[AnomalyTileLayout.blockIndex(wx + x, y, wz + z, minY)]];
 				pos.set(wx + x, y, wz + z);

@@ -40,8 +40,8 @@ public final class AnomalyCeilingRenderer {
 
 	public static void render(LevelRenderContext context) {
 		var client = Minecraft.getInstance();
-		Long seed = AnomalyZones.clientSeed();
-		if (seed == null || client.level == null || !client.level.dimension().equals(Level.OVERWORLD)) return;
+		Long seed = AnomalyZones.seed(client.level);
+		if (seed == null) return;
 		var camera = context.levelState().cameraRenderState;
 		int cellX = Math.floorDiv((int) Math.floor(camera.pos.x), AnomalyZones.SPACING);
 		int cellZ = Math.floorDiv((int) Math.floor(camera.pos.z), AnomalyZones.SPACING);

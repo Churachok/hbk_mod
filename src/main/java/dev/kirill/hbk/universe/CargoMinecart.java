@@ -18,6 +18,7 @@ public final class CargoMinecart extends MinecartChest {
 	@Override public NonNullList<ItemStack> getItemStacks() { return cargo; }
 	@Override public void clearItemStacks() { cargo = NonNullList.withSize(54, ItemStack.EMPTY); }
 	@Override protected Item getDropItem() { return UniverseAlloys.item("cargo_minecart"); }
+	@Override public net.minecraft.world.level.block.state.BlockState getDefaultDisplayBlockState() { return UniverseAlloys.CARGO_CRATE.defaultBlockState(); }
 	@Override public ItemStack getPickResult() { return new ItemStack(getDropItem()); }
 	@Override public AbstractContainerMenu createMenu(int id, Inventory inventory) { return ChestMenu.sixRows(id, inventory, this); }
 }

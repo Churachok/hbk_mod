@@ -14,7 +14,7 @@ public abstract class UniversePhysicsMixin {
 		Entity entity = (Entity) (Object) this;
 		var profile = UniverseProfile.of(entity.level());
 		if (profile != null) {
-			double gravity = UniverseEnvironment.gravity(profile, entity.position());
+			double gravity = UniverseEnvironment.gravity(profile, entity.position()) * dev.kirill.hbk.universe.UniverseDisasters.gravityMultiplier(entity);
 			if (entity instanceof net.minecraft.world.entity.LivingEntity living && dev.kirill.hbk.universe.AlloyActions.equipped(living, net.minecraft.world.entity.EquipmentSlot.CHEST, "gravity_chestplate")) gravity = 1 + (gravity - 1) * .2;
 			return original * gravity;
 		}

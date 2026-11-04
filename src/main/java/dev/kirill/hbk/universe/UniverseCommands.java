@@ -9,7 +9,19 @@ import net.minecraft.network.chat.Component;
 public final class UniverseCommands {
 	private UniverseCommands() {}
 	public static void register() {
-		CommandRegistrationCallback.EVENT.register((dispatcher, registry, environment) -> dispatcher.register(Commands.literal("universe")
+		CommandRegistrationCallback.EVENT.register((dispatcher, registry, environment) -> {
+			var locate = Commands.literal("locate");
+			for (var kind : UniverseStructures.Kind.values()) locate.then(Commands.literal(kind.name().toLowerCase(java.util.Locale.ROOT)).executes(ctx -> {
+				var p = UniverseProfile.of(ctx.getSource().getLevel()); if (p == null) return outside(ctx.getSource());
+				var site = new UniverseStructures(p).nearest(net.minecraft.core.BlockPos.containing(ctx.getSource().getPosition()), kind);
+				return site == null ? 0 : location(ctx.getSource(), "structure.hbk." + kind.name().toLowerCase(java.util.Locale.ROOT), site.origin());
+			}));
+			for (var kind : UniverseLandmarks.Kind.values()) locate.then(Commands.literal(kind.name().toLowerCase(java.util.Locale.ROOT)).executes(ctx -> {
+				var p = UniverseProfile.of(ctx.getSource().getLevel()); if (p == null) return outside(ctx.getSource());
+				var site = new UniverseLandmarks(p).nearest(net.minecraft.core.BlockPos.containing(ctx.getSource().getPosition()), kind);
+				return site == null ? 0 : location(ctx.getSource(), "landmark.hbk." + kind.name().toLowerCase(java.util.Locale.ROOT), site.center());
+			}));
+			dispatcher.register(Commands.literal("universe").then(locate)
 				.then(Commands.literal("return").executes(ctx -> UniverseManager.returnHome(ctx.getSource().getPlayerOrException()) ? 1 : 0))
 				.then(Commands.literal("info").executes(ctx -> info(ctx.getSource(), UniverseProfile.of(ctx.getSource().getLevel()))))
 				.then(Commands.literal("ecology").executes(ctx -> ecology(ctx.getSource(), UniverseProfile.of(ctx.getSource().getLevel()))))
@@ -24,7 +36,12 @@ public final class UniverseCommands {
 							String address = StringArgumentType.getString(ctx, "code");
 							if (!UniverseCode.valid(address)) return invalid(ctx.getSource());
 							return UniverseManager.travel(ctx.getSource().getPlayerOrException(), new UniverseCode(address)) ? 1 : 0;
-						})))));
+						}))));
+		});
+	}
+	private static int outside(CommandSourceStack source) { source.sendFailure(Component.translatable("message.hbk.universe.outside")); return 0; }
+	private static int location(CommandSourceStack source, String key, net.minecraft.core.BlockPos pos) {
+		source.sendSuccess(() -> Component.translatable("message.hbk.universe.site", Component.translatable(key), pos.getX(), pos.getY(), pos.getZ()), false); return 1;
 	}
 	private static int invalid(CommandSourceStack source) { source.sendFailure(Component.translatable("message.hbk.universe.invalid")); return 0; }
 	private static int hazards(CommandSourceStack source) {

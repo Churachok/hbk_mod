@@ -17,6 +17,9 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 	@Override
 	public void runTest(ClientGameTestContext context) {
 		switch (System.getProperty("hbk.client.gametest", "all")) {
+			case "exploration" -> new UniverseExplorationClientGameTest().runTest(context);
+			case "exploration_landmarks" -> new UniverseExplorationClientGameTest(true).runTest(context);
+			case "god" -> new GodClientGameTest().runTest(context);
 			case "worlds" -> new UniverseMinesClientGameTest().runTest(context);
 			case "alloys" -> new UniverseAlloyClientGameTest().runTest(context);
 			case "universe" -> new UniverseClientGameTest().runTest(context);
@@ -36,6 +39,8 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 			case "jagermeister_jei" -> new JeiJagermeisterClientGameTest().runTest(context);
 			case "rofl" -> new RoflClientGameTest().runTest(context);
 			case "all" -> {
+				new UniverseExplorationClientGameTest().runTest(context);
+				new GodClientGameTest().runTest(context);
 				new UniverseClientGameTest().runTest(context);
 				new UniverseAlloyClientGameTest().runTest(context);
 				new UniverseMinesClientGameTest().runTest(context);
@@ -54,7 +59,7 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 				new FlyingCarpetClientGameTest().runTest(context);
 				new RoflClientGameTest().runTest(context);
 			}
-			default -> throw new IllegalArgumentException("hbkClientTest must be time_furnace, anomaly, universe, alloys, worlds, kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, furry, furry_breeding, jagermeister_jei, rofl or all");
+			default -> throw new IllegalArgumentException("hbkClientTest must be exploration, exploration_landmarks, god, time_furnace, anomaly, universe, alloys, worlds, kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, furry, furry_breeding, jagermeister_jei, rofl or all");
 		}
 	}
 

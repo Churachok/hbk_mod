@@ -56,8 +56,16 @@ public final class UniverseEnvironment {
 		}
 		return (int) ((r + v) * 255) << 16 | (int) ((g + v) * 255) << 8 | (int) ((b + v) * 255);
 	}
-	public static int skyColor(UniverseProfile p, long time) { return shade(palette(p, false), .38 + .62 * daylight(p, time)); }
-	public static int fogColor(UniverseProfile p, long time) { return shade(palette(p, true), .55 + .45 * daylight(p, time)); }
+	public static int skyColor(UniverseProfile p, long time) { return disasterColor(p, time, shade(palette(p, false), .38 + .62 * daylight(p, time))); }
+	public static int fogColor(UniverseProfile p, long time) { return disasterColor(p, time, shade(palette(p, true), .55 + .45 * daylight(p, time))); }
+	private static int disasterColor(UniverseProfile p, long time, int original) {
+		var event = UniverseDisasters.cataclysm(p, time);
+		if (!event.active()) return original;
+		double blend = Math.min(1, Math.min(event.elapsed(), event.remaining()) / 80.0) * .48;
+		int color = switch (UniverseDisasters.kind(p)) { case ACID -> 0x9fbb75; case ASH -> 0x999087; case CRYSTAL -> 0xb2a5d7; case ELECTRIC -> 0x8289b9; };
+		return (int) lerp(original >> 16 & 255, color >> 16 & 255, blend) << 16
+				| (int) lerp(original >> 8 & 255, color >> 8 & 255, blend) << 8 | (int) lerp(original & 255, color & 255, blend);
+	}
 	private static int shade(int color, double amount) {
 		return ((int) ((color >> 16 & 255) * clamp(amount, 0, 1)) << 16)
 				| ((int) ((color >> 8 & 255) * clamp(amount, 0, 1)) << 8) | (int) ((color & 255) * clamp(amount, 0, 1));

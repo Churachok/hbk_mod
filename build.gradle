@@ -63,6 +63,7 @@ def gameTestProfiles = [
 	jagermeister: 'jagermeister_game_tests_*',
 	hunters_instinct: 'hunters_instinct_game_tests_*',
 	npc: 'npc_game_tests_*',
+	god: 'god_game_tests_*',
 	furry: 'furry_syringe_game_tests_*',
 	furry_breeding: 'furry_breeding_game_tests_*',
 	rofl: 'rofl_game_tests_*',

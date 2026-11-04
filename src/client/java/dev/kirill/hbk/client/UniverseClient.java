@@ -22,6 +22,19 @@ public final class UniverseClient {
 			var p = UniverseProfile.of(client.level);
 			if (p == null) return;
 			var random = client.level.getRandom();
+			var storm = dev.kirill.hbk.universe.UniverseDisasters.gravity(p, client.level.getGameTime());
+			var cataclysm = dev.kirill.hbk.universe.UniverseDisasters.cataclysm(p, client.level.getGameTime());
+			if (storm.active() || cataclysm.active()) for (int i = 0; i < 24; i++) {
+				Vec3 pos = client.player.position().add(random.nextDouble() * 30 - 15, random.nextDouble() * 12 + 2, random.nextDouble() * 30 - 15);
+				if (dev.kirill.hbk.universe.UniverseDisasters.sheltered(client.level, pos) || !client.level.getBlockState(BlockPos.containing(pos)).isAir()) continue;
+				ParticleOptions particle = storm.active() ? ParticleTypes.REVERSE_PORTAL : switch (dev.kirill.hbk.universe.UniverseDisasters.kind(p)) {
+					case ACID -> new DustParticleOptions(0x91ba4c, .8f);
+					case ASH -> ParticleTypes.WHITE_ASH;
+					case CRYSTAL -> new ItemParticleOption(ParticleTypes.ITEM, Items.AMETHYST_SHARD);
+					case ELECTRIC -> ParticleTypes.ELECTRIC_SPARK;
+				};
+				client.level.addParticle(particle, pos.x, pos.y, pos.z, .02, storm.active() ? .12 : -.35, -.02);
+			}
 			// Local fields are visible even in dry/closed worlds. Strictly bounded particle budget.
 			for (int i = 0; i < 16; i++) {
 				Vec3 pos = client.player.position().add(random.nextDouble() * 56 - 28, random.nextDouble() * 22 - 9, random.nextDouble() * 56 - 28);

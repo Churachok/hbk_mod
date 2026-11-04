@@ -260,6 +260,8 @@ def main():
     langs['en_us']['book.hbk.recipes.info.universe_alloys'] = 'Alloys\n\n2 different ores or minerals → sample.\n\nBlast furnace → ingot.\n\nSmithing: upgrade template + netherite + alloy.'
     for lang, data in langs.items(): rocks.write_language(A / f'lang/{lang}.json', data)
     (REPO / 'docs/UNIVERSE_ALLOY_RECIPES.md').write_text('# Изготовление сплавов\n\nВсе 45 пар симметричны. По одной руде **или** минералу каждого семейства дают один образец. Только плавильная печь: 200 тиков и топливо → один слиток. Каждый предмет требует один шаблон незеритового улучшения, указанную незеритовую основу и один слиток. Имя и зачарования основы сохраняются. Блок хранения = 9 слитков, разбирается обратно без потерь.\n\n| Сплав | Образец (namespace hbk) | Незеритовая основа | Результат |\n| --- | --- | --- | --- |\n' + '\n'.join(craft_rows) + '\n')
+    import export_universe_reward_art
+    export_universe_reward_art.export(alloys)
     print(f'Generated {len(alloys)} alloys, {len(craft_rows)} upgrades, {len(recipes)} recipes; original 16px metal art and native item geometry.')
 
 

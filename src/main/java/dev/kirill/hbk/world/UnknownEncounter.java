@@ -33,7 +33,7 @@ import java.util.UUID;
 public final class UnknownEncounter {
 	public static final ResourceKey<DamageType> LOST_IN_TIME_DAMAGE = ResourceKey.create(
 			Registries.DAMAGE_TYPE, HbkMod.id("lost_in_time"));
-	private static final double WALKING_TRIGGER_CHANCE = 0.0001;
+	static final double WALKING_TRIGGER_CHANCE = 0.0001;
 	private static final double SPAWN_DISTANCE = 4.0;
 	private static final int PORTAL_OPEN_TICKS = 60;
 	private static final int PORTAL_EXIT_TICKS = 20;
@@ -74,7 +74,7 @@ public final class UnknownEncounter {
 	}
 
 	public static StartResult start(ServerPlayer player) {
-		if (!player.isAlive() || SovietBusEvent.isActive(player)) {
+		if (!player.isAlive() || SovietBusEvent.isActive(player) || GodEncounter.isActive(player)) {
 			return StartResult.UNAVAILABLE;
 		}
 		if (ACTIVE.containsKey(player.getUUID())) {
@@ -367,8 +367,8 @@ public final class UnknownEncounter {
 		sendClientState(player, -1, false);
 	}
 
-	private static boolean canTriggerNaturally(ServerPlayer player) {
-		if (SovietBusEvent.isActive(player)) {
+	static boolean canTriggerNaturally(ServerPlayer player) {
+		if (SovietBusEvent.isActive(player) || GodEncounter.isActive(player)) {
 			return false;
 		}
 		if (!player.isAlive() || player.isCreative() || player.isSpectator()

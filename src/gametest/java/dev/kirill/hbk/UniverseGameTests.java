@@ -155,6 +155,9 @@ public final class UniverseGameTests {
 		var reloaded = server.getLevel(UniverseManager.key(code));
 		// A loaded terrain chunk alone is not entity-visible; native entity IO follows a ticking ticket.
 		reloaded.setChunkForced(0, 0, true);
+		// Entity-ticking promotion needs a two-chunk neighbour ring. Headless tests advance
+		// 200 ticks in milliseconds; finish terrain IO before measuring entity restoration.
+		for (int cx = -2; cx <= 2; cx++) for (int cz = -2; cz <= 2; cz++) reloaded.getChunk(cx, cz);
 		test.assertTrue(reloaded != level, "getLevel lazily restores a saved dimension");
 		test.assertTrue(reloaded.getBlockState(pos).is(Blocks.CHEST), "Player blocks survive unload/reload");
 		var stack = ((ChestBlockEntity) reloaded.getBlockEntity(pos)).getItem(0);
@@ -164,7 +167,9 @@ public final class UniverseGameTests {
 		test.succeedWhen(() -> {
 			test.assertTrue(reloaded.getEntity(entityId) != null, "Entities retain their identity after a universe unload; loaded="
 					+ reloaded.areEntitiesLoaded(ChunkPos.pack(0, 0)) + ", ticking=" + reloaded.isPositionEntityTicking(pos)
-					+ ", chunks=" + reloaded.getChunkSource().getLoadedChunksCount());
+					+ ", chunks=" + reloaded.getChunkSource().getLoadedChunksCount()
+					+ ", forced=" + reloaded.getForceLoadedChunks() + ", ticket=" + reloaded.getDataStorage().computeIfAbsent(net.minecraft.world.level.TicketStorage.TYPE).getTicketDebugString(ChunkPos.pack(0,0),true)
+					+ ", pending=" + reloaded.getChunkSource().getPendingTasksCount() + ", tracked=" + (server.getLevel(reloaded.dimension()) == reloaded));
 			test.assertTrue(other.getEntity(entityId) == null, "Entities must not leak to another address");
 			reloaded.setChunkForced(0, 0, false);
 			UniverseManager.unload(server, other); UniverseManager.unload(server, reloaded);

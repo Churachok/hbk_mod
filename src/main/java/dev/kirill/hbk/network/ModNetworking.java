@@ -163,7 +163,16 @@ public final class ModNetworking {
 		}
 	}
 
+	public record GodEncounterPayload(boolean active, boolean announce, double distance) implements CustomPacketPayload {
+		public static final Type<GodEncounterPayload> TYPE = new Type<>(HbkMod.id("god_encounter"));
+		public static final StreamCodec<RegistryFriendlyByteBuf, GodEncounterPayload> CODEC = StreamCodec.of(
+				(buffer, payload) -> { buffer.writeBoolean(payload.active); buffer.writeBoolean(payload.announce); buffer.writeDouble(payload.distance); },
+				buffer -> new GodEncounterPayload(buffer.readBoolean(), buffer.readBoolean(), buffer.readDouble()));
+		@Override public Type<? extends CustomPacketPayload> type() { return TYPE; }
+	}
+
 	public static void register() {
+		PayloadTypeRegistry.clientboundPlay().register(GodEncounterPayload.TYPE, GodEncounterPayload.CODEC);
 		PayloadTypeRegistry.serverboundPlay().register(TravelTimeFurnacePayload.TYPE, TravelTimeFurnacePayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(TravelTimeFurnacePayload.TYPE, (payload, context) -> context.server().execute(() -> {
 			var player = context.player();

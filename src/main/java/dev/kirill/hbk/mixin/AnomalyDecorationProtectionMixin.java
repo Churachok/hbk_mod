@@ -29,12 +29,12 @@ public abstract class AnomalyDecorationProtectionMixin implements AnomalyDecorat
 	@Override
 	public boolean hbk$protectAnomalyWrite(BlockPos pos) {
 		var region = (WorldGenRegion) (Object) this;
-		if (!region.getLevel().dimension().equals(Level.OVERWORLD)) return false;
+		if (!AnomalyZones.supported(region.getLevel())) return false;
 		int cx = pos.getX() >> 4, cz = pos.getZ() >> 4;
 		long key = net.minecraft.world.level.ChunkPos.pack(cx, cz);
 		if (key != hbk$lastChunk) {
 			hbk$lastChunk = key;
-			hbk$zone = AnomalyZones.forChunk(AnomalyZones.layoutSeed(region.getSeed()), cx * 16, cz * 16);
+			hbk$zone = AnomalyZones.forChunk(AnomalyZones.seed(region.getLevel()), cx * 16, cz * 16);
 		}
 		if (hbk$zone == null || hbk$zone.kind() < 5 || !hbk$zone.contains(pos.getX() + 0.5, pos.getZ() + 0.5)) return false;
 		if (hbk$zone.kind() == 6) return !RepeatedAnomaly.capturing();

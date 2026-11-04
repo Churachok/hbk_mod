@@ -2,26 +2,17 @@
   "layers": {
     "humanoid": [
       {
-        "texture": "minecraft:iron",
-        "dyeable": {
-          "color_when_undyed": -4602207
-        }
+        "texture": "hbk:alloys/light_steel"
       }
     ],
     "humanoid_baby": [
       {
-        "texture": "minecraft:iron",
-        "dyeable": {
-          "color_when_undyed": -4602207
-        }
+        "texture": "hbk:alloys/light_steel"
       }
     ],
     "humanoid_leggings": [
       {
-        "texture": "minecraft:iron",
-        "dyeable": {
-          "color_when_undyed": -4602207
-        }
+        "texture": "hbk:alloys/light_steel"
       }
     ]
   }

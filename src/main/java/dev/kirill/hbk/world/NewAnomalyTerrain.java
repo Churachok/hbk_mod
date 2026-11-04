@@ -29,7 +29,7 @@ public final class NewAnomalyTerrain {
 		var source = level.getLevel().getChunkSource();
 		int reference = zone.kind() == 7 ? source.getGenerator().getBaseHeight(zone.centerX(), zone.centerZ(),
 				Heightmap.Types.OCEAN_FLOOR_WG, chunk, source.randomState()) - 1 : 0;
-		long seed = AnomalyZones.layoutSeed(level.getSeed()) ^ (long) zone.minX() * 31 ^ zone.minZ();
+		long seed = AnomalyZones.seed(level.getLevel()) ^ (long) zone.minX() * 31 ^ zone.minZ();
 		for (int x = 0; x < 16; x++) for (int z = 0; z < 16; z++) {
 			int px = wx + x, pz = wz + z, index = x * 16 + z, top = surfaces[index];
 			if (!zone.contains(px + 0.5, pz + 0.5)) continue;
