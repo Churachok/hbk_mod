@@ -19,9 +19,8 @@ public final class AnomalyProximityOverlay {
 	public static void render(GuiGraphicsExtractor graphics, DeltaTracker delta) {
 		var client = Minecraft.getInstance();
 		var player = client.player;
-		Long seed = AnomalyZones.clientSeed();
-		if (player == null || client.level == null || seed == null || !player.isAlive() || player.isSpectator()
-				|| !client.level.dimension().equals(Level.OVERWORLD)) return;
+		Long seed = AnomalyZones.seed(client.level);
+		if (player == null || seed == null || !player.isAlive() || player.isSpectator()) return;
 
 		var position = player.getPosition(delta.getGameTimeDeltaPartialTick(false));
 		int cellX = Math.floorDiv((int) Math.floor(position.x), AnomalyZones.SPACING);

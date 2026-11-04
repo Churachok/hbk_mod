@@ -29,6 +29,11 @@ public final class ModCommands {
 
 	public static void register() {
 		CommandRegistrationCallback.EVENT.register((dispatcher, context, selection) -> {
+			dispatcher.register(Commands.literal("god")
+					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					.executes(ctx -> startGod(ctx.getSource(), ctx.getSource().getPlayerOrException()))
+					.then(Commands.argument("player", EntityArgument.player())
+							.executes(ctx -> startGod(ctx.getSource(), EntityArgument.getPlayer(ctx, "player")))));
 			dispatcher.register(Commands.literal("anomaly")
 					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 					.then(Commands.literal("locate").then(Commands.argument("number", IntegerArgumentType.integer(1, AnomalyZones.TYPE_COUNT))
@@ -67,13 +72,23 @@ public final class ModCommands {
 		});
 	}
 
+	private static int startGod(CommandSourceStack source, ServerPlayer player) {
+		var result = dev.kirill.hbk.world.GodEncounter.start(player);
+		if (result == dev.kirill.hbk.world.GodEncounter.StartResult.STARTED) {
+			source.sendSuccess(() -> Component.translatable("command.hbk.god.started", player.getDisplayName()), true);
+			return 1;
+		}
+		source.sendFailure(Component.translatable("command.hbk.god." + result.name().toLowerCase(java.util.Locale.ROOT)));
+		return 0;
+	}
+
 	private static int locateAnomaly(CommandSourceStack source, int number) {
-		if (!source.getLevel().dimension().equals(Level.OVERWORLD)) {
+		if (!AnomalyZones.supported(source.getLevel())) {
 			source.sendFailure(Component.translatable("commands.hbk.anomaly.overworld"));
 			return 0;
 		}
 		var zone = AnomalyZones.nearest(
-				AnomalyZones.layoutSeed(source.getLevel().getSeed()),
+				AnomalyZones.seed(source.getLevel()),
 				(int) source.getPosition().x, (int) source.getPosition().z, number);
 		if (zone == null) return 0;
 		source.sendSuccess(() -> Component.translatable("commands.hbk.anomaly.found", number,

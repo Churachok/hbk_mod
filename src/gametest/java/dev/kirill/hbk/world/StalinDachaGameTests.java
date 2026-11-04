@@ -43,7 +43,8 @@ public final class StalinDachaGameTests {
 		BlockPos last = test.absolutePos(new BlockPos(8, 5, 8));
 		BoundingBox box = new BoundingBox(first.getX(), first.getY(), first.getZ(),
 				last.getX(), last.getY(), last.getZ());
-		var data = ModWorldData.get(test.getLevel());
+		// Keep this fixture independent of population markers left in a reused test save.
+		var data = new ModWorldData();
 		String key = "test_dacha@" + first.asLong();
 		ModStructurePopulator.populateStalinDachaResidents(test.getLevel(), box, data, key);
 		test.assertTrue(test.getEntities(ModEntityTypes.NKVD).size() == 4,

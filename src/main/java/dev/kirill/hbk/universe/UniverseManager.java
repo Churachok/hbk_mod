@@ -32,6 +32,7 @@ public final class UniverseManager {
 	public static ResourceKey<Level> key(UniverseCode code) { return ResourceKey.create(Registries.DIMENSION, HbkMod.id("universe_" + code.value())); }
 	public static void register() {
 		UniverseHazards.register();
+		UniverseDisasters.register();
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			if (server.getTickCount() % 200 != 0) return;
 			var idle = IDLE.computeIfAbsent(server, ignored -> new HashMap<>());
@@ -75,6 +76,8 @@ public final class UniverseManager {
 	public static boolean unload(MinecraftServer server, ServerLevel level) {
 		if (UniverseProfile.of(level) == null || !level.players().isEmpty() || !level.getForceLoadedChunks().isEmpty()) return false;
 		try {
+			// Restoration must precede the final save: UNLOAD callbacks run after this flush.
+			dev.kirill.hbk.world.AnomalyTransientBlocks.restore(level, true);
 			level.getChunkSource().deactivateTicketsOnClosing();
 			level.save(null, true, false);
 			ServerLevelEvents.UNLOAD.invoker().onLevelUnload(server, level);

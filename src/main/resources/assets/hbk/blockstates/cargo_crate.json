@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "hbk:block/cargo_crate"
+    }
+  }
+}

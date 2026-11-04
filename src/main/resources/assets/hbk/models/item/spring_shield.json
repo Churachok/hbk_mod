@@ -1,3 +1,59 @@
 {
-  "parent": "minecraft:item/shield"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hbk:item/alloys/spring_shield"
+  },
+  "display": {
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        -75,
+        10
+      ],
+      "translation": [
+        1,
+        1,
+        -2
+      ],
+      "scale": [
+        1.6,
+        1.6,
+        1.6
+      ]
+    },
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        75,
+        -10
+      ],
+      "translation": [
+        1,
+        1,
+        -2
+      ],
+      "scale": [
+        1.6,
+        1.6,
+        1.6
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        0,
+        90,
+        0
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ],
+      "scale": [
+        1.3,
+        1.3,
+        1.3
+      ]
+    }
+  }
 }

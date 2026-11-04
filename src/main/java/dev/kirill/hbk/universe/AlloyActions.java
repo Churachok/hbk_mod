@@ -406,6 +406,8 @@ public final class AlloyActions {
 		boolean rain = UniverseWeather.rain(profile, now) > 0; long change = -1;
 		for (int i = 0; i < 24; i++) if ((UniverseWeather.rain(profile, boundary + i * 6000) > 0) != rain) { change = (boundary + i * 6000 - now) / 20; break; }
 		player.sendOverlayMessage(Component.translatable("message.hbk.alloy.forecast", Component.translatable(rain ? "message.hbk.alloy.rain" : "message.hbk.alloy.calm"), change < 0 ? "—" : change));
+		player.sendSystemMessage(Component.translatable("message.hbk.disaster.forecast_gravity", (UniverseDisasters.gravity(profile, now).remaining() + 19) / 20));
+		player.sendSystemMessage(Component.translatable("message.hbk.disaster.forecast_weather", Component.translatable("disaster.hbk." + UniverseDisasters.kind(profile).name().toLowerCase(java.util.Locale.ROOT)), (UniverseDisasters.cataclysm(profile, now).remaining() + 19) / 20));
 	}
 	private static BlockPos nearest(ServerLevel level, BlockPos origin, int radius, java.util.function.Predicate<BlockPos> predicate) {
 		BlockPos best = null; double distance = Double.MAX_VALUE;

@@ -32,9 +32,12 @@ public final class UniverseChunkGenerator extends ChunkGenerator {
 	private final UniverseDensity density;
 	private final UniverseEcology ecology;
 	private final UniverseMines mines;
+	private final UniverseLandmarks landmarks;
+	private final UniverseStructures structures;
 	private final LongAdder generated = new LongAdder(), nanos = new LongAdder();
 	public UniverseChunkGenerator(BiomeSource biomes, UniverseProfile profile) {
 		super(biomes); this.profile = profile; density = new UniverseDensity(profile); ecology = new UniverseEcology(profile); mines = new UniverseMines(profile);
+		landmarks = new UniverseLandmarks(profile); structures = new UniverseStructures(profile);
 	}
 	@Override protected MapCodec<? extends ChunkGenerator> codec() { return CODEC; }
 	public UniverseProfile profile() { return profile; }
@@ -46,7 +49,15 @@ public final class UniverseChunkGenerator extends ChunkGenerator {
 	@Override public void applyCarvers(WorldGenRegion region, long seed, RandomState random, BiomeManager biomes, StructureManager structures, ChunkAccess chunk) {}
 	@Override public void buildSurface(WorldGenRegion region, StructureManager structures, RandomState random, ChunkAccess chunk) { ecology.buildSurface(chunk); }
 	@Override public void spawnOriginalMobs(WorldGenRegion region) {}
-	@Override public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structures) { ecology.decorate(chunk, this); mines.decorate(level, chunk); }
+	@Override public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager manager) {
+		if (dev.kirill.hbk.world.RepeatedAnomaly.decorate(this, level, chunk, manager)) return;
+		ecology.decorate(chunk, this); mines.decorate(level, chunk); structures.decorate(level, chunk);
+		dev.kirill.hbk.world.AnomalyTerrain.decorate(level, chunk);
+	}
+	/** Used to capture a deterministic type-six blueprint at the zone's fixed origin. */
+	public void templateSurface(ChunkAccess chunk) { ecology.buildSurface(chunk); }
+	public UniverseLandmarks landmarks() { return landmarks; }
+	public UniverseStructures structures() { return structures; }
 
 	public UniverseMines mines() { return mines; }
 	private double sample(double x, double y, double z) { return Math.min(density.sample(x, y, z), mines.caveDensity(x, y, z)); }
@@ -60,7 +71,12 @@ public final class UniverseChunkGenerator extends ChunkGenerator {
 				UniverseNoise.lerp(UniverseNoise.lerp(sample(bx, by, bz + 4), sample(bx + 4, by, bz + 4), tx),
 				UniverseNoise.lerp(sample(bx, by + 4, bz + 4), sample(bx + 4, by + 4, bz + 4), tx), ty), tz);
 	}
-	private BlockState material(int x, int y, int z, double d, double support, List<UniverseMines.Site> sites) {
+	private BlockState material(int x, int y, int z, double d, double support, List<UniverseMines.Site> sites,
+			List<UniverseLandmarks.Site> formations, List<UniverseStructures.Site> buildings) {
+		BlockState structure = structures.material(buildings, x, y, z);
+		if (structure != null) return structure;
+		BlockState landmark = landmarks.material(formations, x, y, z);
+		if (landmark != null) return landmark;
 		BlockState mine = mines.material(sites, x, y, z);
 		if (mine != null) return mine;
 		if (d <= 0) return density.water(x, y, z, support) ? UniverseMaterials.NATURAL_WATER.defaultBlockState() : Blocks.AIR.defaultBlockState();
@@ -77,6 +93,7 @@ public final class UniverseChunkGenerator extends ChunkGenerator {
 		long start = System.nanoTime();
 		int x0 = chunk.getPos().getMinBlockX(), z0 = chunk.getPos().getMinBlockZ();
 		List<UniverseMines.Site> sites = mines.sitesForChunk(x0, z0);
+		var formations = landmarks.forChunk(x0, z0); var buildings = this.structures.forChunk(x0, z0);
 		// Extra two vertical layers allow bounded pools to test eight blocks of supporting rock.
 		double[][][] lattice = new double[5][99][5];
 		for (int x = 0; x < 5; x++) for (int j = 0; j < 99; j++) for (int z = 0; z < 5; z++)
@@ -98,7 +115,7 @@ public final class UniverseChunkGenerator extends ChunkGenerator {
 				int supportIndex = Math.floorDiv(supportY, 4);
 				double support = supportIndex >= 0 && supportIndex < 98
 						? UniverseNoise.lerp(column[supportIndex], column[supportIndex + 1], Math.floorMod(supportY, 4) * .25) : -1;
-				BlockState state = material(x0 + x, getMinY() + y, z0 + z, d, support, sites);
+				BlockState state = material(x0 + x, getMinY() + y, z0 + z, d, support, sites, formations, buildings);
 				// Preserve the mine's cave-air mask: ecology keeps these passages free of crops.
 				if (state.is(Blocks.AIR)) continue;
 				chunk.setBlockState(pos.set(x0 + x, getMinY() + y, z0 + z), state);
@@ -115,6 +132,8 @@ public final class UniverseChunkGenerator extends ChunkGenerator {
 	public NoiseColumn baseColumn(int x, int z) {
 		BlockState[] states = new BlockState[getGenDepth()];
 		List<UniverseMines.Site> sites = mines.sitesForChunk(Math.floorDiv(x, 16) * 16, Math.floorDiv(z, 16) * 16);
+		var formations = landmarks.forChunk(Math.floorDiv(x, 16) * 16, Math.floorDiv(z, 16) * 16);
+		var buildings = structures.forChunk(Math.floorDiv(x, 16) * 16, Math.floorDiv(z, 16) * 16);
 		int bx = Math.floorDiv(x, 4) * 4, bz = Math.floorDiv(z, 4) * 4;
 		double tx = Math.floorMod(x, 4) * .25, tz = Math.floorMod(z, 4) * .25;
 		double[] column = new double[99];
@@ -127,7 +146,7 @@ public final class UniverseChunkGenerator extends ChunkGenerator {
 			int y = getMinY() + j;
 			int supportY = density.waterSupportY(y) - getMinY() + 8, index = Math.floorDiv(supportY, 4);
 			double support = index >= 0 && index < 98 ? UniverseNoise.lerp(column[index], column[index + 1], Math.floorMod(supportY, 4) * .25) : -1;
-			states[j] = material(x, y, z, UniverseNoise.lerp(column[j / 4 + 2], column[j / 4 + 3], j % 4 * .25), support, sites);
+			states[j] = material(x, y, z, UniverseNoise.lerp(column[j / 4 + 2], column[j / 4 + 3], j % 4 * .25), support, sites, formations, buildings);
 		}
 		return new NoiseColumn(getMinY(), states);
 	}

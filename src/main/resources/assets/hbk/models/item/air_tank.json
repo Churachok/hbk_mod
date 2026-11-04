@@ -1,3 +1,6 @@
 {
-  "parent": "minecraft:item/nautilus_shell"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hbk:item/alloys/air_tank"
+  }
 }

@@ -1,3 +1,6 @@
 {
-  "parent": "minecraft:item/bundle"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hbk:item/alloys/sample_bag"
+  }
 }

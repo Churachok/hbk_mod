@@ -42,7 +42,8 @@ public final class FracturedClusters {
 	}
 
 	public static void generate(WorldGenLevel level, ChunkAccess chunk, AnomalyZones.Zone zone, int surfaceY) {
-		long seed = level.getSeed() ^ (long) chunk.getPos().x() * 341873128712L
+		var profile = dev.kirill.hbk.universe.UniverseProfile.of(level.getLevel());
+		long seed = (profile == null ? level.getSeed() : profile.seed()) ^ (long) chunk.getPos().x() * 341873128712L
 				^ (long) chunk.getPos().z() * 132897987541L ^ 0xF4AC741L;
 		var random = RandomSource.create(seed);
 		if (random.nextInt(3) != 0 && zone.kind() != 6) return;

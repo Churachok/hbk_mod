@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "minecraft:block/dispenser"
+      "model": "hbk:block/drain_pump"
     }
   }
 }

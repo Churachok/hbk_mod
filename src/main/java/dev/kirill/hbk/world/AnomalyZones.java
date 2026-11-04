@@ -147,9 +147,20 @@ public final class AnomalyZones {
 	}
 
 	public static Zone at(Level level, double x, double z) {
-		if (!level.dimension().equals(Level.OVERWORLD)) return null;
-		Long seed = level instanceof ServerLevel server ? layoutSeed(server.getSeed()) : clientSeed;
+		Long seed = seed(level);
 		return seed == null ? null : at(seed, x, z);
+	}
+
+	public static boolean supported(Level level) {
+		return level.dimension().equals(Level.OVERWORLD) || dev.kirill.hbk.universe.UniverseProfile.of(level) != null;
+	}
+	/** Parallel addresses supply the same layout seed on both sides without extra networking. */
+	public static Long seed(Level level) {
+		if (level == null) return null;
+		var profile = dev.kirill.hbk.universe.UniverseProfile.of(level);
+		if (profile != null) return layoutSeed(profile.seed());
+		if (!level.dimension().equals(Level.OVERWORLD)) return null;
+		return level instanceof ServerLevel server ? layoutSeed(server.getSeed()) : clientSeed;
 	}
 
 	public static boolean contains(Level level, BlockPos pos) {
@@ -205,17 +216,20 @@ public final class AnomalyZones {
 				positions.remove(handler.player.getUUID()));
 		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPED.register(server -> positions.clear());
 		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents.SERVER_STOPPING.register(server ->
-				AnomalyTransientBlocks.restore(server.overworld(), true));
+				{ for (var level : server.getAllLevels()) if (supported(level)) AnomalyTransientBlocks.restore(level, true); });
+		net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents.UNLOAD.register((server, level) -> {
+			if (supported(level)) AnomalyTransientBlocks.restore(level, true);
+		});
 		net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
 			if (ServerPlayNetworking.canSend(handler.player, ModNetworking.AnomalyLayoutPayload.TYPE)) {
 				sender.sendPacket(new ModNetworking.AnomalyLayoutPayload(layoutSeed(server.overworld().getSeed())));
 			}
 		});
 		ServerTickEvents.END_SERVER_TICK.register(server -> {
-			AnomalyTransientBlocks.tick(server.overworld());
+			for (var level : server.getAllLevels()) if (supported(level)) AnomalyTransientBlocks.tick(level);
 			for (ServerPlayer player : server.getPlayerList().getPlayers()) {
 				var previous = positions.put(player.getUUID(), new PreviousPosition(player.level().dimension(), player.position()));
-				if (!player.isAlive() || player.isSpectator() || !player.level().dimension().equals(Level.OVERWORLD)) continue;
+				if (!player.isAlive() || player.isSpectator() || !supported(player.level())) continue;
 				Zone zone = at(player.level(), player.getX(), player.getZ());
 				Vec3 from = previous != null && previous.dimension.equals(player.level().dimension())
 						&& previous.position.distanceToSqr(player.position()) < 64 * 64 ? previous.position : player.position();
@@ -241,7 +255,7 @@ public final class AnomalyZones {
 		if (swept.maxY < CEILING_Y - 0.125 || swept.minY > CEILING_Y + 0.125) return false;
 		int cellX = Math.floorDiv((int) Math.floor(player.getX()), SPACING);
 		int cellZ = Math.floorDiv((int) Math.floor(player.getZ()), SPACING);
-		long seed = layoutSeed(player.level().getSeed());
+		long seed = seed(player.level());
 		for (int dx = -1; dx <= 1; dx++) for (int dz = -1; dz <= 1; dz++) {
 			for (Zone zone : zonesInCell(seed, cellX + dx, cellZ + dz)) {
 				if (swept.intersects(zone.ceiling()) && zone.intersects(swept.minX, swept.minZ, swept.maxX, swept.maxZ)) return true;

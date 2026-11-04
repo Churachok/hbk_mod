@@ -32,6 +32,7 @@ public final class UniverseAlloys {
 	public static BlockEntityType<AlloyDeviceBlockEntity> DEVICE_TYPE;
 	public static EntityType<CargoMinecart> CARGO_MINECART;
 	public static Block ROPE_LADDER;
+	public static Block CARGO_CRATE;
 	public static final TagKey<Item> BAG_CONTENTS = TagKey.create(Registries.ITEM, HbkMod.id("sample_bag_contents"));
 	private UniverseAlloys() {}
 	private static List<Alloy> readCatalog() {
@@ -55,6 +56,8 @@ public final class UniverseAlloys {
 				a.rewards.stream().map(r -> r.id + "_smithing"))).toList();
 	}
 	public static void register() {
+		var crateKey = ResourceKey.create(Registries.BLOCK, HbkMod.id("cargo_crate"));
+		CARGO_CRATE = Registry.register(BuiltInRegistries.BLOCK, crateKey, new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).setId(crateKey).noLootTable()));
 		var entityKey = ResourceKey.create(Registries.ENTITY_TYPE, HbkMod.id("cargo_minecart"));
 		CARGO_MINECART = Registry.register(BuiltInRegistries.ENTITY_TYPE, entityKey,
 				EntityType.Builder.<CargoMinecart>of(CargoMinecart::new, MobCategory.MISC).sized(.98f, .7f).clientTrackingRange(8).build(entityKey));
@@ -94,7 +97,6 @@ public final class UniverseAlloys {
 						case "leggings" -> ArmorType.LEGGINGS; default -> ArmorType.BOOTS;
 					});
 					case "shield" -> p.durability(672).repairable(repair).equippableUnswappable(net.minecraft.world.entity.EquipmentSlot.OFFHAND)
-							.component(DataComponents.ITEM_MODEL, Identifier.withDefaultNamespace("shield"))
 							.component(DataComponents.BANNER_PATTERNS, net.minecraft.world.level.block.entity.BannerPatternLayers.EMPTY)
 							.component(DataComponents.BREAK_SOUND, net.minecraft.sounds.SoundEvents.SHIELD_BREAK)
 							.delayedComponent(DataComponents.BLOCKS_ATTACKS, lookup -> new net.minecraft.world.item.component.BlocksAttacks(.25f, 1,
@@ -103,7 +105,6 @@ public final class UniverseAlloys {
 									Optional.of(lookup.getOrThrow(net.minecraft.tags.DamageTypeTags.BYPASSES_SHIELD)),
 									Optional.of(net.minecraft.sounds.SoundEvents.SHIELD_BLOCK), Optional.of(net.minecraft.sounds.SoundEvents.SHIELD_BREAK)));
 					case "crossbow" -> p.durability(930).repairable(repair).enchantable(1)
-							.component(DataComponents.ITEM_MODEL, Identifier.withDefaultNamespace("crossbow"))
 							.component(DataComponents.CHARGED_PROJECTILES, net.minecraft.world.item.component.ChargedProjectiles.EMPTY);
 					case "minecart" -> p.stacksTo(1);
 					default -> {
@@ -119,8 +120,6 @@ public final class UniverseAlloys {
 						net.minecraft.world.entity.ai.attributes.Attributes.WATER_MOVEMENT_EFFICIENCY,
 						new net.minecraft.world.entity.ai.attributes.AttributeModifier(HbkMod.id("diving_boots"), .8, net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE),
 						net.minecraft.world.entity.EquipmentSlotGroup.FEET));
-				if (Set.of("compass", "recovery_compass", "clock", "bundle").contains(r.model))
-					p.component(DataComponents.ITEM_MODEL, Identifier.withDefaultNamespace(r.id.equals("ore_compass") ? "compass" : r.model));
 				add(r.id, p, q -> r.role.equals("crossbow") ? new ImpulseCrossbow(q) : r.role.equals("minecart")
 						? new MinecartItem(CARGO_MINECART, q) : new AlloyItem(r.id, q));
 			}

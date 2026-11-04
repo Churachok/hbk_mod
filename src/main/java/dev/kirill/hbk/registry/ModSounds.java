@@ -18,6 +18,7 @@ public final class ModSounds {
 	public static final SoundEvent KIRILL_DOOM_MUSIC = register("music.kirill_doom");
 	public static final SoundEvent MAD_LIBERAL_MUSIC = register("music.mad_liberal");
 	public static final SoundEvent UNKNOWN_MUSIC = register("music.unknown");
+	public static final SoundEvent GOD_LOOP = register("god_loop");
 	public static final SoundEvent UNKNOWN_DEATH = register("unknown_death");
 	public static final SoundEvent ANOMALY_GLITCH = register("anomaly_glitch");
 	public static final SoundEvent ANOMALY_AMBIENT = register("anomaly_ambient");

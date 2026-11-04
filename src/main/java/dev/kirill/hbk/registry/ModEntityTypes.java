@@ -41,6 +41,9 @@ import net.minecraft.world.entity.MobCategory;
 import java.util.function.Supplier;
 
 public class ModEntityTypes {
+	public static final EntityType<dev.kirill.hbk.entity.GodEntity> GOD = register("god",
+			EntityType.Builder.<dev.kirill.hbk.entity.GodEntity>of(dev.kirill.hbk.entity.GodEntity::new, MobCategory.MISC)
+					.sized(0.1f, 0.1f).clientTrackingRange(16).updateInterval(1).fireImmune().noSummon());
 	public static final EntityType<GoshasDandruffEntity> GOSHAS_DANDRUFF = register("goshas_dandruff",
 			EntityType.Builder.<GoshasDandruffEntity>of(GoshasDandruffEntity::new, MobCategory.MISC)
 					.sized(0.25f, 0.25f).clientTrackingRange(8).updateInterval(10));

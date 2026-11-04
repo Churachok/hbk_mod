@@ -16,9 +16,9 @@ public final class AnomalyTerrain {
 
 	public static void decorate(WorldGenLevel level, ChunkAccess chunk) {
 		if (RepeatedAnomaly.capturing()) return;
-		if (!level.getLevel().dimension().equals(net.minecraft.world.level.Level.OVERWORLD)) return;
+		if (!AnomalyZones.supported(level.getLevel())) return;
 		int startX = chunk.getPos().getMinBlockX(), startZ = chunk.getPos().getMinBlockZ();
-		var zone = AnomalyZones.forChunk(AnomalyZones.layoutSeed(level.getSeed()), startX, startZ);
+		var zone = AnomalyZones.forChunk(AnomalyZones.seed(level.getLevel()), startX, startZ);
 		if (zone == null) return;
 		if (zone.kind() >= 5) {
 			if (zone.kind() != 6) NewAnomalyTerrain.decorate(level, chunk, zone);

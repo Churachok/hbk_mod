@@ -1,10 +1,10 @@
 {
   "variants": {
     "powered=false": {
-      "model": "minecraft:block/tinted_glass"
+      "model": "hbk:block/phase_glass"
     },
     "powered=true": {
-      "model": "minecraft:block/glass"
+      "model": "hbk:block/phase_glass_active"
     }
   }
 }

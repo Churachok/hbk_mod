@@ -1,3 +1,6 @@
 {
-  "parent": "minecraft:item/fire_charge"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "hbk:item/alloys/shaped_charge"
+  }
 }

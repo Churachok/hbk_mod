@@ -74,6 +74,7 @@ public class HbkMod implements ModInitializer {
 		ModWorldEvents.register();
 		dev.kirill.hbk.world.AnomalyZones.register();
 		UnknownEncounter.register();
+		dev.kirill.hbk.world.GodEncounter.register();
 		SquirrelEncounter.register();
 		SovietBusEvent.register();
 		ModCommands.register();

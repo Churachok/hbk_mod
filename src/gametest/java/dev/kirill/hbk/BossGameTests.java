@@ -17,6 +17,8 @@ public final class BossGameTests {
 	public void bossStormStaysWithinBattleRadius(GameTestHelper test) {
 		var level = test.getLevel();
 		var boss = test.spawnWithNoFreeWill(ModEntityTypes.CJ, 2, 2, 2);
+		// Other test structures can contain bosses within 32 blocks horizontally. Isolate this sample vertically.
+		boss.setPos(boss.getX(), boss.getY() + 128, boss.getZ());
 		test.assertTrue(BossLocalWeather.isStormAt(level, boss.blockPosition()),
 				"Boss must create a local storm around the fight");
 		test.assertFalse(BossLocalWeather.isStormAt(level, boss.blockPosition().offset(33, 0, 0)),

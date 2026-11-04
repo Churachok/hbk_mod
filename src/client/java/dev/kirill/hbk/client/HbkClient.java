@@ -33,9 +33,11 @@ public class HbkClient implements ClientModInitializer {
 		BossFightMusic.register();
 		AnomalyClient.register();
 		UniverseClient.register();
-		EntityRendererRegistry.register(dev.kirill.hbk.universe.UniverseAlloys.CARGO_MINECART, ctx -> new net.minecraft.client.renderer.entity.MinecartRenderer(ctx, net.minecraft.client.model.geom.ModelLayers.CHEST_MINECART));
+		EntityRendererRegistry.register(dev.kirill.hbk.universe.UniverseAlloys.CARGO_MINECART, CargoMinecartRenderer::new);
 		UnknownEncounterClient.register();
 		UnknownDeathClient.register();
+		GodEncounterClient.register();
+		EntityRendererRegistry.register(ModEntityTypes.GOD, GodRenderer::new);
 		ModEntityModelLayers.register();
 		EntityRendererRegistry.register(ModEntityTypes.LEBEDEV_HEAD, LebedevHeadRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.GOSHAS_DANDRUFF, ThrownItemRenderer::new);
