@@ -39,7 +39,7 @@ public final class FunnyButtonItem extends Item {
 						FunnySpinEffect.DURATION_TICKS, hostile ? 1 : 0, false, false, false), player);
 			}
 			player.getCooldowns().addCooldown(stack, FunnySpinEffect.DURATION_TICKS);
-			stack.shrink(1);
+			if (!player.hasInfiniteMaterials()) stack.shrink(1);
 		}
 		return InteractionResult.SUCCESS;
 	}

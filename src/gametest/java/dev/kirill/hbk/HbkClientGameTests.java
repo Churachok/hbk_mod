@@ -7,6 +7,7 @@ import dev.kirill.hbk.client.HuntersInstinctClientGameTest;
 import dev.kirill.hbk.client.FurrySyringeClientGameTest;
 import dev.kirill.hbk.client.FurryBreedingClientGameTest;
 import dev.kirill.hbk.client.SquirrelClientGameTest;
+import dev.kirill.hbk.client.SkippingOwlClientGameTest;
 import dev.kirill.hbk.world.BusClientGameTest;
 import dev.kirill.hbk.world.KonataHouseClientGameTest;
 import net.fabricmc.fabric.api.client.gametest.v1.FabricClientGameTest;
@@ -29,6 +30,7 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 			case "bus" -> new BusClientGameTest().runTest(context);
 			case "blood" -> new LiberalBloodClientGameTest().runTest(context);
 			case "squirrel" -> new SquirrelClientGameTest().runTest(context);
+			case "owl" -> new SkippingOwlClientGameTest().runTest(context);
 			case "carpet" -> new FlyingCarpetClientGameTest().runTest(context);
 			case "beer" -> runBeerTests(context);
 			case "konata" -> new KonataHouseClientGameTest().runTest(context);
@@ -49,6 +51,7 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 				new KitchenClientGameTest().runTest(context);
 				new LiberalBloodClientGameTest().runTest(context);
 				new SquirrelClientGameTest().runTest(context);
+				new SkippingOwlClientGameTest().runTest(context);
 				runBeerTests(context);
 				new JagermeisterClientGameTest().runTest(context);
 				new HuntersInstinctClientGameTest().runTest(context);
@@ -59,7 +62,7 @@ public final class HbkClientGameTests implements FabricClientGameTest {
 				new FlyingCarpetClientGameTest().runTest(context);
 				new RoflClientGameTest().runTest(context);
 			}
-			default -> throw new IllegalArgumentException("hbkClientTest must be exploration, exploration_landmarks, god, time_furnace, anomaly, universe, alloys, worlds, kitchen, blood, bus, squirrel, carpet, beer, konata, jagermeister, hunters_instinct, furry, furry_breeding, jagermeister_jei, rofl or all");
+			default -> throw new IllegalArgumentException("hbkClientTest must be exploration, exploration_landmarks, god, time_furnace, anomaly, universe, alloys, worlds, kitchen, blood, bus, squirrel, owl, carpet, beer, konata, jagermeister, hunters_instinct, furry, furry_breeding, jagermeister_jei, rofl or all");
 		}
 	}
 

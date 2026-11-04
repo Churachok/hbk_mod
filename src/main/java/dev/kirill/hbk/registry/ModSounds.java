@@ -7,6 +7,7 @@ import net.minecraft.sounds.SoundEvent;
 
 public final class ModSounds {
 	public static final SoundEvent CANNED_LAUGHTER = register("canned_laughter");
+	public static final SoundEvent SKIPPING_OWL_LAUGH = register("entity.skipping_owl.laugh");
 	public static final SoundEvent SQUIRREL_AMBIENT = register("entity.squirrel.ambient");
 	public static final SoundEvent SQUIRREL_GIFT = register("entity.squirrel.gift");
 	public static final SoundEvent BUS_HORN = register("bus_horn");

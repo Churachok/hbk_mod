@@ -38,6 +38,7 @@ public class HbkClient implements ClientModInitializer {
 		UnknownDeathClient.register();
 		GodEncounterClient.register();
 		EntityRendererRegistry.register(ModEntityTypes.GOD, GodRenderer::new);
+		SkippingOwlScreenEffect.register();
 		ModEntityModelLayers.register();
 		EntityRendererRegistry.register(ModEntityTypes.LEBEDEV_HEAD, LebedevHeadRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.GOSHAS_DANDRUFF, ThrownItemRenderer::new);
@@ -71,6 +72,7 @@ public class HbkClient implements ClientModInitializer {
 		EntityRendererRegistry.register(ModEntityTypes.VLAD, context -> new ReferenceNpcRenderer(context, "vlad"));
 		EntityRendererRegistry.register(ModEntityTypes.LEX, LexRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.SQUIRREL, SquirrelRenderer::new);
+		EntityRendererRegistry.register(ModEntityTypes.SKIPPING_OWL, SkippingOwlRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.PINK_FURRY_WOLF, PinkFurryWolfRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.CATGIRL, CatgirlRenderer::new);
 		EntityRendererRegistry.register(ModEntityTypes.KONATA, Test3KonataRenderer::new);

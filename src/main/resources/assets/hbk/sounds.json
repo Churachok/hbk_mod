@@ -14,6 +14,10 @@
 		"subtitle": "subtitles.hbk.canned_laughter",
 		"sounds": [{"name": "hbk:canned_laughter", "attenuation_distance": 64}]
 	},
+	"entity.skipping_owl.laugh": {
+		"subtitle": "subtitles.hbk.skipping_owl.laugh",
+		"sounds": ["hbk:entity/skipping_owl/laugh"]
+	},
 	"entity.squirrel.gift": {
 		"subtitle": "subtitles.hbk.squirrel.gift",
 		"sounds": ["hbk:entity/squirrel/gift"]

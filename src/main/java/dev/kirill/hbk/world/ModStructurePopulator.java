@@ -4,8 +4,11 @@ import dev.kirill.hbk.HbkMod;
 import dev.kirill.hbk.registry.ModBlocks;
 import dev.kirill.hbk.registry.ModEntityTypes;
 import dev.kirill.hbk.registry.ModItems;
+import dev.kirill.hbk.registry.ModLoot;
 import dev.kirill.hbk.util.NkvdSpawning;
+import dev.kirill.hbk.world.structure.KonataHouseStructure;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -13,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.npc.villager.Villager;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
@@ -109,6 +113,14 @@ public final class ModStructurePopulator {
 			if (konataPiece != null && konataPiece.getBoundingBox().getYSpan() == 18) {
 				populateKonataBasement(level, konataPiece.getPosition(), konataPiece.getRotation(),
 						data, "konata_basement@" + populationKey);
+			}
+			if (konataPiece != null) {
+				int height = konataPiece.getBoundingBox().getYSpan();
+				if (height == 18 || height == 7) {
+					populateKonataSyringe(level, konataPiece.getPosition(), konataPiece.getRotation(),
+							height == 18 ? KonataHouseStructure.HOUSE_FLOOR_Y : 0,
+							data, "konata_syringe@" + populationKey);
+				}
 			}
 			if (id.equals(GULAG)) {
 				String suppliesKey = "gulag_supplies@" + start.getChunkPos().pack();
@@ -263,6 +275,9 @@ public final class ModStructurePopulator {
 						? 1 + random.nextInt(3) : 1;
 				addToEmptySlot(chest, new ItemStack(item, count), random);
 			}
+			if (random.nextFloat() < ModLoot.FURRY_SYRINGE_CHANCE) {
+				addToEmptySlot(chest, new ItemStack(ModItems.FURRY_SYRINGE), random);
+			}
 			chest.setChanged();
 		}
 		return placeUniqueDachaItem(chests, ModItems.STALIN_PIPE, random)
@@ -317,6 +332,26 @@ public final class ModStructurePopulator {
 		}
 		konata.setPersistenceRequired();
 		return true;
+	}
+
+	/** One removable syringe above the upstairs crafting table; never replenished after collection. */
+	static void populateKonataSyringe(ServerLevel level, BlockPos origin, Rotation rotation,
+			int houseFloorY, ModWorldData data, String key) {
+		if (data.isStructurePopulated(key)) return;
+		BlockPos pos = StructureTemplate.transform(new BlockPos(6, houseFloorY + 2, 6), Mirror.NONE,
+				rotation, BlockPos.ZERO).offset(origin);
+		Direction facing = rotation.rotate(Direction.NORTH);
+		BlockPos support = pos.relative(facing.getOpposite());
+		// Do not reconstruct or overwrite a house that the player has already changed.
+		if (!level.hasChunkAt(pos) || !level.hasChunkAt(support) || !level.getBlockState(pos).isAir()
+				|| !level.getBlockState(support).is(Blocks.CHERRY_PLANKS)) return;
+		ItemFrame frame = new ItemFrame(level, pos, facing);
+		frame.setItem(new ItemStack(ModItems.FURRY_SYRINGE), false);
+		if (frame.survives() && level.addFreshEntity(frame)) {
+			data.markStructurePopulated(key);
+		} else {
+			frame.discard();
+		}
 	}
 
 	/** Adds the already-seated white sheep once, independently of Konata's population flag. */
@@ -452,6 +487,9 @@ public final class ModStructurePopulator {
 			}
 			if (level.getRandom().nextFloat() < 0.03f) {
 				addToEmptySlot(barrel, new ItemStack(ModItems.STALIN_SPAWN_EGG), level.getRandom());
+			}
+			if (level.getRandom().nextFloat() < ModLoot.FURRY_SYRINGE_CHANCE) {
+				addToEmptySlot(barrel, new ItemStack(ModItems.FURRY_SYRINGE), level.getRandom());
 			}
 			barrel.setChanged();
 		}

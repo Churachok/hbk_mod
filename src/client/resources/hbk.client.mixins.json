@@ -15,6 +15,7 @@
 		"EntityRenderDispatcherMixin",
 		"FurryLoveMovementMixin",
 		"GameRendererMixin",
+		"SkippingOwlGuiMixin",
 		"GameRendererInvoker",
 		"CameraInvoker",
 		"HumanoidModelMixin",

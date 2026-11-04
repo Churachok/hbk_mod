@@ -173,6 +173,7 @@ public final class ModNetworking {
 
 	public static void register() {
 		PayloadTypeRegistry.clientboundPlay().register(GodEncounterPayload.TYPE, GodEncounterPayload.CODEC);
+		SkippingOwlScenePayload.registerPayloads();
 		PayloadTypeRegistry.serverboundPlay().register(TravelTimeFurnacePayload.TYPE, TravelTimeFurnacePayload.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(TravelTimeFurnacePayload.TYPE, (payload, context) -> context.server().execute(() -> {
 			var player = context.player();

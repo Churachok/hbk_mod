@@ -15,6 +15,7 @@ public class ModEntityModelLayers {
 	public static final ModelLayerLocation PINK_FURRY_WOLF = new ModelLayerLocation(HbkMod.id("pink_furry_wolf"), "main");
 	public static final ModelLayerLocation CATGIRL = new ModelLayerLocation(HbkMod.id("catgirl"), "main");
 	public static final ModelLayerLocation SQUIRREL = new ModelLayerLocation(HbkMod.id("squirrel"), "main");
+	public static final ModelLayerLocation SKIPPING_OWL = new ModelLayerLocation(HbkMod.id("skipping_owl"), "main");
 	public static final ModelLayerLocation KONATA = new ModelLayerLocation(HbkMod.id("konata"), "main");
 	public static final ModelLayerLocation TEST_KONATA = new ModelLayerLocation(HbkMod.id("test"), "main");
 	public static final ModelLayerLocation TEST2_KONATA = new ModelLayerLocation(HbkMod.id("test2"), "main");
@@ -37,6 +38,7 @@ public class ModEntityModelLayers {
 		ModelLayerRegistry.registerModelLayer(PINK_FURRY_WOLF, PinkFurryWolfModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(CATGIRL, CatgirlModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(SQUIRREL, SquirrelModel::createBodyLayer);
+		ModelLayerRegistry.registerModelLayer(SKIPPING_OWL, SkippingOwlModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(KONATA, KonataModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(TEST_KONATA, TestKonataModel::createBodyLayer);
 		ModelLayerRegistry.registerModelLayer(TEST2_KONATA, Test2KonataModel::createBodyLayer);
